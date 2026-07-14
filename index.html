@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tu experiencia Rollershow, mostrala y ganá</title>
+<meta name="description" content="Subí fotos de tus cortinas instaladas, contanos tu experiencia y participá del sorteo mensual de premios de decoración." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" />
+<link rel="icon" href="img/logo.svg" />
+<style>
+/* ==========================================================================
+   Rollershow, tu experiencia + sorteo. Mockup fase 1, sin backend.
+   Paleta y tipografía heredadas de la landing quality.
+   ========================================================================== */
+:root{
+  --bg:#FAF7F2; --bg-elev:#FFFFFF; --bg-muted:#F1EBE0; --bg-deep:#1C1816;
+  --fg:#1C1816; --fg-soft:#4A4039; --fg-mute:#87796D;
+  --border:#E4DCCE; --border-strong:#C8BCA8;
+  --accent:#B8662C; --accent-deep:#8E4D1F; --accent-soft:#F3E3D2; --on-accent:#FFFFFF;
+  --ok:#4C7A4C; --danger:#B23B3B;
+  --font-display:"Bricolage Grotesque",system-ui,sans-serif;
+  --font-body:"Manrope",system-ui,sans-serif;
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 1px 2px rgba(28,24,22,.05),0 8px 24px -12px rgba(28,24,22,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--fg);
+  line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--accent-deep)}
+/* Las animaciones corren siempre, no se gatean por reduced-motion (regla del proyecto). */
+
+.wrap{max-width:680px;margin:0 auto;padding:0 20px;min-width:0}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;background:#F6EEE2;overflow:hidden}
+.hero-media{position:absolute;inset:0}
+.hero-media img{width:100%;height:100%;object-fit:cover;object-position:72% 50%}
+.hero-media::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,rgba(250,247,242,.97) 0%,rgba(250,247,242,.93) 42%,rgba(250,247,242,.62) 66%,rgba(250,247,242,.12) 88%,rgba(250,247,242,0) 100%)}
+@media (min-width:640px){
+  .hero-media::after{background:linear-gradient(100deg,rgba(250,247,242,.96) 0%,rgba(250,247,242,.88) 34%,rgba(250,247,242,.30) 62%,rgba(250,247,242,0) 82%)}
+}
+.hero-inner{position:relative;max-width:680px;margin:0 auto;padding:22px 20px 30px;min-height:430px;display:flex;flex-direction:column}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-top img{height:26px;width:auto}
+.ig-link{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;color:var(--fg-soft);text-decoration:none;
+  border:1px solid var(--border-strong);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.55)}
+.ig-link svg{width:15px;height:15px}
+.hero-copy{margin-top:auto;padding-top:170px;max-width:30ch}
+.hero-eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep)}
+.hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(1.9rem,7.2vw,2.7rem);line-height:1.06;margin:10px 0 12px;letter-spacing:-.01em}
+.hero p{color:var(--fg-soft);font-size:1rem;max-width:36ch}
+.hero-fecha{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--bg-deep);color:#F5EFE6;
+  font-size:.85rem;font-weight:600;border-radius:999px;padding:8px 15px}
+.hero-fecha svg{width:14px;height:14px;flex:none}
+
+/* ---------- Barra sticky de chances ---------- */
+.chancebar{position:sticky;top:0;z-index:40;background:rgba(250,247,242,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);transition:box-shadow .3s}
+.chancebar-in{max-width:680px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px;min-width:0}
+.chance-count{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.chance-count strong{font-family:var(--font-display);font-size:1.35rem;font-weight:800;color:var(--accent-deep);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);display:inline-block}
+.chance-count span{font-size:.8rem;font-weight:600;color:var(--fg-mute)}
+.chance-meter{flex:1;min-width:0}
+.chance-meter-label{font-size:.72rem;font-weight:600;color:var(--fg-mute);margin-bottom:3px}
+.chance-track{height:7px;background:var(--bg-muted);border-radius:99px;overflow:hidden}
+.chance-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-deep));border-radius:99px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.tickets{display:flex;align-items:center;gap:6px;background:var(--accent-soft);border:1px solid #E8CBAA;
+  border-radius:999px;padding:6px 12px;font-size:.85rem;font-weight:700;color:var(--accent-deep);white-space:nowrap}
+.tickets svg{width:16px;height:16px;flex:none}
+.bump{animation:bump .45s cubic-bezier(.34,1.56,.64,1) !important}
+@keyframes bump{40%{transform:scale(1.35)}}
+
+/* ---------- Secciones ---------- */
+section{padding:38px 0 6px}
+.sec-head h2{font-family:var(--font-display);font-weight:800;font-size:1.5rem;letter-spacing:-.01em}
+.sec-head p{color:var(--fg-soft);margin-top:5px;font-size:.95rem}
+.pts-hint{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--accent-deep);
+  background:var(--accent-soft);border-radius:999px;padding:3px 10px;vertical-align:2px}
+
+/* ---------- Tips de foto ---------- */
+.tips{display:flex;gap:8px;margin:16px 0 4px;flex-wrap:wrap}
+.tips li{list-style:none;display:flex;align-items:center;gap:7px;font-size:.8rem;font-weight:600;color:var(--fg-soft);
+  background:var(--bg-elev);border:1px solid var(--border);border-radius:999px;padding:7px 13px}
+.tips svg{width:14px;height:14px;color:var(--accent);flex:none}
+
+/* ---------- Card de cortina ---------- */
+.item{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-top:16px;overflow:hidden;min-width:0}
+.item-head{display:flex;align-items:center;gap:13px;padding:14px 16px;min-width:0}
+.item-head img{width:52px;height:52px;border-radius:var(--radius-sm);object-fit:cover;flex:none}
+.item-title{min-width:0}
+.item-title h3{font-family:var(--font-display);font-weight:700;font-size:1.06rem;line-height:1.2}
+.item-title span{font-size:.82rem;color:var(--fg-mute);font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-pts{margin-left:auto;flex:none;font-size:.75rem;font-weight:700;color:var(--fg-mute);text-align:right;line-height:1.35}
+.item-pts b{color:var(--accent-deep)}
+.drop{margin:0 16px 16px;border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:20px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;transition:border-color .2s,background .2s;min-width:0}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop svg{width:26px;height:26px;color:var(--accent)}
+.drop-cta{font-weight:700;font-size:.93rem}
+.drop-cta u{text-decoration-color:var(--accent);text-underline-offset:3px}
+.drop small{color:var(--fg-mute);font-size:.78rem}
+.drop input{display:none}
+.previews{display:flex;flex-wrap:wrap;gap:9px;padding:0 16px 16px;min-width:0}
+.previews:empty{display:none}
+.pv{position:relative;width:74px;height:74px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);
+  animation:pvin .35s cubic-bezier(.22,1,.36,1)}
+@keyframes pvin{from{opacity:0;transform:scale(.7)}}
+.pv img,.pv video{width:100%;height:100%;object-fit:cover}
+.pv .vtag{position:absolute;left:5px;bottom:5px;background:rgba(28,24,22,.75);color:#fff;font-size:.62rem;font-weight:700;
+  border-radius:5px;padding:2px 6px}
+.pv button{position:absolute;top:4px;right:4px;width:21px;height:21px;border-radius:50%;background:rgba(28,24,22,.72);
+  color:#fff;display:grid;place-items:center;line-height:0}
+.pv button svg{width:11px;height:11px}
+
+/* ---------- Vendedor ---------- */
+.vendedor{display:flex;align-items:center;gap:15px;background:var(--bg-elev);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:18px;min-width:0}
+.vendedor img{width:62px;height:62px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--accent-soft)}
+.vendedor-txt{min-width:0}
+.vendedor-txt strong{font-family:var(--font-display);font-weight:700;font-size:1.02rem;display:block}
+.vendedor-txt p{font-size:.88rem;color:var(--fg-soft);margin-top:2px}
+
+/* ---------- Estrellas ---------- */
+.stars-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:18px 16px;margin-top:14px}
+.block-label{font-weight:700;font-size:.98rem;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stars{display:flex;gap:6px;margin-top:12px}
+.stars button{padding:4px;border-radius:8px;transition:transform .15s}
+.stars button:active{transform:scale(1.25)}
+.stars svg{width:37px;height:37px;fill:none;stroke:var(--border-strong);stroke-width:1.6;transition:fill .2s,stroke .2s}
+.stars button.on svg{fill:#E8A33D;stroke:#C77F1A}
+.stars-word{font-size:.85rem;font-weight:700;color:var(--accent-deep);margin-top:8px;min-height:1.3em}
+
+/* ---------- Audio ---------- */
+.audio-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:18px 16px;margin-top:14px}
+.audio-sub{font-size:.85rem;color:var(--fg-mute);margin-top:3px}
+.audio-ui{margin-top:14px;min-height:58px}
+.rec-btn{display:flex;align-items:center;gap:11px;background:var(--accent);color:var(--on-accent);border-radius:999px;
+  padding:13px 20px;font-weight:700;font-size:.95rem;box-shadow:0 6px 18px -6px rgba(184,102,44,.5);transition:transform .15s}
+.rec-btn:active{transform:scale(.97)}
+.rec-btn svg{width:19px;height:19px;flex:none}
+.rec-live{display:flex;align-items:center;gap:12px;background:var(--bg-muted);border-radius:999px;padding:9px 12px;min-width:0}
+.rec-dot{width:11px;height:11px;border-radius:50%;background:var(--danger);flex:none;animation:pulse 1.1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.rec-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:.92rem;min-width:44px}
+.eq{display:flex;align-items:center;gap:3px;flex:1;height:26px;min-width:0;overflow:hidden}
+.eq i{width:3px;border-radius:2px;background:var(--accent);animation:eq .9s ease-in-out infinite}
+@keyframes eq{0%,100%{height:22%}50%{height:95%}}
+.rec-stop{width:40px;height:40px;border-radius:50%;background:var(--bg-deep);color:#fff;display:grid;place-items:center;flex:none}
+.rec-stop svg{width:15px;height:15px}
+.voice-note{display:flex;align-items:center;gap:11px;background:var(--accent-soft);border:1px solid #E8CBAA;
+  border-radius:999px;padding:8px 10px;min-width:0}
+.vn-play{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;flex:none}
+.vn-play svg{width:16px;height:16px}
+.vn-track{flex:1;height:5px;background:#E4CCAF;border-radius:99px;overflow:hidden;min-width:0}
+.vn-track i{display:block;height:100%;width:0%;background:var(--accent-deep);border-radius:99px}
+.vn-time{font-size:.8rem;font-weight:700;color:var(--accent-deep);font-variant-numeric:tabular-nums;flex:none}
+.audio-actions{display:flex;gap:14px;margin-top:11px}
+.audio-actions button{font-size:.83rem;font-weight:700;color:var(--fg-mute);display:inline-flex;align-items:center;gap:6px}
+.audio-actions button svg{width:14px;height:14px}
+.audio-actions .del{color:var(--danger)}
+.audio-err{font-size:.85rem;color:var(--danger);margin-top:10px}
+
+/* ---------- Texto ---------- */
+.text-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:18px 16px;margin-top:14px}
+.text-block textarea{width:100%;min-height:96px;margin-top:12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px;font:inherit;font-size:.93rem;resize:vertical;background:var(--bg);color:var(--fg)}
+.text-block textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+
+/* ---------- Cierre ---------- */
+.cierre{padding:30px 0 60px}
+.consent{display:flex;gap:11px;align-items:flex-start;background:var(--bg-muted);border-radius:var(--radius-sm);padding:14px 15px}
+.consent input{width:19px;height:19px;margin-top:2px;accent-color:var(--accent);flex:none}
+.consent label{font-size:.86rem;color:var(--fg-soft)}
+.consent.err{outline:2px solid var(--danger)}
+.cta{display:flex;width:100%;justify-content:center;align-items:center;gap:10px;margin-top:16px;background:var(--accent);
+  color:var(--on-accent);font-family:var(--font-display);font-weight:700;font-size:1.15rem;border-radius:var(--radius);
+  padding:17px 20px;box-shadow:0 10px 26px -8px rgba(184,102,44,.55);transition:transform .15s,background .2s}
+.cta:active{transform:scale(.98)}
+.cta:hover{background:var(--accent-deep)}
+.cta-sub{text-align:center;font-size:.8rem;color:var(--fg-mute);margin-top:10px}
+
+/* ---------- Gracias ---------- */
+#gracias{display:none;position:relative;overflow:hidden;text-align:center;padding:64px 0 70px}
+body.done #gracias{display:block}
+body.done #app,body.done .chancebar{display:none}
+.gr-badge{width:74px;height:74px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;
+  margin:0 auto 20px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
+.gr-badge svg{width:34px;height:34px}
+@keyframes pop{from{transform:scale(0)}}
+#gracias h1{font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,6.5vw,2.4rem);letter-spacing:-.01em}
+#gracias .gr-sub{color:var(--fg-soft);margin-top:10px;max-width:42ch;margin-inline:auto}
+.gr-score{display:flex;justify-content:center;gap:12px;margin-top:26px;flex-wrap:wrap}
+.gr-score div{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:16px 22px;min-width:130px}
+.gr-score strong{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent-deep);display:block}
+.gr-score span{font-size:.8rem;font-weight:600;color:var(--fg-mute)}
+.gr-fecha{margin-top:26px;font-size:.95rem;color:var(--fg-soft)}
+.gr-fecha b{color:var(--fg)}
+.gr-ig{display:inline-flex;align-items:center;gap:10px;margin-top:16px;background:var(--bg-deep);color:#F5EFE6;
+  text-decoration:none;font-weight:700;border-radius:var(--radius);padding:15px 26px;transition:transform .15s}
+.gr-ig:active{transform:scale(.97)}
+.gr-ig svg{width:19px;height:19px}
+.confetti{position:absolute;top:-12px;width:9px;height:9px;border-radius:50%;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.15}}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--border);padding:26px 0 34px;color:var(--fg-mute);font-size:.8rem}
+footer .wrap{display:flex;flex-direction:column;gap:6px}
+footer a{color:var(--fg-mute)}
+
+/* ---------- Modales (bases y exit) ---------- */
+dialog{border:none;border-radius:var(--radius);max-width:min(480px,calc(100vw - 36px));width:100%;padding:0;
+  background:var(--bg-elev);color:var(--fg);box-shadow:0 24px 60px -20px rgba(28,24,22,.4);
+  margin:auto}
+dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.modal-in{padding:24px 22px}
+.modal-in h2{font-family:var(--font-display);font-weight:800;font-size:1.3rem;letter-spacing:-.01em}
+.modal-in .bases-txt{margin-top:12px;font-size:.86rem;color:var(--fg-soft);display:grid;gap:9px;max-height:52vh;overflow:auto}
+.modal-close{margin-top:18px;width:100%;background:var(--bg-muted);border-radius:var(--radius-sm);padding:12px;font-weight:700}
+#exitModal .modal-in{text-align:center;padding:30px 24px}
+#exitModal p{color:var(--fg-soft);margin-top:8px;font-size:.94rem}
+#exitModal strong.big{font-family:var(--font-display);font-size:2.1rem;font-weight:800;color:var(--accent-deep);display:block;margin-top:12px}
+#exitModal .cta{margin-top:18px;font-size:1.02rem;padding:14px}
+#exitModal .stay{margin-top:12px;font-weight:700;font-size:.88rem;color:var(--fg-mute);width:100%}
+
+@media (min-width:640px){
+  .hero-inner{min-height:480px;padding:28px 20px 44px}
+  .hero-copy{padding-top:150px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<header class="hero">
+  <div class="hero-media"><img src="img/hero-premios.jpg" alt="" fetchpriority="high" /></div>
+  <div class="hero-inner">
+    <div class="hero-top">
+      <img src="img/logo.svg" alt="Rollershow" />
+      <a class="ig-link" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
+        Seguinos
+      </a>
+    </div>
+    <div class="hero-copy">
+      <span class="hero-eyebrow">Sorteo mensual para clientes</span>
+      <h1 id="heroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
+      <p>Subí fotos de tus cortinas instaladas, contanos cómo fue tu experiencia y participá por <strong>3 premios de decoración</strong>. Cuanto más compartas, más chances tenés.</p>
+      <span class="hero-fecha">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Sorteo: jueves 31 de julio, en vivo por Instagram
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     BARRA STICKY DE PUNTOS / CHANCES
+============================================================ -->
+<div class="chancebar">
+  <div class="chancebar-in">
+    <div class="chance-count"><strong id="ptsNum">0</strong><span>puntos</span></div>
+    <div class="chance-meter">
+      <div class="chance-meter-label" id="meterLabel">Sumá 10 puntos y tenés tu primera chance</div>
+      <div class="chance-track"><div class="chance-fill" id="meterFill"></div></div>
+    </div>
+    <div class="tickets">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M13 5v2.5M13 11v2M13 16.5V19" stroke-dasharray="1 3"/></svg>
+      <span id="ticketNum">0</span>&nbsp;chances
+    </div>
+  </div>
+</div>
+
+<main id="app">
+
+  <!-- ============================================================
+       TUS CORTINAS
+  ============================================================ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Tus cortinas</h2>
+        <p>Estas son las que instalaste con nosotros. Una foto por ambiente ya te suma <span class="pts-hint">+10 c/u</span> y un video vale <span class="pts-hint">+25</span></p>
+      </div>
+      <ul class="tips">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Con luz de día</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/></svg>Que se vea la cortina entera</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="12" rx="2"/></svg>Mejor horizontal</li>
+      </ul>
+      <div id="items"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TU EXPERIENCIA
+  ============================================================ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Tu experiencia</h2>
+        <p>Esto ayuda a otros a animarse, y a nosotros a seguir mejorando.</p>
+      </div>
+
+      <!-- TODO(Nico): foto y nombre del vendedor vienen del presupuesto (GET /api/v2/presupuesto/:token). -->
+      <div class="vendedor">
+        <img id="vendFoto" src="" alt="" />
+        <div class="vendedor-txt">
+          <strong id="vendNombre"></strong>
+          <p id="vendCopy"></p>
+        </div>
+      </div>
+
+      <div class="stars-block">
+        <div class="block-label">¿Cómo fue comprar en Rollershow? <span class="pts-hint">+5</span></div>
+        <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
+          <!-- estrellas SVG propias, generadas por JS -->
+        </div>
+        <div class="stars-word" id="starsWord"></div>
+      </div>
+
+      <div class="audio-block">
+        <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+30</span></div>
+        <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Lo podés escuchar y regrabar las veces que quieras.</p>
+        <div class="audio-ui" id="audioUI"></div>
+      </div>
+
+      <div class="text-block">
+        <div class="block-label">¿Querés agregar algo por escrito? <span class="pts-hint">+5</span></div>
+        <textarea id="reviewText" placeholder="Lo que le dirías a alguien que está dudando…"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CIERRE
+  ============================================================ -->
+  <div class="cierre">
+    <div class="wrap">
+      <div class="consent" id="consentBox">
+        <input type="checkbox" id="consent" />
+        <label for="consent">Autorizo a Rollershow a compartir mis fotos, videos y opinión en sus redes y su web. <a href="#" id="openBases">Bases del sorteo</a></label>
+      </div>
+      <button class="cta" id="submitBtn">
+        Confirmar mi participación
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <p class="cta-sub" id="ctaSub">Con lo que cargaste hasta ahora entrás al sorteo de julio.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     GRACIAS
+============================================================ -->
+<section id="gracias">
+  <div class="wrap">
+    <div class="gr-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+    <h1>¡Listo! Ya estás participando.</h1>
+    <p class="gr-sub" id="grSub">Tu experiencia quedó registrada. Gracias por mostrarnos cómo quedó tu casa.</p>
+    <div class="gr-score">
+      <div><strong id="grPts">0</strong><span>puntos juntados</span></div>
+      <div><strong id="grTickets">0</strong><span>chances en el sorteo</span></div>
+    </div>
+    <p class="gr-fecha">El sorteo se hace <b>en vivo el jueves 31 de julio</b> por nuestro Instagram. Ahí anunciamos a los 3 ganadores.</p>
+    <a class="gr-ig" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
+      Seguir a Rollershow y ver el sorteo
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Rollershow. Cortinas a medida en Villa Carlos Paz y Capital Federal.</span>
+    <span><a href="#" id="openBases2">Bases y condiciones del sorteo</a></span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     MODAL: BASES Y CONDICIONES
+============================================================ -->
+<dialog id="basesModal">
+  <div class="modal-in">
+    <h2>Bases del sorteo</h2>
+    <div class="bases-txt">
+      <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
+      <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita (5). El puntaje final lo valida Rollershow al revisar el material.</p>
+      <p>Se sortean 3 premios de decoración por mes, un premio por ganador. El sorteo se realiza en vivo el último jueves hábil del mes en el Instagram de Rollershow y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
+      <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
+      <p>Sin obligación de compra adicional. Premios no canjeables por dinero.</p>
+    </div>
+    <button class="modal-close" data-close>Entendido</button>
+  </div>
+</dialog>
+
+<!-- ============================================================
+     EXIT POPUP (solo si hay puntos sin confirmar)
+============================================================ -->
+<dialog id="exitModal">
+  <div class="modal-in">
+    <h2>Lo que cargaste ya suma</h2>
+    <strong class="big" id="exitPts">0 puntos</strong>
+    <p>Te falta un solo paso: confirmá y entrás al sorteo del jueves 31 con todo lo que cargaste.</p>
+    <button class="cta" id="exitConfirm">Confirmar mi participación</button>
+    <button class="stay" data-close>Quiero seguir cargando</button>
+  </div>
+</dialog>
+
+<script>
+/* ==========================================================================
+   DATOS DEL PRESUPUESTO (mockup)
+   TODO(Nico): reemplazar este bloque por fetch a la API real.
+   Contrato propuesto:
+     GET /api/v2/presupuesto/:token
+       -> { cliente: { nombre }, vendedor: { nombre, foto_url }, items: [
+            { id, ambiente, producto, tela, foto_referencia_url } ] }
+   El token llega en la URL (?t=...) desde el WhatsApp post-instalación.
+   ========================================================================== */
+const PRESUPUESTO = {
+  cliente: { nombre: "Carolina" },
+  vendedor: { nombre: "Marcelo", foto: "img/perfil-01.jpg" }, // TODO(Nico): foto real del vendedor desde el CRM
+  items: [
+    { id: 1, ambiente: "Living",      producto: "Roller Blackout",     tela: "Sand",   img: "img/blackout-sand-bedroom-thumb.jpg" },
+    { id: 2, ambiente: "Dormitorio",  producto: "Roller Blackout",     tela: "Gris",   img: "img/blackout-gris-living-thumb.jpg" },
+    { id: 3, ambiente: "Cocina",      producto: "Roller Sunscreen 5%", tela: "Lino",   img: "img/sunscreen-living-thumb.jpg" },
+    { id: 4, ambiente: "Home office", producto: "Roller Blackout",     tela: "Blanco", img: "img/blackout-white-office-thumb.jpg" }
+  ]
+};
+
+/* Puntaje. OJO(Nico): en producción los puntos se recalculan SIEMPRE server-side
+   al recibir el POST; lo del cliente es solo feedback visual. */
+const PUNTOS = { foto: 10, video: 25, audio: 30, estrellas: 5, texto: 5 };
+const PTS_POR_CHANCE = 10;
+
+/* ---------- estado ---------- */
+const state = { archivos: {}, estrellas: 0, audioBlob: null, textoOk: false, enviado: false };
+PRESUPUESTO.items.forEach(i => state.archivos[i.id] = []);
+
+const $ = s => document.querySelector(s);
+
+/* ---------- personalización ---------- */
+$("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, tu casa ya luce Rollershow. Mostrala y ganá.`;
+$("#vendFoto").src = PRESUPUESTO.vendedor.foto;
+$("#vendFoto").alt = PRESUPUESTO.vendedor.nombre;
+$("#vendNombre").textContent = `${PRESUPUESTO.vendedor.nombre} te acompañó en tu compra`;
+$("#vendCopy").textContent = `¿Cómo fue la atención? Se lo podés contar acá abajo, él también lo va a leer.`;
+
+/* ---------- puntos ---------- */
+/* Toda participación con algo cargado entra con al menos 1 chance. */
+function chancesDe(p) { return p > 0 ? Math.max(1, Math.floor(p / PTS_POR_CHANCE)) : 0; }
+function totalPuntos() {
+  let p = 0;
+  Object.values(state.archivos).flat().forEach(f => p += f.esVideo ? PUNTOS.video : PUNTOS.foto);
+  if (state.estrellas > 0) p += PUNTOS.estrellas;
+  if (state.audioBlob)     p += PUNTOS.audio;
+  if (state.textoOk)       p += PUNTOS.texto;
+  return p;
+}
+function renderPuntos() {
+  const p = totalPuntos(), t = chancesDe(p);
+  const num = $("#ptsNum"), tick = $("#ticketNum");
+  if (num.textContent != p) { num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump"); }
+  num.textContent = p; tick.textContent = t;
+  const resto = p % PTS_POR_CHANCE;
+  $("#meterFill").style.width = (p === 0 ? 0 : (resto === 0 ? 100 : resto * 10)) + "%";
+  $("#meterLabel").textContent =
+    p === 0 ? "Con 10 puntos entrás al sorteo" :
+    resto === 0 ? "¡Chance completa! Todo lo que sumes agranda la próxima" :
+    `Te faltan ${PTS_POR_CHANCE - resto} puntos para otra chance`;
+  $("#ctaSub").textContent = p === 0
+    ? "Podés participar igual: con calificar tu experiencia ya arrancás."
+    : `Con lo que cargaste entrás al sorteo de julio con ${t === 1 ? "1 chance" : t + " chances"}.`;
+}
+
+/* ---------- cards de cortinas ---------- */
+const itemsBox = $("#items");
+PRESUPUESTO.items.forEach(item => {
+  const card = document.createElement("article");
+  card.className = "item";
+  card.innerHTML = `
+    <div class="item-head">
+      <img src="${item.img}" alt="" />
+      <div class="item-title">
+        <h3>${item.ambiente}</h3>
+        <span>${item.producto} en tela ${item.tela}</span>
+      </div>
+      <div class="item-pts"><b>+10</b> foto<br /><b>+25</b> video</div>
+    </div>
+    <label class="drop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+      <span class="drop-cta">Arrastrá tu foto o <u>tocá para elegir</u></span>
+      <small>Desde el teléfono podés sacarla en el momento</small>
+      <input type="file" accept="image/*,video/*" multiple />
+    </label>
+    <div class="previews"></div>`;
+  itemsBox.appendChild(card);
+
+  const drop = card.querySelector(".drop");
+  const input = card.querySelector("input");
+  const previews = card.querySelector(".previews");
+
+  input.addEventListener("change", () => { addFiles(item.id, input.files, previews); input.value = ""; });
+  drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); addFiles(item.id, e.dataTransfer.files, previews); });
+});
+
+function addFiles(itemId, fileList, previews) {
+  [...fileList].forEach(file => {
+    const esVideo = file.type.startsWith("video/");
+    if (!esVideo && !file.type.startsWith("image/")) return;
+    const entry = { file, esVideo, url: URL.createObjectURL(file) };
+    state.archivos[itemId].push(entry);
+
+    /* TODO(Nico): acá conviene subir el archivo apenas se elige (upload progresivo),
+       así el cliente no pierde nada si cierra la página. Para imágenes, comprimir
+       antes de subir: canvas a máx 1600px de lado, JPEG q0.82 (el cliente está en
+       mobile con datos). El mockup solo previsualiza. */
+
+    const pv = document.createElement("div");
+    pv.className = "pv";
+    pv.innerHTML = (esVideo
+      ? `<video src="${entry.url}" muted playsinline></video><span class="vtag">VIDEO</span>`
+      : `<img src="${entry.url}" alt="" />`)
+      + `<button type="button" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
+    pv.querySelector("button").addEventListener("click", () => {
+      state.archivos[itemId] = state.archivos[itemId].filter(e => e !== entry);
+      URL.revokeObjectURL(entry.url);
+      pv.remove(); renderPuntos();
+    });
+    previews.appendChild(pv);
+  });
+  renderPuntos();
+}
+
+/* ---------- estrellas ---------- */
+const PALABRAS = ["", "Uh, contanos qué pasó", "Podemos mejorar", "Bien", "Muy buena", "Excelente"];
+const starsBox = $("#stars");
+for (let i = 1; i <= 5; i++) {
+  const b = document.createElement("button");
+  b.type = "button"; b.setAttribute("aria-label", i + (i === 1 ? " estrella" : " estrellas"));
+  b.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>`;
+  b.addEventListener("click", () => {
+    state.estrellas = i;
+    [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < i));
+    $("#starsWord").textContent = PALABRAS[i];
+    saveLocal(); renderPuntos();
+  });
+  starsBox.appendChild(b);
+}
+
+/* ---------- audio estilo nota de voz ---------- */
+const audioUI = $("#audioUI");
+let mediaRecorder = null, chunks = [], recTimer = null, recSeconds = 0, audioEl = null;
+
+function fmt(s) { return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"); }
+
+function renderAudio(stateName) {
+  if (stateName === "idle") {
+    audioUI.innerHTML = `<button type="button" class="rec-btn" id="recStart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
+      Grabar mi mensaje</button>`;
+    $("#recStart").addEventListener("click", startRec);
+  }
+  if (stateName === "recording") {
+    const bars = Array.from({ length: 26 }, (_, i) => `<i style="animation-delay:${(i * 73) % 900}ms"></i>`).join("");
+    audioUI.innerHTML = `<div class="rec-live">
+      <span class="rec-dot"></span><span class="rec-time" id="recTime">0:00</span>
+      <div class="eq">${bars}</div>
+      <button type="button" class="rec-stop" id="recStop" aria-label="Frenar grabación"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
+    </div>`;
+    $("#recStop").addEventListener("click", () => mediaRecorder && mediaRecorder.stop());
+  }
+  if (stateName === "recorded") {
+    audioUI.innerHTML = `<div class="voice-note">
+      <button type="button" class="vn-play" id="vnPlay" aria-label="Escuchar"><svg id="vnIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11-7.2c.6-.4.6-1.4 0-1.8l-11-7.2c-.7-.4-1.6.1-1.6.9z"/></svg></button>
+      <div class="vn-track"><i id="vnFill"></i></div>
+      <span class="vn-time" id="vnTime">${fmt(recSeconds)}</span>
+    </div>
+    <div class="audio-actions">
+      <button type="button" id="reRec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Grabar de nuevo</button>
+      <button type="button" class="del" id="delRec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>Borrar</button>
+    </div>`;
+    const url = URL.createObjectURL(state.audioBlob);
+    audioEl = new Audio(url);
+    const icon = () => $("#vnIcon").innerHTML = audioEl.paused
+      ? `<path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11-7.2c.6-.4.6-1.4 0-1.8l-11-7.2c-.7-.4-1.6.1-1.6.9z"/>`
+      : `<rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/>`;
+    $("#vnPlay").addEventListener("click", () => { audioEl.paused ? audioEl.play() : audioEl.pause(); icon(); });
+    audioEl.addEventListener("pause", icon); audioEl.addEventListener("play", icon);
+    audioEl.addEventListener("timeupdate", () => {
+      const d = audioEl.duration && isFinite(audioEl.duration) ? audioEl.duration : recSeconds;
+      $("#vnFill").style.width = (audioEl.currentTime / d * 100) + "%";
+      $("#vnTime").textContent = fmt(d - audioEl.currentTime);
+    });
+    audioEl.addEventListener("ended", () => { $("#vnFill").style.width = "0%"; $("#vnTime").textContent = fmt(recSeconds); icon(); });
+    $("#reRec").addEventListener("click", () => { limpiarAudio(); startRec(); });
+    $("#delRec").addEventListener("click", () => { limpiarAudio(); renderAudio("idle"); renderPuntos(); });
+  }
+}
+function limpiarAudio() {
+  if (audioEl) { audioEl.pause(); audioEl = null; }
+  state.audioBlob = null;
+}
+async function startRec() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    chunks = []; recSeconds = 0;
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      clearInterval(recTimer);
+      stream.getTracks().forEach(t => t.stop());
+      state.audioBlob = new Blob(chunks, { type: mediaRecorder.mimeType });
+      renderAudio("recorded"); renderPuntos();
+    };
+    mediaRecorder.start();
+    renderAudio("recording");
+    recTimer = setInterval(() => { recSeconds++; const t = $("#recTime"); if (t) t.textContent = fmt(recSeconds); }, 1000);
+  } catch (err) {
+    audioUI.innerHTML = `<p class="audio-err">No pudimos acceder al micrófono. Fijate el permiso del navegador y probá de nuevo.</p>
+      <button type="button" class="rec-btn" id="recStart" style="margin-top:10px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
+      Probar de nuevo</button>`;
+    $("#recStart").addEventListener("click", startRec);
+  }
+}
+renderAudio("idle");
+
+/* ---------- texto ---------- */
+const reviewText = $("#reviewText");
+reviewText.addEventListener("input", () => {
+  state.textoOk = reviewText.value.trim().length >= 20; /* con 20 caracteres cuenta, para que "ok" no sume */
+  saveLocal(); renderPuntos();
+});
+
+/* ---------- persistencia liviana (estrellas + texto) ---------- */
+/* Los archivos NO se persisten en el mockup: en producción se suben apenas se
+   eligen (ver TODO en addFiles) y este localStorage deja de hacer falta. */
+const LS_KEY = "rs-experiencia";
+function saveLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify({ e: state.estrellas, t: reviewText.value })); } catch (_) {}
+}
+try {
+  const prev = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+  if (prev) {
+    if (prev.e) { state.estrellas = prev.e; [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e)); $("#starsWord").textContent = PALABRAS[prev.e]; }
+    if (prev.t) { reviewText.value = prev.t; state.textoOk = prev.t.trim().length >= 20; }
+  }
+} catch (_) {}
+
+/* ---------- bases ---------- */
+const basesModal = $("#basesModal");
+["openBases", "openBases2"].forEach(id => $("#" + id).addEventListener("click", e => { e.preventDefault(); basesModal.showModal(); }));
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+
+/* ---------- envío ---------- */
+$("#submitBtn").addEventListener("click", enviar);
+$("#exitConfirm").addEventListener("click", () => { $("#exitModal").close(); enviar(); });
+
+function enviar() {
+  const consent = $("#consent");
+  if (!consent.checked) {
+    $("#consentBox").classList.add("err");
+    $("#consentBox").scrollIntoView({ block: "center", behavior: "smooth" });
+    setTimeout(() => $("#consentBox").classList.remove("err"), 2500);
+    return;
+  }
+  if (totalPuntos() === 0 && !state.estrellas) {
+    $(".stars-block").scrollIntoView({ block: "center", behavior: "smooth" });
+    $("#starsWord").textContent = "Con calificar tu experiencia ya participás";
+    return;
+  }
+
+  /* TODO(Nico): armar el POST real. Contrato propuesto:
+     POST /api/v2/reviews  (multipart/form-data)
+       token            -> el de la URL
+       estrellas        -> 1..5
+       texto            -> string
+       consentimiento   -> true (obligatorio)
+       audio            -> blob webm/ogg (state.audioBlob)
+       media[<itemId>][] -> archivos por ítem (state.archivos)
+     Respuesta: { puntos, chances } calculados server-side (nunca confiar en el cliente).
+     Ejemplo:
+       const fd = new FormData();
+       fd.append("token", new URLSearchParams(location.search).get("t") || "");
+       fd.append("estrellas", state.estrellas);
+       fd.append("texto", reviewText.value.trim());
+       if (state.audioBlob) fd.append("audio", state.audioBlob, "experiencia.webm");
+       Object.entries(state.archivos).forEach(([id, list]) =>
+         list.forEach(e => fd.append(`media[${id}][]`, e.file)));
+       await fetch("/api/v2/reviews", { method: "POST", body: fd });
+  */
+
+  state.enviado = true;
+  try { localStorage.removeItem(LS_KEY); } catch (_) {}
+  const p = totalPuntos(), t = chancesDe(p);
+  $("#grSub").textContent = state.archivos && Object.values(state.archivos).flat().length
+    ? "Tu experiencia quedó registrada. Gracias por mostrarnos cómo quedó tu casa."
+    : "Tu experiencia quedó registrada. Si después querés sumar fotos, entrá de nuevo desde el mismo link.";
+  document.body.classList.add("done");
+  window.scrollTo({ top: 0 });
+  countUp($("#grPts"), p); countUp($("#grTickets"), t);
+  confetti();
+}
+function countUp(el, target) {
+  const t0 = performance.now(), dur = 900;
+  (function tick(now) {
+    const k = Math.min((now - t0) / dur, 1);
+    el.textContent = Math.round(target * (1 - Math.pow(1 - k, 3)));
+    if (k < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+function confetti() {
+  const colors = ["#B8662C", "#E8A33D", "#8E4D1F", "#C8BCA8", "#E8CBAA"];
+  const box = $("#gracias");
+  for (let i = 0; i < 36; i++) {
+    const c = document.createElement("span");
+    c.className = "confetti";
+    c.style.cssText = `left:${(i * 61) % 100}%;background:${colors[i % colors.length]};
+      animation-duration:${2.2 + (i % 5) * .45}s;animation-delay:${(i % 7) * .18}s;
+      width:${6 + (i % 3) * 3}px;height:${6 + ((i + 1) % 3) * 3}px;border-radius:${i % 2 ? "50%" : "2px"}`;
+    box.appendChild(c);
+  }
+}
+
+/* ---------- exit popup ----------
+   Armado por engagement: solo si hay puntos y no se envió. En mobile NO se usa
+   blur/visibilitychange (falsos positivos por multitasking): botón Atrás +
+   inactividad larga, con guardia de teclado. En desktop, cursor saliendo arriba. */
+let exitShown = false;
+const exitModal = $("#exitModal");
+function tryExit() {
+  if (exitShown || state.enviado || totalPuntos() === 0) return;
+  const ae = document.activeElement;
+  if (ae && (ae.tagName === "TEXTAREA" || ae.tagName === "INPUT")) return; /* teclado abierto */
+  if (basesModal.open || exitModal.open) return;
+  exitShown = true;
+  $("#exitPts").textContent = totalPuntos() + " puntos";
+  exitModal.showModal();
+}
+/* desktop: cursor hacia la barra del navegador */
+document.addEventListener("mouseout", e => {
+  if (!e.relatedTarget && e.clientY <= 0 && matchMedia("(pointer:fine)").matches) tryExit();
+});
+/* mobile: trampa de botón Atrás */
+history.pushState({ rs: 1 }, "");
+window.addEventListener("popstate", () => {
+  if (!exitShown && !state.enviado && totalPuntos() > 0) { history.pushState({ rs: 1 }, ""); tryExit(); }
+});
+/* mobile: inactividad de 75s con puntos cargados */
+let idleTimer = null;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (matchMedia("(pointer:coarse)").matches) idleTimer = setTimeout(tryExit, 75000);
+}
+["touchstart", "scroll", "keydown", "click"].forEach(ev => addEventListener(ev, resetIdle, { passive: true }));
+resetIdle();
+
+renderPuntos();
+</script>
+</body>
+</html>

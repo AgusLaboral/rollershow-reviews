@@ -1,0 +1,23 @@
+# Rollershow Reviews & Sorteo
+
+Mockup fase 1: web app para que clientes que ya compraron suban fotos/video de sus cortinas instaladas, califiquen con estrellas, dejen un mensaje de voz (estilo nota de WhatsApp) y una opinión escrita. Todo suma puntos que se traducen en chances de un sorteo mensual de 3 premios de decoración, anunciado en el Instagram de Rollershow.
+
+- **`index.html`** — single-file, vanilla HTML+CSS+JS, sin build ni dependencias. Mobile-first.
+- **`img/`** — hero generado + assets reutilizados del repo de la landing.
+- **`_scratch/`** — efímeros (screenshots de verificación), ignorado.
+- **`PLAN.md`** — plan del proyecto y decisiones.
+
+## Integración pendiente (Nico)
+
+Buscar `TODO(Nico)` en `index.html`:
+1. `GET /api/v2/presupuesto/:token` → cliente, vendedor (nombre + foto) e ítems comprados. El token llega por query (`?t=...`) desde el WhatsApp post-instalación.
+2. `POST /api/v2/reviews` (multipart) → estrellas, texto, audio, media por ítem, consentimiento. **Los puntos/chances se recalculan server-side.**
+3. Upload progresivo de archivos apenas se eligen + compresión de imágenes client-side (máx 1600px, JPEG q0.82).
+
+## Mecánica
+
+Foto 10 pts, video 25, audio 30, estrellas 5, texto 5. Cada 10 pts = 1 chance; toda participación confirmada tiene al menos 1 chance. Sorteo el último jueves hábil del mes, en vivo por Instagram.
+
+## Verificación
+
+`node _scratch/verify-reviews.mjs` (Playwright, requiere servir la carpeta en :8899): overflow horizontal, puntos, consentimiento, gracias, exit popup, bases.
