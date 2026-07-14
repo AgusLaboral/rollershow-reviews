@@ -20,6 +20,10 @@
   --fg:#1C1816; --fg-soft:#4A4039; --fg-mute:#87796D;
   --border:#E4DCCE; --border-strong:#C8BCA8;
   --accent:#B8662C; --accent-deep:#8E4D1F; --accent-soft:#F3E3D2; --on-accent:#FFFFFF;
+  /* Rojo Teja: color institucional de CTA (manual de marca, cap. 02 Color) */
+  --cta:#C63A21; --cta-glow:#D2451E; --cta-deep:#97290F;
+  /* Iconografía del audio en verde WhatsApp real, para que la interfaz se sienta familiar */
+  --whatsapp:#25D366; --whatsapp-deep:#1FAD53; --whatsapp-soft:#E3F5E8;
   --ok:#4C7A4C; --danger:#B23B3B;
   --font-display:"Bricolage Grotesque",system-ui,sans-serif;
   --font-body:"Manrope",system-ui,sans-serif;
@@ -98,9 +102,9 @@ section{padding:38px 0 6px}
 .item-title span{font-size:.82rem;color:var(--fg-mute);font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item-pts{margin-left:auto;flex:none;font-size:.75rem;font-weight:700;color:var(--fg-mute);text-align:right;line-height:1.35}
 .item-pts b{color:var(--accent-deep)}
-.drop{margin:0 16px 16px;border:2px dashed var(--border-strong);border-radius:var(--radius-sm);padding:20px 14px;
-  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;transition:border-color .2s,background .2s;min-width:0}
-.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop{border-top:1px solid var(--border);padding:18px 16px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;transition:background .2s;min-width:0}
+.drop.over{background:var(--accent-soft)}
 .drop svg{width:26px;height:26px;color:var(--accent)}
 .drop-cta{font-weight:700;font-size:.93rem}
 .drop-cta u{text-decoration-color:var(--accent);text-underline-offset:3px}
@@ -142,8 +146,8 @@ section{padding:38px 0 6px}
 /* ---------- Audio ---------- */
 .audio-sub{font-size:.85rem;color:var(--fg-mute);margin-top:3px}
 .audio-ui{margin-top:14px;min-height:58px}
-.rec-btn{display:flex;align-items:center;gap:11px;background:var(--accent);color:var(--on-accent);border-radius:999px;
-  padding:13px 20px;font-weight:700;font-size:.95rem;box-shadow:0 6px 18px -6px rgba(184,102,44,.5);transition:transform .15s}
+.rec-btn{display:flex;align-items:center;gap:11px;background:var(--whatsapp);color:#fff;border-radius:999px;
+  padding:13px 20px;font-weight:700;font-size:.95rem;box-shadow:0 6px 18px -6px rgba(37,211,102,.55);transition:transform .15s}
 .rec-btn:active{transform:scale(.97)}
 .rec-btn svg{width:19px;height:19px;flex:none}
 .rec-live{display:flex;align-items:center;gap:12px;background:var(--bg-muted);border-radius:999px;padding:9px 12px;min-width:0}
@@ -151,17 +155,17 @@ section{padding:38px 0 6px}
 @keyframes pulse{50%{opacity:.25}}
 .rec-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:.92rem;min-width:44px}
 .eq{display:flex;align-items:center;gap:3px;flex:1;height:26px;min-width:0;overflow:hidden}
-.eq i{width:3px;border-radius:2px;background:var(--accent);animation:eq .9s ease-in-out infinite}
+.eq i{width:3px;border-radius:2px;background:var(--whatsapp-deep);animation:eq .9s ease-in-out infinite}
 @keyframes eq{0%,100%{height:22%}50%{height:95%}}
 .rec-stop{width:40px;height:40px;border-radius:50%;background:var(--bg-deep);color:#fff;display:grid;place-items:center;flex:none}
 .rec-stop svg{width:15px;height:15px}
-.voice-note{display:flex;align-items:center;gap:11px;background:var(--accent-soft);border:1px solid #E8CBAA;
+.voice-note{display:flex;align-items:center;gap:11px;background:var(--whatsapp-soft);border:1px solid #C3E9CE;
   border-radius:999px;padding:8px 10px;min-width:0}
-.vn-play{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;flex:none}
+.vn-play{width:42px;height:42px;border-radius:50%;background:var(--whatsapp);color:#fff;display:grid;place-items:center;flex:none}
 .vn-play svg{width:16px;height:16px}
-.vn-track{flex:1;height:5px;background:#E4CCAF;border-radius:99px;overflow:hidden;min-width:0}
-.vn-track i{display:block;height:100%;width:0%;background:var(--accent-deep);border-radius:99px}
-.vn-time{font-size:.8rem;font-weight:700;color:var(--accent-deep);font-variant-numeric:tabular-nums;flex:none}
+.vn-track{flex:1;height:5px;background:#C3E9CE;border-radius:99px;overflow:hidden;min-width:0}
+.vn-track i{display:block;height:100%;width:0%;background:var(--whatsapp-deep);border-radius:99px}
+.vn-time{font-size:.8rem;font-weight:700;color:var(--whatsapp-deep);font-variant-numeric:tabular-nums;flex:none}
 .audio-actions{display:flex;gap:14px;margin-top:11px}
 .audio-actions button{font-size:.83rem;font-weight:700;color:var(--fg-mute);display:inline-flex;align-items:center;gap:6px}
 .audio-actions button svg{width:14px;height:14px}
@@ -175,15 +179,17 @@ section{padding:38px 0 6px}
 
 /* ---------- Cierre ---------- */
 .cierre{padding:30px 0 60px}
-.consent{display:flex;gap:11px;align-items:flex-start;background:var(--bg-muted);border-radius:var(--radius-sm);padding:14px 15px}
+.consent{display:flex;gap:11px;align-items:flex-start}
 .consent input{width:19px;height:19px;margin-top:2px;accent-color:var(--accent);flex:none}
 .consent label{font-size:.86rem;color:var(--fg-soft)}
-.consent.err{outline:2px solid var(--danger)}
-.cta{display:flex;width:100%;justify-content:center;align-items:center;gap:10px;margin-top:16px;background:var(--accent);
-  color:var(--on-accent);font-family:var(--font-display);font-weight:700;font-size:1.15rem;border-radius:var(--radius);
-  padding:17px 20px;box-shadow:0 10px 26px -8px rgba(184,102,44,.55);transition:transform .15s,background .2s}
+.consent.err label{color:var(--danger)}
+.cta{display:flex;width:100%;justify-content:center;align-items:center;gap:10px;margin-top:16px;
+  background:linear-gradient(120deg,var(--cta-glow),var(--cta-deep),var(--cta-glow));background-size:220% 220%;
+  animation:brasa 5s ease-in-out infinite;color:var(--on-accent);font-family:var(--font-display);font-weight:700;
+  font-size:1.15rem;border-radius:var(--radius);padding:17px 20px;box-shadow:0 10px 28px -8px rgba(198,58,33,.55);
+  transition:transform .15s}
 .cta:active{transform:scale(.98)}
-.cta:hover{background:var(--accent-deep)}
+@keyframes brasa{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .cta-sub{text-align:center;font-size:.8rem;color:var(--fg-mute);margin-top:10px}
 
 /* ---------- Gracias ---------- */
@@ -241,8 +247,11 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
    de sobra para separarlos estructuralmente en vez de desvanecer la imagen.
    El grid va en .hero (padre real de .hero-media y .hero-inner, que son hermanos). */
 @media (min-width:900px){
+  /* Un solo sistema de contenedor: hero y secciones comparten ancho y margen,
+     así los bordes quedan alineados al bajar por la página (antes el hero
+     usaba 1120px y el resto 680px — dos anchos distintos, se notaba el salto). */
   .hero{background:var(--bg);display:grid;grid-template-columns:1fr 1fr;
-    max-width:1120px;margin:0 auto;column-gap:64px;padding:0 40px}
+    max-width:1080px;margin:0 auto;column-gap:64px;padding:0 40px}
   .hero-media{position:static;grid-column:2;grid-row:1;border-radius:24px;
     overflow:hidden;box-shadow:var(--shadow);min-height:440px}
   .hero-media::after{display:none}
@@ -251,6 +260,15 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
     padding:56px 0 64px;justify-content:center}
   .hero-copy{margin-top:32px;padding-top:0;max-width:44ch}
   .hero h1{font-size:clamp(2.3rem,3.6vw,2.9rem)}
+
+  .wrap{max-width:1080px;padding:0 40px}
+  .chancebar-in{max-width:1080px;padding:10px 40px}
+  /* Tus cortinas: grid de 2 columnas real, no una sola card estirada al ancho completo */
+  #items{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .item{margin-top:0}
+  /* El resto del contenido queda en una columna de lectura, alineada a la
+     izquierda del contenedor (misma línea que el título del hero) */
+  .sec-head,.tips,.experiencia,.consent,.cta,.cta-sub{max-width:720px}
 }
 </style>
 </head>
