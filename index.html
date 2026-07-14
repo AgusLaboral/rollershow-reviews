@@ -45,9 +45,6 @@ a{color:var(--accent-deep)}
 .hero-media img{width:100%;height:100%;object-fit:cover;object-position:72% 50%}
 .hero-media::after{content:"";position:absolute;inset:0;
   background:linear-gradient(100deg,rgba(250,247,242,.97) 0%,rgba(250,247,242,.93) 42%,rgba(250,247,242,.62) 66%,rgba(250,247,242,.12) 88%,rgba(250,247,242,0) 100%)}
-@media (min-width:640px){
-  .hero-media::after{background:linear-gradient(100deg,rgba(250,247,242,.96) 0%,rgba(250,247,242,.88) 34%,rgba(250,247,242,.30) 62%,rgba(250,247,242,0) 82%)}
-}
 .hero-inner{position:relative;max-width:680px;margin:0 auto;padding:22px 20px 30px;min-height:430px;display:flex;flex-direction:column}
 .hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hero-top img{height:26px;width:auto}
@@ -55,7 +52,6 @@ a{color:var(--accent-deep)}
   border:1px solid var(--border-strong);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.55)}
 .ig-link svg{width:15px;height:15px}
 .hero-copy{margin-top:auto;padding-top:170px;max-width:30ch}
-.hero-eyebrow{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep)}
 .hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(1.9rem,7.2vw,2.7rem);line-height:1.06;margin:10px 0 12px;letter-spacing:-.01em}
 .hero p{color:var(--fg-soft);font-size:1rem;max-width:36ch}
 .hero-fecha{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--bg-deep);color:#F5EFE6;
@@ -84,8 +80,7 @@ a{color:var(--accent-deep)}
 section{padding:38px 0 6px}
 .sec-head h2{font-family:var(--font-display);font-weight:800;font-size:1.5rem;letter-spacing:-.01em}
 .sec-head p{color:var(--fg-soft);margin-top:5px;font-size:.95rem}
-.pts-hint{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:700;color:var(--accent-deep);
-  background:var(--accent-soft);border-radius:999px;padding:3px 10px;vertical-align:2px}
+.pts-hint{font-size:inherit;font-weight:800;color:var(--accent-deep)}
 
 /* ---------- Tips de foto ---------- */
 .tips{display:flex;gap:8px;margin:16px 0 4px;flex-wrap:wrap}
@@ -123,17 +118,19 @@ section{padding:38px 0 6px}
   color:#fff;display:grid;place-items:center;line-height:0}
 .pv button svg{width:11px;height:11px}
 
-/* ---------- Vendedor ---------- */
-.vendedor{display:flex;align-items:center;gap:15px;background:var(--bg-elev);border:1px solid var(--border);
-  border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-top:18px;min-width:0}
-.vendedor img{width:62px;height:62px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--accent-soft)}
+/* ---------- Panel de experiencia (una sola pieza, no 4 cards repetidas) ---------- */
+.experiencia{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-top:18px;overflow:hidden}
+.exp-row{padding:20px 18px;border-top:1px solid var(--border)}
+.exp-row:first-child{border-top:none}
+
+.vendedor{display:flex;align-items:center;gap:15px;padding:16px 18px;min-width:0}
+.vendedor img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--accent-soft)}
 .vendedor-txt{min-width:0}
 .vendedor-txt strong{font-family:var(--font-display);font-weight:700;font-size:1.02rem;display:block}
 .vendedor-txt p{font-size:.88rem;color:var(--fg-soft);margin-top:2px}
 
 /* ---------- Estrellas ---------- */
-.stars-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:18px 16px;margin-top:14px}
 .block-label{font-weight:700;font-size:.98rem;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .stars{display:flex;gap:6px;margin-top:12px}
 .stars button{padding:4px;border-radius:8px;transition:transform .15s}
@@ -143,8 +140,6 @@ section{padding:38px 0 6px}
 .stars-word{font-size:.85rem;font-weight:700;color:var(--accent-deep);margin-top:8px;min-height:1.3em}
 
 /* ---------- Audio ---------- */
-.audio-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:18px 16px;margin-top:14px}
 .audio-sub{font-size:.85rem;color:var(--fg-mute);margin-top:3px}
 .audio-ui{margin-top:14px;min-height:58px}
 .rec-btn{display:flex;align-items:center;gap:11px;background:var(--accent);color:var(--on-accent);border-radius:999px;
@@ -174,11 +169,9 @@ section{padding:38px 0 6px}
 .audio-err{font-size:.85rem;color:var(--danger);margin-top:10px}
 
 /* ---------- Texto ---------- */
-.text-block{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:18px 16px;margin-top:14px}
-.text-block textarea{width:100%;min-height:96px;margin-top:12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+.exp-row textarea{width:100%;min-height:96px;margin-top:12px;border:1px solid var(--border);border-radius:var(--radius-sm);
   padding:12px;font:inherit;font-size:.93rem;resize:vertical;background:var(--bg);color:var(--fg)}
-.text-block textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.exp-row textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
 
 /* ---------- Cierre ---------- */
 .cierre{padding:30px 0 60px}
@@ -237,9 +230,27 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
 #exitModal .cta{margin-top:18px;font-size:1.02rem;padding:14px}
 #exitModal .stay{margin-top:12px;font-weight:700;font-size:.88rem;color:var(--fg-mute);width:100%}
 
-@media (min-width:640px){
+@media (min-width:640px) and (max-width:899px){
   .hero-inner{min-height:480px;padding:28px 20px 44px}
   .hero-copy{padding-top:150px}
+}
+
+/* Desktop: composición real de dos columnas — la foto vive en su propio marco,
+   el texto en un panel sólido. Sin degradado sobre la imagen: mobile resuelve
+   contraste con overlay porque la foto ocupa todo el ancho; desktop tiene lugar
+   de sobra para separarlos estructuralmente en vez de desvanecer la imagen.
+   El grid va en .hero (padre real de .hero-media y .hero-inner, que son hermanos). */
+@media (min-width:900px){
+  .hero{background:var(--bg);display:grid;grid-template-columns:1fr 1fr;
+    max-width:1120px;margin:0 auto;column-gap:64px;padding:0 40px}
+  .hero-media{position:static;grid-column:2;grid-row:1;border-radius:24px;
+    overflow:hidden;box-shadow:var(--shadow);min-height:440px}
+  .hero-media::after{display:none}
+  .hero-media img{object-position:50% 45%}
+  .hero-inner{grid-column:1;grid-row:1;max-width:none;margin:0;min-height:0;
+    padding:56px 0 64px;justify-content:center}
+  .hero-copy{margin-top:32px;padding-top:0;max-width:44ch}
+  .hero h1{font-size:clamp(2.3rem,3.6vw,2.9rem)}
 }
 </style>
 </head>
@@ -259,12 +270,11 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
       </a>
     </div>
     <div class="hero-copy">
-      <span class="hero-eyebrow">Sorteo mensual para clientes</span>
       <h1 id="heroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
       <p>Subí fotos de tus cortinas instaladas, contanos cómo fue tu experiencia y participá por <strong>3 premios de decoración</strong>. Cuanto más compartas, más chances tenés.</p>
       <span class="hero-fecha">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        Sorteo: jueves 31 de julio, en vivo por Instagram
+        Este mes sorteamos el jueves 31 de julio, en vivo por Instagram
       </span>
     </div>
   </div>
@@ -317,32 +327,34 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
         <p>Esto ayuda a otros a animarse, y a nosotros a seguir mejorando.</p>
       </div>
 
-      <!-- TODO(Nico): foto y nombre del vendedor vienen del presupuesto (GET /api/v2/presupuesto/:token). -->
-      <div class="vendedor">
-        <img id="vendFoto" src="" alt="" />
-        <div class="vendedor-txt">
-          <strong id="vendNombre"></strong>
-          <p id="vendCopy"></p>
+      <div class="experiencia">
+        <!-- TODO(Nico): foto y nombre del vendedor vienen del presupuesto (GET /api/v2/presupuesto/:token). -->
+        <div class="vendedor">
+          <img id="vendFoto" src="" alt="" />
+          <div class="vendedor-txt">
+            <strong id="vendNombre"></strong>
+            <p id="vendCopy"></p>
+          </div>
         </div>
-      </div>
 
-      <div class="stars-block">
-        <div class="block-label">¿Cómo fue comprar en Rollershow? <span class="pts-hint">+5</span></div>
-        <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
-          <!-- estrellas SVG propias, generadas por JS -->
+        <div class="exp-row">
+          <div class="block-label">¿Cómo fue comprar en Rollershow? <span class="pts-hint">+5</span></div>
+          <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
+            <!-- estrellas SVG propias, generadas por JS -->
+          </div>
+          <div class="stars-word" id="starsWord"></div>
         </div>
-        <div class="stars-word" id="starsWord"></div>
-      </div>
 
-      <div class="audio-block">
-        <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+30</span></div>
-        <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Lo podés escuchar y regrabar las veces que quieras.</p>
-        <div class="audio-ui" id="audioUI"></div>
-      </div>
+        <div class="exp-row">
+          <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+30</span></div>
+          <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Lo podés escuchar y regrabar las veces que quieras.</p>
+          <div class="audio-ui" id="audioUI"></div>
+        </div>
 
-      <div class="text-block">
-        <div class="block-label">¿Querés agregar algo por escrito? <span class="pts-hint">+5</span></div>
-        <textarea id="reviewText" placeholder="Lo que le dirías a alguien que está dudando…"></textarea>
+        <div class="exp-row">
+          <div class="block-label">¿Querés agregar algo por escrito? <span class="pts-hint">+5</span></div>
+          <textarea id="reviewText" placeholder="Lo que le dirías a alguien que está dudando…"></textarea>
+        </div>
       </div>
     </div>
   </section>
@@ -684,7 +696,7 @@ function enviar() {
     return;
   }
   if (totalPuntos() === 0 && !state.estrellas) {
-    $(".stars-block").scrollIntoView({ block: "center", behavior: "smooth" });
+    $(".experiencia").scrollIntoView({ block: "center", behavior: "smooth" });
     $("#starsWord").textContent = "Con calificar tu experiencia ya participás";
     return;
   }
