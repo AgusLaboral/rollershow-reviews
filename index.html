@@ -220,6 +220,32 @@ body.done #app,body.done .chancebar{display:none}
   padding:16px 22px;min-width:130px}
 .gr-score strong{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent-deep);display:block}
 .gr-score span{font-size:.8rem;font-weight:600;color:var(--fg-mute)}
+
+/* ---------- Duplicar chances con reseña de Google ---------- */
+.g-block{margin-top:34px;padding-top:30px;border-top:1px solid var(--border)}
+.g-block h3{font-family:var(--font-display);font-weight:800;font-size:1.2rem}
+.g-block p{color:var(--fg-soft);margin:8px auto 0;font-size:.92rem;max-width:36ch}
+.g-cta{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--cta);color:#fff;
+  text-decoration:none;font-weight:700;font-size:.98rem;border-radius:999px;padding:13px 24px;
+  box-shadow:0 8px 22px -6px rgba(198,58,33,.5);transition:transform .15s}
+.g-cta:active{transform:scale(.97)}
+.g-cta svg{width:16px;height:16px}
+.g-confirm{margin-top:6px}
+.g-confirm p{font-weight:700;color:var(--fg)}
+.g-confirm button{margin-top:12px;background:var(--cta);color:#fff;font-weight:700;border:none;
+  border-radius:999px;padding:12px 22px;font-size:.95rem;box-shadow:0 8px 22px -6px rgba(198,58,33,.5)}
+.g-validating{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;
+  color:var(--fg-soft);font-weight:600;font-size:.92rem}
+.g-spinner{width:17px;height:17px;border:2.5px solid var(--border-strong);border-top-color:var(--cta);
+  border-radius:50%;animation:gspin .8s linear infinite;flex:none}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.g-done{margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.g-done strong{color:var(--ok);font-weight:800;display:inline-flex;align-items:center;gap:7px;font-size:1rem}
+.g-done strong svg{width:17px;height:17px;flex:none}
+.g-done small{color:var(--fg-mute);font-size:.82rem;max-width:34ch}
+/* [hidden] pierde contra cualquier display propio de la clase (la hoja de
+   autor le gana a la del navegador aunque la especificidad sea igual) */
+.g-cta[hidden],.g-confirm[hidden],.g-validating[hidden],.g-done[hidden]{display:none}
 .gr-fecha{margin-top:26px;font-size:.95rem;color:var(--fg-soft)}
 .gr-fecha b{color:var(--fg)}
 .gr-ig{display:inline-flex;align-items:center;gap:10px;margin-top:16px;background:var(--bg-deep);color:#F5EFE6;
@@ -276,14 +302,20 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
 
   .wrap{max-width:1080px;padding:0 40px}
   .chancebar-in{max-width:1080px;padding:10px 40px}
-  .ganadores-track{scroll-padding-left:40px;padding:4px 40px 18px}
+  /* El carrusel es hermano de .wrap, no hijo: sin este centrado queda pegado
+     al borde real del viewport en vez de alinearse con el resto (bug real
+     en pantallas anchas, aunque a 1280-1440px no se notaba tanto). */
+  .ganadores-track{max-width:1080px;margin:16px auto 0;scroll-padding-left:40px;padding:4px 40px 18px}
   .ganador-card{flex-basis:190px}
   /* Tus cortinas: grid de 2 columnas real, no una sola card estirada al ancho completo */
   #items{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .item{margin-top:0}
-  /* El resto del contenido queda en una columna de lectura, alineada a la
-     izquierda del contenedor (misma línea que el título del hero) */
-  .sec-head,.tips,.experiencia,.consent,.cta,.cta-sub{max-width:720px}
+  /* Un solo ancho de contenedor para TODO el bloque (antes .experiencia/
+     .consent/.cta tenían su propio recorte a 720px, distinto del ancho de
+     #items — eso era lo que se veía descuajeringado: cada sección con su
+     propio borde derecho). La lectura larga se resuelve en el párrafo
+     (max-width en ch), nunca angostando el contenedor. */
+  .sec-head p{max-width:62ch}
 }
 </style>
 </head>
@@ -464,6 +496,34 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
       <div><strong id="grPts">0</strong><span>puntos juntados</span></div>
       <div><strong id="grTickets">0</strong><span>chances en el sorteo</span></div>
     </div>
+
+    <!-- Google no avisa si alguien realmente publicó la reseña (no hay webhook
+         de Google Business Profile para esto), así que la confirmación es
+         auto-reportada por el cliente. Rollershow asume ese margen de
+         confianza, igual que ya confía en que las fotos subidas son reales.
+         TODO(Agus/Nico): reemplazar el placeid de acá abajo por el link real
+         de reseña de Rollershow (Google Business Profile → Pedir reseñas →
+         copiar enlace, o el place_id desde search.google.com/local/writereview). -->
+    <div class="g-block" id="gBlock">
+      <h3>Duplicá tus chances</h3>
+      <p id="gIntro">Dejanos tu opinión en Google (se abre en una pestaña nueva) y cuando vuelvas confirmás acá para sumar el doble de puntos.</p>
+      <a class="g-cta" id="gReviewBtn" href="https://search.google.com/local/writereview?placeid=TODO_PLACE_ID_ROLLERSHOW" target="_blank" rel="noopener">
+        Dejar mi reseña en Google
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <div class="g-confirm" id="gConfirmStep" hidden>
+        <p>¿Ya la dejaste?</p>
+        <button type="button" id="gConfirmBtn">Confirmar reseña</button>
+      </div>
+      <div class="g-validating" id="gValidating" hidden>
+        <span class="g-spinner"></span> Confirmando tu reseña…
+      </div>
+      <div class="g-done" id="gDone" hidden>
+        <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg> Listo, duplicamos tus puntos</strong>
+        <small>Los ganadores salen con nombre completo y la fecha del sorteo — no te lo pierdas.</small>
+      </div>
+    </div>
+
     <p class="gr-fecha">El sorteo se hace <b>en vivo el jueves 31 de julio</b> por nuestro Instagram. Ahí anunciamos a los 3 ganadores.</p>
     <a class="gr-ig" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
@@ -806,11 +866,13 @@ function enviar() {
   countUp($("#grPts"), p); countUp($("#grTickets"), t);
   confetti();
 }
-function countUp(el, target) {
+function countUp(el, target) { countFromTo(el, 0, target); }
+function countFromTo(el, from, to) {
   const t0 = performance.now(), dur = 900;
   (function tick(now) {
     const k = Math.min((now - t0) / dur, 1);
-    el.textContent = Math.round(target * (1 - Math.pow(1 - k, 3)));
+    const eased = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(from + (to - from) * eased);
     if (k < 1) requestAnimationFrame(tick);
   })(t0);
 }
@@ -859,6 +921,32 @@ function resetIdle() {
 }
 ["touchstart", "scroll", "keydown", "click"].forEach(ev => addEventListener(ev, resetIdle, { passive: true }));
 resetIdle();
+
+/* ---------- Duplicar chances con reseña de Google ----------
+   Google no notifica si la reseña se publicó de verdad (no hay webhook de
+   Business Profile para esto), así que la confirmación queda auto-reportada
+   por el cliente — mismo nivel de confianza que ya le damos a las fotos que
+   sube. El "confirmando" es solo feedback visual, no valida nada server-side. */
+let googleDoubled = false;
+$("#gReviewBtn").addEventListener("click", () => {
+  $("#gIntro").style.display = "none";
+  $("#gReviewBtn").hidden = true;
+  $("#gConfirmStep").hidden = false;
+});
+$("#gConfirmBtn").addEventListener("click", () => {
+  if (googleDoubled) return;
+  googleDoubled = true;
+  $("#gConfirmStep").hidden = true;
+  $("#gValidating").hidden = false;
+  setTimeout(() => {
+    $("#gValidating").hidden = true;
+    $("#gDone").hidden = false;
+    const before = parseInt($("#grPts").textContent, 10) || 0;
+    const after = before * 2;
+    countFromTo($("#grPts"), before, after);
+    countFromTo($("#grTickets"), chancesDe(before), chancesDe(after));
+  }, 1700);
+});
 
 renderPuntos();
 </script>
