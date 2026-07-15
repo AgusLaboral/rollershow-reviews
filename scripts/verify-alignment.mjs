@@ -38,12 +38,16 @@ for (const viewport of viewports) {
       const content = step.querySelector('.step-content');
       const visual = step.querySelector('.item-visual');
       const task = step.querySelector('.item-task');
+      const secondary = step.querySelector('.step-secondary');
+      const next = step.querySelector('.next-peek');
       return {
         kind: step.dataset.flowStep,
         inner: rect(inner),
         content: content ? rect(content) : null,
         visual: visual ? rect(visual) : null,
         task: task ? rect(task) : null,
+        secondary: secondary ? rect(secondary) : null,
+        next: next ? rect(next) : null,
         verticalOverflow: step.scrollHeight - step.clientHeight,
       };
     };
@@ -80,6 +84,8 @@ for (const viewport of viewports) {
           !close(step.visual.left, report.master.left) || !close(step.task.right, report.master.right)) {
         fails.push(`${viewport.width}px ${step.kind}: columnas de producto fuera del grid maestro`);
       }
+      const nextGap = step.next.top - step.secondary.bottom;
+      if (nextGap < 8 || nextGap > 42) fails.push(`${viewport.width}px ${step.kind}: el próximo paso quedó desacoplado (${Math.round(nextGap)}px)`);
     }
     for (const step of report.steps.filter(step => step.content && !step.kind.startsWith('item-'))) {
       if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||

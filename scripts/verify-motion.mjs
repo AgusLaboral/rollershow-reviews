@@ -27,7 +27,8 @@ for (const variant of ['ambientes']) {
       roller: {
         visible: getComputedStyle(roller).visibility,
         transform: getComputedStyle(fabric).transform,
-        backdrop: getComputedStyle(fabric).backdropFilter || getComputedStyle(fabric).webkitBackdropFilter,
+        duration: getComputedStyle(fabric).animationDuration,
+        keyframes: fabric.getAnimations()[0]?.effect.getKeyframes().map(frame => ({ offset: frame.offset, easing: frame.easing, transform: frame.transform })),
         background: getComputedStyle(fabric).backgroundImage,
         color: getComputedStyle(fabric).backgroundColor,
         noise: getComputedStyle(fabric, '::after').backgroundImage,
@@ -38,10 +39,13 @@ for (const variant of ['ambientes']) {
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
   if (motion.roller.visible !== 'visible' || motion.roller.transform === 'none') fails.push(`${variant}: falta la cortina roller`);
-  if (!motion.roller.backdrop.includes('blur') || !motion.roller.noise.includes('data:image/svg+xml') || !motion.roller.color.startsWith('rgba')) {
-    fails.push(`${variant}: el material no combina transparencia, frost y microtextura ${JSON.stringify(motion.roller)}`);
+  if (!motion.roller.noise.includes('data:image/svg+xml') || !motion.roller.color.startsWith('rgba')) {
+    fails.push(`${variant}: el material no combina transparencia y microtextura ${JSON.stringify(motion.roller)}`);
   }
-  await page.waitForTimeout(900);
+  if (motion.roller.duration !== '1.2s' || motion.roller.keyframes?.length < 5 || !motion.roller.keyframes?.[0]?.easing.includes('cubic-bezier')) {
+    fails.push(`${variant}: la bajada no conserva el arranque lento y la aceleración ${JSON.stringify(motion.roller.keyframes)}`);
+  }
+  await page.waitForTimeout(1250);
   const settled = await page.evaluate(() => ({
     active: document.querySelectorAll('.flow-step.active').length,
     leaving: document.querySelectorAll('.flow-step.leaving').length,
@@ -53,6 +57,17 @@ for (const variant of ['ambientes']) {
   await page.close();
 }
 
+const heroPage = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+await heroPage.goto(BASE, { waitUntil: 'networkidle' });
+const heroMotion = await heroPage.evaluate(() => {
+  const layers = [...document.querySelectorAll('.intro-float')];
+  return { count: layers.length, names: layers.map(layer => getComputedStyle(layer).animationName) };
+});
+if (heroMotion.count !== 3 || new Set(heroMotion.names).size !== 3 || heroMotion.names.includes('none')) {
+  fails.push(`portada: los objetos no tienen movimientos independientes ${JSON.stringify(heroMotion)}`);
+}
+await heroPage.close();
+
 const reducedContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
 const reducedPage = await reducedContext.newPage();
 await reducedPage.goto(BASE, { waitUntil: 'networkidle' });
@@ -62,7 +77,7 @@ const reduced = await reducedPage.evaluate(() => ({
   visible: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
   duration: getComputedStyle(document.querySelector('.roller-fabric')).animationDuration,
 }));
-if (reduced.visible !== 'visible' || reduced.duration !== '0.68s') fails.push(`reduced-motion: coreografía alternativa ausente ${JSON.stringify(reduced)}`);
+if (reduced.visible !== 'visible' || reduced.duration !== '0.74s') fails.push(`reduced-motion: coreografía alternativa ausente ${JSON.stringify(reduced)}`);
 await reducedContext.close();
 
 for (const width of [1024, 1280, 1440, 1920]) {

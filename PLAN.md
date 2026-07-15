@@ -109,7 +109,15 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 ## 11. Consolidación visual y grid completo — 2026-07-15
 
 - Se eliminó la variante vertical: detrás de la cortina la diferencia no llegaba a leerse y mantenía dos comportamientos sin beneficio para la persona. Queda un único recorrido oficial con profundidad.
-- El material de la cortina pasó a sunscreen translúcido: trama tejida bidireccional, ruido fractal SVG, microvariación tonal y `backdrop-filter` para ver el ambiente refractado. Implementación nativa, sin sumar React, Three.js ni dependencias.
+- El material de la cortina pasó a sunscreen translúcido: trama tejida bidireccional, ruido fractal SVG y microvariación tonal. Se eliminó `backdrop-filter` y el blur de los planos porque provocaban cuadros negros en capturas/GPU; la transparencia y textura se conservan con CSS/SVG nativo.
 - Todas las etapas usan el mismo grid maestro. Producto ocupa columnas 1–7 y 8–12; calificación, audio, texto y confirmación ocupan columnas 3–10. Logo, copy y CTA de portada comparten el borde izquierdo del grid.
 - En mobile, las acciones de experiencia dejaron de quedar aisladas al fondo: aparecen inmediatamente después del bloque al que responden.
 - `scripts/verify-alignment.mjs` recorre las 9 etapas completas en 320/390/768/1024/1280/1440/1920 px; ya no valida sólo portada y primera cortina.
+
+## 12. Cierre de composición y handoff a Google — 2026-07-15
+
+- El último ambiente ya no empuja “Después: tu experiencia” al fondo de una columna artificialmente alta; queda ligado al bloque de acción con un espacio controlado.
+- La cortina dura 1,2 s: arranca casi detenida, acelera al cubrir y luego revela. Se verificó cuadro por cuadro y se retiraron filtros de composición inestables que generaban cuadros negros.
+- La portada suma tres capas recortadas del producto con movimientos lentos independientes, sin agregar requests ni distraer del único CTA.
+- Al confirmar, el foco y el scroll llegan al botón de Google con un pulso visible. El enlace viejo con un `placeid` inválido se reemplazó por una URL universal oficial de Google Maps al showroom de Roseti 1674.
+- Los tests ahora cubren el acople vertical del próximo paso, el timing de la cortina, las capas independientes de portada, el foco final y la estructura del enlace de Google.

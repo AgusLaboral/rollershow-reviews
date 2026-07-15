@@ -207,6 +207,7 @@ section{padding:38px 0 6px}
 /* ---------- Gracias ---------- */
 #gracias{display:none;position:relative;overflow:hidden;text-align:center;padding:64px 0 70px}
 body.done #gracias{display:block}
+#gracias>.wrap{position:relative;z-index:1}
 body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{display:none}
 .gr-badge{width:74px;height:74px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;
   margin:0 auto 20px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
@@ -228,6 +229,8 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
   text-decoration:none;font-weight:700;font-size:.98rem;border-radius:999px;padding:13px 24px;
   box-shadow:0 8px 22px -6px rgba(198,58,33,.5);transition:transform .15s}
 .g-cta:active{transform:scale(.97)}
+.g-cta.google-focus{animation:googleFocus 1.8s cubic-bezier(.16,1,.3,1) 2;outline:4px solid rgba(198,58,33,.2);outline-offset:7px}
+@keyframes googleFocus{0%,100%{transform:translateY(0);box-shadow:0 8px 22px -6px rgba(198,58,33,.5)}50%{transform:translateY(-4px);box-shadow:0 18px 34px -8px rgba(198,58,33,.72)}}
 .g-cta svg{width:16px;height:16px}
 .g-confirm{margin-top:6px}
 .g-confirm p{font-weight:700;color:var(--fg)}
@@ -251,7 +254,7 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
   text-decoration:none;font-weight:700;border-radius:var(--radius);padding:15px 26px;transition:transform .15s}
 .gr-ig:active{transform:scale(.97)}
 .gr-ig svg{width:19px;height:19px}
-.confetti{position:absolute;top:-12px;width:9px;height:9px;border-radius:50%;animation:fall linear forwards;pointer-events:none}
+.confetti{position:absolute;z-index:0;top:-12px;width:9px;height:9px;border-radius:50%;animation:fall linear forwards;pointer-events:none}
 @keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.15}}
 
 /* ---------- Footer ---------- */
@@ -358,7 +361,7 @@ body{min-height:100dvh}
   linear-gradient(102deg,rgba(255,255,255,.3),transparent 24%,rgba(116,98,78,.08) 52%,transparent 78%,rgba(255,255,255,.22)),
   repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 1px,rgba(92,76,60,.16) 1px 2px,transparent 2px 4px),
   repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,rgba(91,74,57,.11) 1px 2px,transparent 2px 5px);
-  -webkit-backdrop-filter:blur(8px) saturate(.72) contrast(1.08);backdrop-filter:blur(8px) saturate(.72) contrast(1.08);
+  /* La transparencia vive en el propio tejido: backdrop-filter parpadea en negro en algunas GPU. */
   box-shadow:0 28px 72px rgba(28,24,22,.3);transform:translate3d(0,-104%,0);will-change:transform}
 .roller-fabric::before{content:"";position:absolute;inset:0;z-index:1;background:
   radial-gradient(ellipse at 24% 18%,rgba(255,255,255,.23),transparent 38%),
@@ -367,21 +370,22 @@ body{min-height:100dvh}
 .roller-bar{position:absolute;z-index:4;left:0;right:0;bottom:0;height:11px;background:linear-gradient(180deg,#D2C8B8,#9C8D78);
   border-top:1px solid rgba(255,255,255,.52);box-shadow:0 9px 21px rgba(28,24,22,.3)}
 .flow-shell.curtain-running .roller-wipe{visibility:visible}
-.flow-shell.curtain-running .roller-tube{animation:rollerTube .9s ease both}
-.flow-shell.curtain-running .roller-fabric{animation:rollerPass .9s cubic-bezier(.65,0,.18,1) both}
+.flow-shell.curtain-running .roller-tube{animation:rollerTube 1.2s ease both}
+.flow-shell.curtain-running .roller-fabric{animation:rollerPass 1.2s linear both}
 @keyframes rollerPass{
-  0%{transform:translate3d(0,-104%,0)}
-  42%{transform:translate3d(0,0,0)}
-  54%{transform:translate3d(0,0,0)}
+  0%{transform:translate3d(0,-100%,0);animation-timing-function:cubic-bezier(.72,0,1,1)}
+  18%{transform:translate3d(0,-94%,0);animation-timing-function:cubic-bezier(.5,0,.18,1)}
+  58%{transform:translate3d(0,0,0)}
+  68%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(.16,1,.3,1)}
   100%{transform:translate3d(0,-104%,0)}
 }
-@keyframes rollerTube{0%,100%{opacity:0}8%,92%{opacity:1}}
+@keyframes rollerTube{0%,100%{opacity:0}4%,94%{opacity:1}}
 
 .flow-viewport{height:100%;position:relative;overflow:hidden;perspective:1400px;transform-style:preserve-3d}
 .flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));
   opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(8%,0,0) scale(.985);
-  transform-origin:50% 50%;transform-style:preserve-3d;will-change:transform,opacity,filter;
-  transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.16,1,.3,1),filter .55s cubic-bezier(.22,1,.36,1),visibility .72s}
+  transform-origin:50% 50%;transform-style:preserve-3d;will-change:transform,opacity;
+  transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.16,1,.3,1),visibility .72s}
 .flow-step.active{opacity:1;visibility:visible;pointer-events:auto;z-index:2;transform:translate3d(0,0,0)}
 .flow-step.leaving{visibility:visible;pointer-events:none;z-index:1}
 .step-inner{width:min(100%,520px);min-height:calc(100dvh - 128px);margin:0 auto;display:flex;flex-direction:column}
@@ -407,9 +411,17 @@ body{min-height:100dvh}
 /* Portada: premio primero, una sola salida. */
 .intro-step{padding:0;background:#EDE1D2}
 .intro-scene{position:absolute;inset:0;overflow:hidden}
-.intro-scene img{width:100%;height:100%;object-fit:cover;object-position:66% 50%;transform:scale(1.035);animation:heroBreath 9s ease-in-out infinite alternate}
+.intro-scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% 50%}
+.intro-base{transform:scale(1.035);animation:heroBreath 13s ease-in-out infinite alternate}
+.intro-float{pointer-events:none;will-change:transform;filter:saturate(1.03)}
+.intro-float-pillow{clip-path:polygon(0 16%,96% 16%,96% 69%,0 69%);animation:heroPillow 10s cubic-bezier(.45,0,.55,1) infinite alternate}
+.intro-float-rug{clip-path:polygon(12% 57%,100% 53%,100% 94%,12% 98%);animation:heroRug 12s cubic-bezier(.45,0,.55,1) -3s infinite alternate}
+.intro-float-vase{display:none}
 .intro-scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,247,242,.15) 0%,rgba(250,247,242,.45) 35%,rgba(250,247,242,.98) 72%,var(--bg) 100%)}
 @keyframes heroBreath{to{transform:scale(1.075) translate3d(-1.2%,0,0)}}
+@keyframes heroPillow{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.048) translate3d(5px,-6px,0)}}
+@keyframes heroRug{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.045) translate3d(-5px,5px,0)}}
+@keyframes heroVase{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.047) translate3d(4px,-4px,0)}}
 .intro-step .step-inner{position:relative;z-index:2;padding:80px 20px 28px;justify-content:flex-end;height:100%;min-height:0;width:min(100%,580px)}
 .intro-logo{position:absolute;top:22px;left:20px;width:202px;max-width:54vw}
 .intro-copy-block{display:flex;flex-direction:column;align-items:stretch}
@@ -474,13 +486,13 @@ body{min-height:100dvh}
 .item-visual,.item-task,.step-content{will-change:transform,opacity;transition:transform .82s cubic-bezier(.16,1,.3,1),opacity .5s ease-out}
 
 /* Ambientes: la cámara atraviesa un ambiente y el siguiente llega desde el fondo. */
-.variant-ambientes .flow-step{transform:translate3d(0,0,-280px) scale(.78);filter:blur(12px) saturate(.82);
+.variant-ambientes .flow-step{transform:translate3d(0,0,-280px) scale(.78);
   transition-duration:.56s,.82s,.62s,.82s}
-.variant-ambientes .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0) saturate(1)}
-.variant-ambientes .flow-step.active.entering{opacity:.18;transform:translate3d(0,2%, -280px) scale(.78);filter:blur(12px) saturate(.82)}
-.variant-ambientes .flow-shell[data-direction="forward"] .flow-step.leaving{opacity:0;transform:translate3d(0,-2%,220px) scale(1.18);filter:blur(14px) saturate(1.08)}
-.variant-ambientes .flow-shell[data-direction="back"] .flow-step.active.entering{opacity:.25;transform:translate3d(0,-2%,180px) scale(1.15);filter:blur(10px)}
-.variant-ambientes .flow-shell[data-direction="back"] .flow-step.leaving{opacity:0;transform:translate3d(0,2%,-260px) scale(.8);filter:blur(12px)}
+.variant-ambientes .flow-step.active{transform:translate3d(0,0,0) scale(1)}
+.variant-ambientes .flow-step.active.entering{opacity:.18;transform:translate3d(0,2%, -280px) scale(.78)}
+.variant-ambientes .flow-shell[data-direction="forward"] .flow-step.leaving{opacity:0;transform:translate3d(0,-2%,220px) scale(1.18)}
+.variant-ambientes .flow-shell[data-direction="back"] .flow-step.active.entering{opacity:.25;transform:translate3d(0,-2%,180px) scale(1.15)}
+.variant-ambientes .flow-shell[data-direction="back"] .flow-step.leaving{opacity:0;transform:translate3d(0,2%,-260px) scale(.8)}
 .variant-ambientes .flow-step.active.entering .item-visual{opacity:.35;transform:translate3d(-5%,2%,-120px) rotateY(-5deg)}
 .variant-ambientes .flow-step.active.entering .item-task{opacity:.2;transform:translate3d(14%,0,-170px) rotateY(4deg)}
 .variant-ambientes .flow-step.active.entering .step-content{opacity:.25;transform:translate3d(0,5%,-140px)}
@@ -489,9 +501,9 @@ body{min-height:100dvh}
 
 /* La animación sigue activa, pero con menos recorrido para quien lo solicita. */
 @media (prefers-reduced-motion:reduce){
-  .intro-scene img{animation-duration:18s;transform:scale(1.015)}
-  .flow-shell.curtain-running .roller-fabric{animation-duration:.68s}
-  .flow-shell.curtain-running .roller-tube{animation-duration:.68s}
+  .intro-base,.intro-float{animation-duration:24s;transform:scale(1.015)}
+  .flow-shell.curtain-running .roller-fabric{animation-duration:.74s}
+  .flow-shell.curtain-running .roller-tube{animation-duration:.74s}
   .variant-ambientes .flow-step{transition-duration:.38s;filter:none}
   .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
   .variant-ambientes .flow-step.active{transform:scale(1)}
@@ -514,7 +526,7 @@ body.done #flowApp{display:none}
   .next-peek{margin-top:12px;padding-top:10px}
 }
 @media (max-width:799px){
-  .roller-fabric{-webkit-backdrop-filter:none;backdrop-filter:none;background-color:rgba(221,213,200,.54)}
+  .roller-fabric{background-color:rgba(221,213,200,.54)}
 }
 @media (min-width:800px){
   .flow-head{left:50%;right:auto;width:min(calc(100% - 80px),1120px);padding-inline:0;transform:translateX(-50%)}
@@ -530,14 +542,17 @@ body.done #flowApp{display:none}
   .item-step .item-task{min-height:min(560px,calc(100dvh - 140px));justify-content:flex-start}
   .item-step .upload-zone{min-height:150px;margin-top:0}
   .item-step .step-actions{margin-top:22px;padding-top:0}
-  .item-step .next-peek{margin-top:auto}
   .item-step.has-media .upload-zone{min-height:64px}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
   .intro-step .intro-logo{left:0}
   .intro-step .intro-copy-block{width:min(100%,500px)}
   .intro-step .intro-copy-block .step-primary{width:max-content;min-width:270px}
   .intro-scene::after{background:linear-gradient(90deg,rgba(250,247,242,.98) 0%,rgba(250,247,242,.9) 40%,rgba(250,247,242,.08) 72%)}
-  .intro-scene img{object-position:72% 50%}.intro-step h1{font-size:3.65rem}.intro-prize{font-size:1.35rem}
+  .intro-scene img{object-position:72% 50%}
+  .intro-float-pillow{clip-path:polygon(34% 8%,80% 8%,82% 83%,35% 83%)}
+  .intro-float-rug{clip-path:polygon(42% 52%,100% 46%,100% 94%,42% 96%)}
+  .intro-float-vase{display:block;clip-path:polygon(74% 0,100% 0,100% 73%,73% 73%);animation:heroVase 14s cubic-bezier(.45,0,.55,1) -5s infinite alternate}
+  .intro-step h1{font-size:3.65rem}.intro-prize{font-size:1.35rem}
 }
 </style>
 </head>
@@ -562,7 +577,12 @@ body.done #flowApp{display:none}
   </div>
   <div class="flow-viewport" id="flowViewport">
     <section class="flow-step intro-step active" data-flow-step="intro" aria-hidden="false">
-      <div class="intro-scene"><img src="img/hero-premios.webp" srcset="img/hero-premios-768.webp 768w, img/hero-premios.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Almohadones y alfombras premium para el sorteo" fetchpriority="high" /></div>
+      <div class="intro-scene">
+        <img class="intro-base" src="img/hero-premios.webp" srcset="img/hero-premios-768.webp 768w, img/hero-premios.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Almohadones y alfombras premium para el sorteo" fetchpriority="high" />
+        <img class="intro-float intro-float-pillow" src="img/hero-premios.webp" alt="" aria-hidden="true" decoding="async" />
+        <img class="intro-float intro-float-rug" src="img/hero-premios.webp" alt="" aria-hidden="true" decoding="async" />
+        <img class="intro-float intro-float-vase" src="img/hero-premios.webp" alt="" aria-hidden="true" decoding="async" />
+      </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
         <div class="intro-copy-block">
@@ -798,7 +818,7 @@ body.done #flowApp{display:none}
     <div class="g-block" id="gBlock">
       <h3>Duplicá tus chances</h3>
       <p id="gIntro">Dejanos tu opinión en Google (se abre en una pestaña nueva) y cuando vuelvas confirmás acá para sumar el doble de puntos.</p>
-      <a class="g-cta" id="gReviewBtn" href="https://search.google.com/local/writereview?placeid=0x95bcb6719099596b:0x4354517b56352268" target="_blank" rel="noopener">
+      <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/search/?api=1&amp;query=Cortinas%20RollerShow%2C%20Roseti%201674%2C%20CABA" target="_blank" rel="noopener">
         Dejar mi reseña en Google
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -1208,9 +1228,9 @@ function goToFlow(target) {
   flowIndex = target; updateFlowChrome();
   requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("entering")));
   next.focus({ preventScroll: true });
-  setTimeout(() => { flowBusy = false; }, 620);
-  setTimeout(() => { current.classList.remove("leaving"); }, 860);
-  setTimeout(() => { app.classList.remove("curtain-running"); }, 940);
+  setTimeout(() => { flowBusy = false; }, 1040);
+  setTimeout(() => { current.classList.remove("leaving"); }, 1160);
+  setTimeout(() => { app.classList.remove("curtain-running"); }, 1240);
 }
 setupFlow();
 
@@ -1270,6 +1290,14 @@ function enviar() {
   $("#grTicketsLabel").textContent = t === 1 ? "chance en el sorteo" : "chances en el sorteo";
   countUp($("#grPts"), p); countUp($("#grTickets"), t);
   confetti();
+  setTimeout(() => {
+    const googleButton = $("#gReviewBtn");
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    googleButton.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    googleButton.focus({ preventScroll: true });
+    googleButton.classList.add("google-focus");
+    setTimeout(() => googleButton.classList.remove("google-focus"), 3800);
+  }, 1050);
 }
 function countUp(el, target) { countFromTo(el, 0, target); }
 function countFromTo(el, from, to) {

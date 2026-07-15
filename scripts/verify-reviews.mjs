@@ -8,7 +8,7 @@ await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch();
 const fails = [];
-const waitCurtain = page => page.waitForTimeout(950);
+const waitCurtain = page => page.waitForTimeout(1280);
 const testImage = {
   name: 'foto.jpg', mimeType: 'image/jpeg',
   buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),
@@ -80,6 +80,22 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
+    const googleHandoff = await page.evaluate(() => {
+      const button = document.querySelector('#gReviewBtn');
+      const url = new URL(button.href);
+      return {
+        focused: document.activeElement === button,
+        highlighted: button.classList.contains('google-focus'),
+        host: url.hostname,
+        path: url.pathname,
+        api: url.searchParams.get('api'),
+        query: url.searchParams.get('query'),
+      };
+    });
+    if (!googleHandoff.focused || !googleHandoff.highlighted) fails.push(`Google no recibe foco al finalizar ${JSON.stringify(googleHandoff)}`);
+    if (googleHandoff.host !== 'www.google.com' || !googleHandoff.path.startsWith('/maps/search/') || googleHandoff.api !== '1' || !googleHandoff.query?.includes('RollerShow')) {
+      fails.push(`enlace oficial de Google Maps incorrecto ${JSON.stringify(googleHandoff)}`);
+    }
 
     const [popup] = await Promise.all([ctx.waitForEvent('page'), page.click('#gReviewBtn')]);
     await popup.close().catch(() => {});
