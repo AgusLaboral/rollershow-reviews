@@ -43,7 +43,9 @@ for (const viewport of viewports) {
       const card = step.querySelector('.curtain-card');
       const upload = step.querySelector('.upload-zone');
       const secondary = step.querySelector('.step-secondary');
-      const next = step.querySelector('.next-peek');
+      const heading = step.querySelector('.item-heading');
+      const subtitle = step.querySelector('.item-subtitle');
+      const actions = step.querySelector('.step-actions');
       return {
         kind: step.dataset.flowStep,
         inner: rect(inner),
@@ -54,7 +56,10 @@ for (const viewport of viewports) {
         card: card ? rect(card) : null,
         upload: upload ? rect(upload) : null,
         secondary: secondary ? rect(secondary) : null,
-        next: next ? rect(next) : null,
+        heading: heading ? rect(heading) : null,
+        subtitle: subtitle ? rect(subtitle) : null,
+        actions: actions ? rect(actions) : null,
+        structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status,.reward-moment,.reward-flight'),
         verticalOverflow: step.scrollHeight - step.clientHeight,
       };
     };
@@ -96,8 +101,11 @@ for (const viewport of viewports) {
           !close(step.card.top, step.stage.top) || !close(step.upload.top, step.stage.top)) {
         fails.push(`${viewport.width}px ${step.kind}: producto y carga no forman una sola pieza`);
       }
-      const nextGap = step.next.top - step.secondary.bottom;
-      if (nextGap < 8 || nextGap > 42) fails.push(`${viewport.width}px ${step.kind}: el próximo paso quedó desacoplado (${Math.round(nextGap)}px)`);
+      const expectedActionLeft = report.master.left + 7 * (column + 24);
+      if (!close(step.heading.left, report.master.left) || !close(step.subtitle.left, report.master.left) ||
+          !close(step.actions.left, expectedActionLeft) || !close(step.actions.right, report.master.right) || step.structuralNoise) {
+        fails.push(`${viewport.width}px ${step.kind}: jerarquía interna fuera del grid o con ruido estructural`);
+      }
     }
     for (const step of report.steps.filter(step => step.content && !step.kind.startsWith('item-'))) {
       if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||
@@ -119,6 +127,10 @@ for (const viewport of viewports) {
     for (const step of report.steps.filter(step => step.kind !== 'intro')) {
       if (!close(step.inner.left, contentLeft) || !close(step.inner.right, viewport.width - contentLeft)) {
         fails.push(`${viewport.width}px ${step.kind}: margen móvil inconsistente`);
+      }
+      if (step.kind.startsWith('item-') && (!close(step.heading.left, contentLeft) || !close(step.stage.left, contentLeft) ||
+          !close(step.actions.left, contentLeft) || !close(step.actions.right, viewport.width - contentLeft) || step.structuralNoise)) {
+        fails.push(`${viewport.width}px ${step.kind}: composición interna móvil sin eje común`);
       }
     }
   }

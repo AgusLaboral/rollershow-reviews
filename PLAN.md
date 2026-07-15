@@ -151,6 +151,14 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Desenfocar los placeholders de alta resolución sin sustituirlos por thumbnails de baja.
 - [x] Reemplazar el placeholder por la foto/video real dentro de la misma superficie.
 - [x] Eliminar la miniatura duplicada del flujo multistep.
-- [x] Priorizar `+10`/`+25` con una celebración contenida y sin aviso global duplicado.
+- [x] Priorizar `+10`/`+25` con una banda roller local, sin confetti, rombos, toast ni puntos volando.
 - [x] Recalcular puntos y recuperar el archivo anterior o placeholder al borrar.
 - [x] Verificar flujo, movimiento, reduced motion, grid y overflow de 320 a 1920 px.
+
+## 17. Reset anti-IA y composición interna — 2026-07-15
+
+- [x] Eliminar pills de archivo, mini-preview siguiente, metadata sobre fondo variable y eyebrow de ambiente.
+- [x] Sacar todos los avisos flotantes y recompensas posicionadas por coordenadas de foto, estrellas, audio y texto.
+- [x] Separar los estados: antes de cargar manda el uploader; después manda continuar y “sumar otra” es secundario.
+- [x] Quitar cajas dobles en audio/texto y reemplazar las dos cards de confirmación por una frase.
+- [x] Medir ejes internos de título, superficie y acciones en cada ambiente y breakpoint.

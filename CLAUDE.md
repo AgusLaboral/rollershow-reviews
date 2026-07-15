@@ -120,7 +120,7 @@ Una segunda app, con su propia URL, para correr el sorteo en sí: lista de parti
 ## Reemplazo de referencia y recompensa de puntos — 2026-07-15
 
 - La referencia de cada ambiente parte desenfocada, pero conserva una fuente real de 1024×1024. El blur está pre-renderizado para no reintroducir los cuadros negros vistos con filtros CSS sobre planos animados. Al cargar una foto o video, el archivo del usuario la reemplaza dentro de la misma superficie; no se crea una miniatura ni una caja paralela.
-- La carga correcta dispara una sola recompensa local: `+10` o `+25` domina el ambiente con papel picado breve. El aviso global no se duplica para archivos; los puntos viajan al contador y se anuncian por `aria-live`.
-- Después de cargar, la foto pasa a ser protagonista, el uploader baja a “Sumar otra foto o video” y aparece el CTA para continuar. El contador/borrado es auxiliar y no compite con esos elementos.
+- La carga correcta dispara una sola recompensa local: `+10` o `+25` domina el ambiente detrás de una banda roller sunscreen que baja y se retira. No usar papel picado, rombos, toasts, barras de estado ni puntos que vuelan por coordenadas; el contador del header responde en su lugar y `aria-live` anuncia el logro.
+- Después de cargar, la foto pasa a ser protagonista y desaparece el uploader superpuesto. Continuar es el único CTA; “Sumar otra foto o video” queda como link secundario debajo. El borrado es un único control cuadrado alineado arriba a la derecha, sin contador ni pill.
 - Con varias cargas se muestra la última. Borrarla recupera la anterior; borrar la única recupera el placeholder, retira el estado completado y recalcula puntos/chances.
-- La aceptación automatizada cubre reemplazo real, ausencia de preview separado, suma acumulada, recuperación al borrar, reduced motion, grid y overflow de 320 a 1920 px.
+- La aceptación automatizada cubre reemplazo real, ausencia de previews/toasts/pills/eyebrows, suma acumulada, recuperación al borrar, ejes internos de título/superficie/acciones, reduced motion, grid y overflow de 320 a 1920 px.

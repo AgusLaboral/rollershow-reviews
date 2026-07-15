@@ -14,7 +14,7 @@ const testImage = 'C:/Users/Agus/Desktop/rollershow-reviews/img/blackout-sand-be
 async function reachConfirm(page, { withPhoto = false } = {}) {
   await page.click('#startFlow'); await waitCurtain(page);
   if (withPhoto) {
-    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(300);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
@@ -69,13 +69,14 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     src: step.querySelector('.curtain-photo img').getAttribute('src'),
     width: step.querySelector('.curtain-photo img').naturalWidth,
     unified: !!step.querySelector('.item-stage .item-visual') && !!step.querySelector('.item-stage .item-task'),
+    structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status'),
   })));
   if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
       environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
       environments[2]?.title !== 'Escritorio' || environments[3]?.title !== 'Home office') {
     fails.push(`${vp.w}px: fotos y nombres de ambientes no corresponden ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified)) {
+  if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
@@ -90,7 +91,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (await page.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-1') fails.push('el CTA no abre la primera cortina');
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
-    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(120);
     const photoReward = await page.evaluate(() => ({
       points: document.querySelector('.item-step.active .stage-score-burst strong')?.textContent,
@@ -100,47 +101,49 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       replacement: !!document.querySelector('.item-step.active .stage-user-media'),
       separatePreview: !!document.querySelector('.item-step.active .item-stage > .previews'),
       placeholderHidden: getComputedStyle(document.querySelector('.item-step.active .reference-media')).opacity === '0',
-      status: document.querySelector('.item-step.active .stage-media-status span')?.textContent,
+      remove: !!document.querySelector('.item-step.active .stage-remove'),
+      addMore: getComputedStyle(document.querySelector('.item-step.active .upload-more-action')).display !== 'none',
+      randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight,.score-paper').length,
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
-        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || photoReward.status !== '1 archivo') {
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
     await page.waitForTimeout(180);
     let pts = await page.textContent('#flowPts');
     if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
-    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .upload-more-action input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(80);
-    if (await page.textContent('#flowPts') !== '20' || await page.textContent('.flow-step.active .stage-media-status span') !== '2 archivos') fails.push('segunda foto: no suma ni actualiza el estado');
-    await page.click('.flow-step.active .stage-media-status button');
-    if (await page.textContent('#flowPts') !== '10' || await page.textContent('.flow-step.active .stage-media-status span') !== '1 archivo') fails.push('quitar la foto activa no recupera la anterior');
-    await page.click('.flow-step.active .stage-media-status button');
+    if (await page.textContent('#flowPts') !== '20') fails.push('segunda foto: no suma puntos');
+    await page.click('.flow-step.active .stage-remove');
+    if (await page.textContent('#flowPts') !== '10' || !(await page.isVisible('.flow-step.active .stage-user-media'))) fails.push('quitar la foto activa no recupera la anterior');
+    await page.click('.flow-step.active .stage-remove');
     const emptyStage = await page.evaluate(() => ({ points:document.querySelector('#flowPts')?.textContent, media:!!document.querySelector('.flow-step.active .stage-user-media'), hasMedia:document.querySelector('.flow-step.active')?.classList.contains('has-media') }));
     if (emptyStage.points !== '0' || emptyStage.media || emptyStage.hasMedia) fails.push(`quitar la última foto no recupera el placeholder ${JSON.stringify(emptyStage)}`);
-    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(80);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
 
     await page.locator('#stars button').nth(4).click();
     const ratingReward = await page.evaluate(() => ({
-      kind: document.querySelector('.reward-moment')?.dataset.kind,
-      points: document.querySelector('.reward-points')?.textContent,
+      live: document.querySelector('#rewardLive')?.textContent,
+      randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight').length,
       local: document.querySelector('.rating-step')?.classList.contains('rating-reward'),
     }));
-    if (ratingReward.kind !== 'rating' || ratingReward.points !== '+5' || !ratingReward.local) fails.push(`estrellas: recompensa incompleta ${JSON.stringify(ratingReward)}`);
+    if (!ratingReward.live?.includes('5 puntos') || ratingReward.randomVisuals !== 0 || !ratingReward.local) fails.push(`estrellas: recompensa incompleta ${JSON.stringify(ratingReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
     await page.click('#ratingNext'); await waitCurtain(page);
     await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
     await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
     const textReward = await page.evaluate(() => ({
-      kind: document.querySelector('.reward-moment')?.dataset.kind,
-      points: document.querySelector('.reward-points')?.textContent,
+      live: document.querySelector('#rewardLive')?.textContent,
+      randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight').length,
       local: document.querySelector('.text-step')?.classList.contains('text-reward'),
     }));
-    if (textReward.kind !== 'text' || textReward.points !== '+5' || !textReward.local) fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
+    if (!textReward.live?.includes('5 puntos') || textReward.randomVisuals !== 0 || !textReward.local) fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
     await page.click('.text-step.active .step-primary'); await waitCurtain(page);
@@ -177,7 +180,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     const p2 = await ctx.newPage();
     await p2.goto(URL, { waitUntil: 'networkidle' });
     await p2.click('#startFlow'); await waitCurtain(p2);
-    await p2.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await p2.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
     await p2.goBack(); await p2.waitForTimeout(500);
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
 
@@ -194,12 +197,12 @@ const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } }
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'networkidle' });
 await dpage.evaluate(() => window.celebrateAction('audio', { points:30, anchor:document.querySelector('#startFlow'), detail:'Audio guardado' }));
-const audioReward = await dpage.evaluate(() => ({ kind:document.querySelector('.reward-moment')?.dataset.kind, live:document.querySelector('#rewardLive')?.textContent }));
-if (audioReward.kind !== 'audio' || !audioReward.live?.includes('30 puntos')) fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
+const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent }));
+if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos')) fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
-await dpage.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(120);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 await dctx.close();
