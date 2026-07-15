@@ -196,3 +196,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Al cambiar de etapa, desplegar ese mismo cilindro hasta el ancho del grid y bajar desde ahí la tela sunscreen.
 - [x] Alinear roller, tela, progreso y contenido al mismo grid en mobile y desktop.
 - [x] Verificar por cuadro el estado en reposo, el despliegue y el cierre limpio de la transición.
+
+## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
+
+- [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
+- [x] Alinear puntaje y autorización como una misma fila semántica, no como dos cajas independientes.
+- [x] Hacer transparente el chrome del puntaje en el último paso para que la escena no quede cortada por un rectángulo opaco.
+- [x] Regenerar el hero en 1536×1024 con exactamente 3 almohadones y 2 alfombras, y servir una variante responsive de 768 px.
+- [x] Agregar regresiones automáticas para copy, transparencia, calidad del asset y alineación interna del cierre.

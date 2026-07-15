@@ -60,7 +60,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
-      !initial.copy.text?.includes('frase que ayude') || initial.copy.confirm !== 'Mirá todo lo que sumaste.' ||
+      !initial.copy.text?.includes('frase que ayude') || !initial.copy.confirm?.startsWith('Mostraste ') ||
       !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('duplicar tus chances')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
@@ -188,9 +188,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       consentBg: getComputedStyle(document.querySelector('#consentBox')).backgroundColor,
       fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
       concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
+      scoreBackground: getComputedStyle(document.querySelector('#flowScore')).backgroundColor,
+      hero: {
+        src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
+        width: document.querySelector('.confirm-prize-base')?.naturalWidth,
+      },
     }));
     if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 3 ||
-        !confirmBefore.proof.includes('oportunidades') || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
+        confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.hero.src?.includes('hero-premios-v2') || confirmBefore.hero.width < 1500 ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
     }
@@ -203,7 +209,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       title: document.querySelector('#confirmTitle').textContent,
       live: document.querySelector('#rewardLive').textContent,
     }));
-    if (confirmAfter.submitDisabled || !confirmAfter.authorized || !confirmAfter.title.includes('sorteo') || !confirmAfter.live.includes('Autorización lista')) {
+    if (confirmAfter.submitDisabled || !confirmAfter.authorized || confirmAfter.title !== 'Ya autorizaste el material.' || !confirmAfter.live.includes('Autorización lista')) {
       fails.push(`confirmación autorizada: relevo de CTA incompleto ${JSON.stringify(confirmAfter)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-confirm-ready.png` });

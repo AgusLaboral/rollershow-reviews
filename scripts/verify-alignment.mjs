@@ -46,6 +46,9 @@ for (const viewport of viewports) {
       const heading = step.querySelector('.item-heading');
       const subtitle = step.querySelector('.item-subtitle');
       const actions = step.querySelector('.step-actions');
+      const confirmScore = step.querySelector('.confirm-score');
+      const confirmActions = step.querySelector('.confirm-actions');
+      const title = step.querySelector('.step-title');
       return {
         kind: step.dataset.flowStep,
         inner: rect(inner),
@@ -59,6 +62,9 @@ for (const viewport of viewports) {
         heading: heading ? rect(heading) : null,
         subtitle: subtitle ? rect(subtitle) : null,
         actions: actions ? rect(actions) : null,
+        confirmScore: confirmScore ? rect(confirmScore) : null,
+        confirmActions: confirmActions ? rect(confirmActions) : null,
+        title: title ? rect(title) : null,
         structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status,.reward-moment,.reward-flight'),
         verticalOverflow: step.scrollHeight - step.clientHeight,
       };
@@ -124,6 +130,12 @@ for (const viewport of viewports) {
     if (!close(confirm.inner.left, report.master.left) || !close(confirm.inner.right, report.master.right) ||
         !close(confirm.content.left, report.master.left) || !close(confirm.content.right, report.master.right)) {
       fails.push(`${viewport.width}px confirm: celebración final fuera del grid maestro`);
+    }
+    const scoreCenter = (confirm.confirmScore.top + confirm.confirmScore.bottom) / 2;
+    const actionsCenter = (confirm.confirmActions.top + confirm.confirmActions.bottom) / 2;
+    if (!close(confirm.title.left, report.master.left) || !close(confirm.confirmScore.left, report.master.left) ||
+        Math.abs(scoreCenter - actionsCenter) > 16) {
+      fails.push(`${viewport.width}px confirm: puntaje y autorización no forman una misma fila semántica`);
     }
   } else {
     const contentWidth = Math.min(viewport.width - 40, 520);
