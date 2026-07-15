@@ -245,12 +245,17 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       return {
         focused: document.activeElement === button,
         highlighted: button.classList.contains('google-focus'),
+        buttonRect: { top:button.getBoundingClientRect().top, bottom:button.getBoundingClientRect().bottom },
+        chanceTop: document.querySelector('.gr-chances strong').getBoundingClientRect().top,
+        viewportHeight: innerHeight,
         host: url.hostname,
         path: url.pathname,
         href: button.href,
       };
     });
-    if (!googleHandoff.focused || !googleHandoff.highlighted) fails.push(`Google no recibe foco al finalizar ${JSON.stringify(googleHandoff)}`);
+    if (!googleHandoff.focused || !googleHandoff.highlighted || googleHandoff.buttonRect.top < 0 || googleHandoff.buttonRect.bottom > googleHandoff.viewportHeight || googleHandoff.chanceTop < -2) {
+      fails.push(`Google no recibe foco sin cortar el logro ${JSON.stringify(googleHandoff)}`);
+    }
     if (googleHandoff.host !== 'www.google.com'
       || !googleHandoff.path.startsWith('/maps/place/Cortinas+RollerShow/')
       || !googleHandoff.href.includes('0x95bcb6719099596b:0x4354517b56352268')

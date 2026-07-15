@@ -289,6 +289,12 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 .gr-score .gr-chances{animation-delay:1.18s}.gr-score .gr-points{animation-delay:1.42s;padding-bottom:1.2vw}
 @keyframes grMonumentIn{65%{opacity:1;transform:translate3d(0,-10px,24px) rotateX(-3deg)}100%{opacity:1;transform:none}}
 .gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 0 18px rgba(232,163,61,.16),0 28px 70px rgba(0,0,0,.38);font-variant-numeric:tabular-nums}
+.gr-score strong{position:relative;width:max-content;transform-style:preserve-3d;animation:grNumberFloat 5.5s ease-in-out 2.5s infinite alternate}
+.gr-score strong::before,.gr-score strong::after{content:attr(data-value);position:absolute;inset:0;pointer-events:none;z-index:-1}
+.gr-score strong::before{color:#5F2014;transform:translate3d(9px,13px,-42px);filter:blur(.45px);opacity:.8;text-shadow:0 24px 54px rgba(0,0,0,.52)}
+.gr-score strong::after{color:transparent;-webkit-text-stroke:1px rgba(255,239,214,.28);transform:translate3d(-3px,-4px,26px);opacity:.72}
+.gr-points strong::before{color:#6E5947;opacity:.62}
+@keyframes grNumberFloat{to{transform:perspective(760px) rotateX(-2.5deg) rotateY(1.6deg) translate3d(0,-4px,18px)}}
 .gr-chances strong{font-size:clamp(8rem,20vw,18rem);color:#F3A13D}.gr-points strong{font-size:clamp(5.2rem,11vw,10rem)}
 .gr-score span{display:flex;align-items:baseline;gap:9px;margin-top:22px;color:rgba(255,249,242,.7);font-size:clamp(.9rem,1.25vw,1.08rem);font-weight:600}
 .gr-score span b{font-family:var(--font-display);color:#FFF9F2;font-size:clamp(1.6rem,3vw,2.7rem);line-height:1}
@@ -1759,12 +1765,16 @@ function enviar() {
   $("#grTicketsLabel").textContent = t === 1 ? "activa en el sorteo" : "activas en el sorteo";
   $("#grPts").textContent = p;
   $("#grTickets").textContent = t;
+  $("#grPts").dataset.value = p;
+  $("#grTickets").dataset.value = t;
   startCelebration();
   setTimeout(() => {
     const googleButton = $("#gReviewBtn");
     const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    googleButton.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-    googleButton.focus({ preventScroll: true });
+    const rect = googleButton.getBoundingClientRect();
+    const targetTop = Math.max(0, scrollY + rect.top - innerHeight * .78);
+    scrollTo({ top:targetTop, behavior:reduceMotion ? "auto" : "smooth" });
+    googleButton.focus({ preventScroll:true });
     googleButton.classList.add("google-focus");
   }, 2850);
 }
@@ -1774,7 +1784,9 @@ function countFromTo(el, from, to) {
   (function tick(now) {
     const k = Math.min((now - t0) / dur, 1);
     const eased = 1 - Math.pow(1 - k, 3);
-    el.textContent = Math.round(from + (to - from) * eased);
+    const value = Math.round(from + (to - from) * eased);
+    el.textContent = value;
+    if (el.matches("#grPts,#grTickets")) el.dataset.value = value;
     if (k < 1) requestAnimationFrame(tick);
   })(t0);
 }

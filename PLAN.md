@@ -214,3 +214,5 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Reservar zonas de exclusión para que las partículas pasen por detrás de copy, labels y acciones.
 - [x] Hacer que Google tome foco y pulso permanente una vez asentado el festejo.
 - [x] Conservar una coreografía alternativa en reduced motion, DPR limitado y cantidad de partículas escalada para mobile.
+- [x] Dar volumen persistente a las cifras con capas tipográficas en Z, no sólo una entrada escalada.
+- [x] Recalcular el scroll del handoff para que Google quede completo sin cortar la parte superior del logro.
