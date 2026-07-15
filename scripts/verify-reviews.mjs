@@ -140,6 +140,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.waitForTimeout(180);
     let pts = await page.textContent('#flowPts');
     if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
+    const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
+    if (!addMoreCopy.includes('+10 puntos') || !addMoreCopy.includes('+25 puntos')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
     await page.locator('.flow-step.active .upload-more-action input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(80);
     if (await page.textContent('#flowPts') !== '20') fails.push('segunda foto: no suma puntos');
@@ -319,6 +321,7 @@ await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
 for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
 await dpage.locator('#stars button').nth(4).click();
 await dpage.click('#ratingNext'); await waitCurtain(dpage);
+if (!((await dpage.textContent('#recStart')) || '').includes('+30 puntos')) fails.push('grabar audio no recuerda que suma 30 puntos');
 await dpage.click('#recStart');
 await dpage.waitForTimeout(450);
 const recordingState = await dpage.evaluate(() => {
@@ -337,7 +340,7 @@ const recordingState = await dpage.evaluate(() => {
     simulatedCss: [...document.querySelectorAll('.eq i')].some(bar => getComputedStyle(bar).animationName !== 'none'),
   };
 });
-if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
+if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+30 puntos)' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
     recordingState.skipVisible || recordingState.activeStep !== 'audio' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss) fails.push(`audio grabando: jerarquía u onda real incorrecta ${JSON.stringify(recordingState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
 

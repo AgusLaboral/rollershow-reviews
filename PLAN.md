@@ -203,6 +203,13 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Integrar `Seguir sin foto` dentro de la superficie de carga y alinearlo exactamente con el CTA principal.
 - [x] Verificar la relación CTA → acción secundaria y el ancho del roller en 320, 390, 768, 1024, 1165, 1280, 1440 y 1920 px.
 
+## 26. Recompensa visible en cada decisión de aporte — 2026-07-15
+
+- [x] Mostrar `+10 puntos` y `+25` en el control para sumar otra foto o video.
+- [x] Mostrar `+30 puntos` al iniciar y al terminar una grabación nueva.
+- [x] Conservar calificación y texto con su puntaje junto a la acción, sin duplicarlo en CTAs de mero avance.
+- [x] Verificar copy y ajuste responsive en mobile y desktop.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
