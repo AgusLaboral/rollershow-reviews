@@ -283,36 +283,40 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes grCopyIn{to{opacity:1;transform:none}}
 #gracias h1{font-family:var(--font-display);font-weight:850;font-size:clamp(2.7rem,6.6vw,6.1rem);line-height:.88;letter-spacing:-.065em;text-wrap:balance}
 #gracias .gr-sub{color:rgba(255,249,242,.72);margin:20px 0 0;max-width:48ch;font-size:clamp(1rem,1.55vw,1.28rem)}
-.gr-score{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(230px,.75fr);align-items:end;gap:clamp(32px,6vw,100px);margin-top:clamp(34px,5dvh,64px);padding:0 0 clamp(30px,4dvh,48px);perspective:900px}
-.gr-score::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,rgba(255,249,242,.58),rgba(232,163,61,.42),transparent)}
+.gr-score{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);align-items:end;gap:clamp(56px,8vw,128px);margin-top:clamp(34px,5dvh,64px);padding:0 0 clamp(18px,3dvh,30px);perspective:900px}
+.gr-score::after{display:none}
 .gr-score>div{position:relative;min-width:0;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:0;transform:translate3d(0,90px,-180px) rotateX(18deg);animation:grMonumentIn 1.35s cubic-bezier(.16,1,.3,1) forwards}
-.gr-score .gr-chances{animation-delay:1.18s}.gr-score .gr-points{animation-delay:1.42s;padding-bottom:1.2vw}
+.gr-score .gr-chances{animation-delay:1.18s}.gr-score .gr-points{animation-delay:1.42s}
 @keyframes grMonumentIn{65%{opacity:1;transform:translate3d(0,-10px,24px) rotateX(-3deg)}100%{opacity:1;transform:none}}
 .gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 0 18px rgba(232,163,61,.16),0 28px 70px rgba(0,0,0,.38);font-variant-numeric:tabular-nums}
 .gr-score strong{position:relative;width:max-content;transform-style:preserve-3d;animation:grNumberFloat 5.5s ease-in-out 2.5s infinite alternate}
 .gr-score strong::before,.gr-score strong::after{content:attr(data-value);position:absolute;inset:0;pointer-events:none;z-index:-1}
-.gr-score strong::before{color:#5F2014;transform:translate3d(9px,13px,-42px);filter:blur(.45px);opacity:.8;text-shadow:0 24px 54px rgba(0,0,0,.52)}
-.gr-score strong::after{color:transparent;-webkit-text-stroke:1px rgba(255,239,214,.28);transform:translate3d(-3px,-4px,26px);opacity:.72}
-.gr-points strong::before{color:#6E5947;opacity:.62}
+.gr-score strong::before{color:#5F2014;transform:translate3d(5px,7px,-28px);filter:blur(.25px);opacity:.52;text-shadow:0 18px 40px rgba(0,0,0,.42)}
+.gr-score strong::after{display:none}
+.gr-points strong::before{color:#6E5947;opacity:.44}
 @keyframes grNumberFloat{to{transform:perspective(760px) rotateX(-2.5deg) rotateY(1.6deg) translate3d(0,-4px,18px)}}
-.gr-chances strong{font-size:clamp(8rem,20vw,18rem);color:#F3A13D}.gr-points strong{font-size:clamp(5.2rem,11vw,10rem)}
+.gr-chances strong{font-size:clamp(8rem,15vw,14rem);color:#F3A13D}.gr-points strong{font-size:clamp(6rem,10.5vw,9.5rem)}
 .gr-score span{display:flex;align-items:baseline;gap:9px;margin-top:22px;color:rgba(255,249,242,.7);font-size:clamp(.9rem,1.25vw,1.08rem);font-weight:600}
 .gr-score span b{font-family:var(--font-display);color:#FFF9F2;font-size:clamp(1.6rem,3vw,2.7rem);line-height:1}
 .gr-score span em{font-style:normal}
-.gr-lower{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(360px,1.28fr);gap:clamp(38px,8vw,120px);align-items:center;margin-top:clamp(30px,5dvh,62px)}
+.gr-lower{display:grid;grid-template-columns:minmax(260px,.72fr) minmax(360px,1.28fr);gap:clamp(38px,8vw,120px);align-items:start;margin-top:clamp(34px,5dvh,58px)}
 .gr-meta{text-align:left;color:rgba(255,249,242,.66);font-size:.92rem;opacity:0;animation:grCopyIn .9s cubic-bezier(.16,1,.3,1) 2s forwards}
 .gr-meta b{color:#FFF9F2}.gr-meta .gr-fecha{margin:0}.gr-meta .gr-ig{margin-top:18px}
 .g-block{position:relative;margin:0;padding:0;border:0;text-align:left;opacity:0;transform:translateY(48px);animation:grCopyIn 1s cubic-bezier(.16,1,.3,1) 2.15s forwards}
-.g-block::before,.g-block::after{content:"";position:absolute;z-index:-1;left:44%;top:66%;width:420px;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.g-block::before{border:1px solid rgba(232,163,61,.23);box-shadow:0 0 70px rgba(198,58,33,.15);animation:gOrbit 7s linear infinite}.g-block::after{width:310px;border:1px solid rgba(255,249,242,.13);animation:gOrbit 5s linear infinite reverse}
+.g-block::before,.g-block::after{display:none}
 @keyframes gOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .g-block h3{font-family:var(--font-display);font-weight:850;font-size:clamp(1.7rem,3.4vw,3rem);line-height:1;letter-spacing:-.045em}.g-block p{color:rgba(255,249,242,.69);margin:12px 0 0;font-size:1rem;max-width:42ch}
 .g-cta{display:flex;align-items:center;justify-content:space-between;gap:18px;width:min(100%,540px);margin-top:22px;background:linear-gradient(110deg,#D2451E,#A92C13);color:#fff;text-decoration:none;font-family:var(--font-display);font-weight:800;font-size:clamp(1rem,1.5vw,1.18rem);border-radius:18px;padding:19px 22px;box-shadow:0 18px 54px -16px rgba(210,69,30,.86),inset 0 1px rgba(255,255,255,.3);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s}
 .g-cta.google-focus{animation:googleFocus 2.2s cubic-bezier(.16,1,.3,1) infinite;outline:1px solid rgba(255,209,150,.65);outline-offset:8px}
 @keyframes googleFocus{0%,100%{transform:translateY(0) scale(1);box-shadow:0 18px 54px -16px rgba(210,69,30,.8),0 0 0 0 rgba(210,69,30,.34)}50%{transform:translateY(-5px) scale(1.018);box-shadow:0 28px 72px -14px rgba(210,69,30,1),0 0 0 18px rgba(210,69,30,0)}}
+.g-done{margin-top:24px;display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;column-gap:14px;row-gap:4px;text-align:left}
+.g-done>svg{width:48px;height:48px;padding:12px;border-radius:50%;color:#103A24;background:#62D58B;box-shadow:0 10px 30px rgba(55,185,103,.22);stroke-dasharray:30;animation:gCheckIn .55s cubic-bezier(.16,1,.3,1) both}
+.g-done>div{min-width:0}.g-done strong{display:block;color:#FFF9F2;font-family:var(--font-display);font-size:1.08rem;font-weight:800}
+.g-done small{display:block;margin-top:4px;color:rgba(255,249,242,.7);font-size:.9rem;line-height:1.45;max-width:38ch}
+@keyframes gCheckIn{0%{transform:scale(.55) rotate(-12deg);opacity:0;stroke-dashoffset:30}100%{transform:none;opacity:1;stroke-dashoffset:0}}
 .gr-fecha{font-size:.95rem;color:inherit}.gr-fecha b{color:inherit}.gr-ig{display:inline-flex;align-items:center;gap:10px;color:#F5EFE6;background:none;border-radius:0;border-bottom:1px solid rgba(245,239,230,.38);text-decoration:none;font-weight:700;padding:10px 0;box-shadow:none}
 body.done footer{background:#130F0D;border-color:rgba(255,249,242,.12);color:rgba(255,249,242,.48)}body.done footer a{color:rgba(255,249,242,.58)}
-@media(max-width:699px){#gracias>.wrap{padding:48px 20px 42px}#gracias h1{font-size:clamp(3rem,15vw,5rem)}.gr-score{grid-template-columns:1fr .72fr;gap:14px;margin-top:42px}.gr-chances strong{font-size:clamp(8.2rem,47vw,12rem)}.gr-points strong{font-size:clamp(4.4rem,24vw,7rem)}.gr-score span{display:block;margin-top:17px}.gr-score span b{display:block;margin-bottom:4px}.gr-lower{grid-template-columns:1fr;margin-top:34px;gap:34px}.g-block{grid-row:1}.gr-meta{grid-row:2}.g-block::before{width:310px}.g-block::after{width:230px}.g-cta{width:100%}}
+@media(max-width:699px){#gracias>.wrap{padding:48px 20px 42px}#gracias h1{font-size:clamp(3rem,15vw,5rem)}.gr-score{grid-template-columns:1fr .72fr;gap:14px;margin-top:42px}.gr-chances strong{font-size:clamp(8.2rem,47vw,12rem)}.gr-points strong{font-size:clamp(4.4rem,24vw,7rem)}.gr-score span{display:block;margin-top:17px}.gr-score span b{display:block;margin-bottom:4px}.gr-lower{grid-template-columns:1fr;margin-top:34px;gap:34px}.g-block{grid-row:1}.gr-meta{grid-row:2}.g-cta{width:100%}}
 @media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
 
 /* ---------- Footer ---------- */
@@ -593,6 +597,7 @@ body{min-height:max(100vh,100dvh)}
 .audio-earned strong{display:block;color:var(--cta-deep);font-family:var(--font-display);font-size:1rem;margin-bottom:2px}
 .text-step textarea{display:block;width:100%;min-height:180px;margin:0;border:1px solid var(--border-strong);border-radius:12px;
   padding:14px 15px;font:inherit;font-size:1rem;line-height:1.5;resize:none;background:var(--bg);color:var(--fg)}
+.text-reward-label{display:block;margin-bottom:9px;font-family:var(--font-display);font-size:.9rem;font-weight:800;color:var(--cta-deep)}
 .text-step textarea:focus{outline:3px solid rgba(198,58,33,.2);border-color:var(--cta)}
 
 /* Recompensas locales: cada pantalla responde donde ocurrió la acción. */
@@ -841,7 +846,7 @@ body.done #flowApp{display:none}
        <div class="step-content">
         <h2 class="step-title">Dejá una frase que ayude a elegir.</h2>
         <p class="step-copy"><strong>Una frase alcanza y suma 5 puntos.</strong><span>Contá qué fue lo que más te gustó.</span></p>
-        <div class="focus-panel" id="flowTextMount"></div>
+        <div class="focus-panel" id="flowTextMount"><label class="text-reward-label" for="reviewText">Escribir mi opinión (+5 puntos)</label></div>
         <div class="step-actions"><button class="step-primary" data-flow-next type="button">Revisar mi participación</button></div>
        </div>
       </div>
@@ -977,7 +982,7 @@ body.done #flowApp{display:none}
           <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
             <!-- estrellas SVG propias, generadas por JS -->
           </div>
-          <div class="stars-word" id="starsWord"></div>
+          <div class="stars-word" id="starsWord">Elegir una calificación (+5 puntos)</div>
         </div>
 
         <div class="exp-row">
@@ -1053,14 +1058,14 @@ body.done #flowApp{display:none}
         <h3>Duplicá tus chances en Google</h3>
         <p id="gIntro">Dejá tu reseña y, cuando vuelvas, confirmala acá. Tus puntos se duplican.</p>
         <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/place/Cortinas+RollerShow/@-34.5819602,-58.4652317,20z/data=!4m8!3m7!1s0x95bcb6719099596b:0x4354517b56352268!8m2!3d-34.5817708!4d-58.4657373!9m1!1b1!16s%2Fg%2F11ddzr18df?entry=ttu&amp;g_ep=EgoyMDI2MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
-          Dejar mi reseña en Google
+          Dejar mi reseña en Google (duplicá tus puntos)
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <div class="g-confirm" id="gConfirmStep" hidden><p>¿Ya la publicaste?</p><button type="button" id="gConfirmBtn">Sí, ya publiqué mi reseña</button></div>
+        <div class="g-confirm" id="gConfirmStep" hidden><p>¿Ya la publicaste?</p><button type="button" id="gConfirmBtn">Confirmar reseña y duplicar mis puntos</button></div>
         <div class="g-validating" id="gValidating" hidden><span class="g-spinner"></span> Actualizando tus puntos...</div>
-        <div class="g-done" id="gDone" hidden>
-          <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg> Listo, duplicamos tus puntos</strong>
-          <small>Ya tenés el doble de chances para el sorteo.</small>
+        <div class="g-done" id="gDone" role="status" aria-live="polite" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
+          <div><strong>Listo, duplicamos tus puntos</strong><small>Ya tenés el doble de chances para el sorteo.</small></div>
         </div>
       </div>
     </div>
@@ -1326,7 +1331,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <label class="upload-zone">
           <span class="upload-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-          <span><strong>Mostranos cómo quedó</strong><small>Subí una foto o video de la cortina completa</small></span><b class="upload-value">Foto +10<br>Video +25</b></span>
+          <span><strong>Mostranos cómo quedó</strong><small>Subí una foto o video de la cortina completa</small></span><b class="upload-value">Foto +10 puntos<br>Video +25 puntos</b></span>
           <input type="file" accept="image/*,video/*" multiple />
         </label>
         <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto</button>
@@ -1445,7 +1450,7 @@ const PALABRAS = ["", "Gracias por decirlo", "Queremos mejorar", "Buena", "Muy b
 const starsBox = $("#stars");
 for (let i = 1; i <= 5; i++) {
   const b = document.createElement("button");
-  b.type = "button"; b.setAttribute("aria-label", i + (i === 1 ? " estrella" : " estrellas"));
+  b.type = "button"; b.setAttribute("aria-label", `${i}${i === 1 ? " estrella" : " estrellas"} (+${PUNTOS.estrellas} puntos)`);
   b.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>`;
   b.addEventListener("click", () => {
     const firstRating = state.estrellas === 0;

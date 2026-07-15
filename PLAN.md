@@ -210,6 +210,14 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Conservar calificación y texto con su puntaje junto a la acción, sin duplicarlo en CTAs de mero avance.
 - [x] Verificar copy y ajuste responsive en mobile y desktop.
 
+## 27. Auditoría del cierre desktop y recompensa por CTA — 2026-07-15
+
+- [x] Llevar el impacto al propio control de foto, video, estrellas, audio, texto y Google.
+- [x] Unificar el tratamiento de profundidad de chances y puntos sin quitar la prioridad de chances.
+- [x] Eliminar el divisor y las órbitas que se cruzaban detrás del módulo de Google.
+- [x] Rediseñar la confirmación de Google con un check vectorial de 48 px, contraste accesible y estado semántico.
+- [x] Agregar capturas y regresiones específicas del estado final en desktop y mobile.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.

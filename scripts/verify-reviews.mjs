@@ -51,6 +51,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       confirm: document.querySelector('.confirm-step .step-title')?.textContent,
       consent: document.querySelector('#consentBox label')?.textContent,
       google: document.querySelector('#gBlock h3')?.textContent,
+      ratingAction: document.querySelector('#starsWord')?.textContent,
+      textAction: document.querySelector('.text-reward-label')?.textContent,
+      googleAction: document.querySelector('#gReviewBtn')?.textContent,
     },
   }));
   if (initial.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${initial.overflow}`);
@@ -64,12 +67,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('Duplicá tus chances')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
+  if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
+      !initial.copy.googleAction?.includes('duplicá tus puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
   const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
     title: step.querySelector('.step-title').textContent,
     src: step.querySelector('.curtain-photo img').getAttribute('src'),
     width: step.querySelector('.curtain-photo img').naturalWidth,
     unified: !!step.querySelector('.item-stage .item-visual') && !!step.querySelector('.item-stage .item-task'),
     structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status'),
+    uploadReward: step.querySelector('.upload-value')?.textContent,
   })));
   if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
       environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
@@ -78,6 +84,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   }
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
+  }
+  if (environments.some(item => !item.uploadReward?.includes('Foto +10 puntos') || !item.uploadReward?.includes('Video +25 puntos'))) {
+    fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
   }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
 
@@ -286,6 +295,17 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
     if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');
     if (await page.textContent('#grPts') !== '40') fails.push('reseña de Google no duplica puntos');
+    const googleDone = await page.evaluate(() => ({
+      icon: Math.round(document.querySelector('#gDone>svg').getBoundingClientRect().width),
+      status: document.querySelector('#gDone strong')?.textContent,
+      orbitA: getComputedStyle(document.querySelector('#gBlock'),'::before').display,
+      orbitB: getComputedStyle(document.querySelector('#gBlock'),'::after').display,
+      divider: getComputedStyle(document.querySelector('.gr-score'),'::after').display,
+    }));
+    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.orbitA !== 'none' || googleDone.orbitB !== 'none' || googleDone.divider !== 'none') {
+      fails.push(`cierre Google: estado o geometría decorativa incorrectos ${JSON.stringify(googleDone)}`);
+    }
+    await page.screenshot({ path: `${OUT}/canonical-390-google-done.png`, fullPage:true });
 
     const p2 = await ctx.newPage();
     await p2.goto(URL, { waitUntil: 'networkidle' });
@@ -371,6 +391,16 @@ await dpage.click('#submitBtn'); await dpage.waitForTimeout(1800);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
 await dpage.waitForTimeout(1500);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks.png`, fullPage:true });
+await dpage.evaluate(() => {
+  document.querySelector('#gIntro').style.display='none';
+  document.querySelector('#gReviewBtn').hidden=true;
+  document.querySelector('#gConfirmStep').hidden=true;
+  document.querySelector('#gDone').hidden=false;
+  document.querySelector('#grTickets').textContent='17'; document.querySelector('#grTickets').dataset.value='17';
+  document.querySelector('#grPts').textContent='170'; document.querySelector('#grPts').dataset.value='170';
+});
+await dpage.waitForTimeout(700);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-google-done.png`, fullPage:true });
 await dctx.close();
 
 await browser.close();
