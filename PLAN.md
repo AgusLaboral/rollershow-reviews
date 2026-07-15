@@ -170,3 +170,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Dar jerarquía estable a chances antes que puntos y animar el cambio en el mismo contador, sin marcador flotante ni count-up genérico.
 - [x] Expresar cada logro con consecuencias exactas: puntos ganados, chances nuevas y total resultante; variar el incentivo local sin prometer cercanía determinista a un premio sorteado.
 - [x] Verificar estados de audio grabando/revisión y geometría mobile/desktop; hacer opaco el fondo de cada etapa para evitar transparencias de composición.
+
+## 19. Celebración final y relevo de CTA — 2026-07-15
+
+- [x] Convertir el cierre en una escena celebratoria con fotografía real de premios, capas móviles y bandas sunscreen, sin confetti ni badges genéricos.
+- [x] Hacer de chances el logro principal, con puntos, ambientes mostrados y premios concretos como evidencia secundaria.
+- [x] Aplicar jerarquía por estado: autorización roja y confirmación gris; después, autorización resuelta y confirmación roja.
+- [x] Mantener el botón desactivado estable y accesible; el pulso activo cambia luz/sombra, no el área clickeable.
+- [x] Sustituir la comparación inventada con un promedio por una consecuencia verificable: cada chance es una oportunidad en el sorteo.
+- [x] Verificar los dos estados en mobile y desktop, sin scroll en 320×700 y sin romper el grid de 320 a 1920 px.

@@ -528,10 +528,56 @@ body{min-height:max(100vh,100dvh)}
 @keyframes voiceSet{0%{transform:scale(.96);box-shadow:0 0 0 0 rgba(198,58,33,.3)}45%{box-shadow:0 0 0 10px rgba(198,58,33,0)}100%{transform:none}}
 .text-step.text-reward textarea{animation:textSet .75s cubic-bezier(.16,1,.3,1) both}
 @keyframes textSet{0%{box-shadow:inset 0 -2px 0 var(--cta);transform:translateY(2px)}100%{box-shadow:inset 0 -2px 0 transparent;transform:none}}
-.confirm-score{margin-top:22px;padding-block:15px;border-block:1px solid var(--border);color:var(--fg-soft);font-size:1rem}
-.confirm-score strong{font-family:var(--font-display);color:var(--accent-deep)}
-.confirm-step .consent{margin-top:16px}
+.confirm-step{background:#EDE1D2;overflow:hidden}
+.confirm-world{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.confirm-world img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 50%;opacity:.16;transform:scale(1.035)}
+.confirm-prize-base{animation:finalSceneBreath 14s ease-in-out infinite alternate}
+.confirm-prize-pillow{clip-path:polygon(20% 5%,82% 5%,82% 70%,20% 70%);animation:finalPillow 9s ease-in-out infinite alternate}
+.confirm-prize-rug{clip-path:polygon(28% 54%,100% 50%,100% 100%,24% 100%);animation:finalRug 11s ease-in-out -2s infinite alternate}
+.confirm-world::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(250,247,242,.98) 0 48%,rgba(250,247,242,.76) 68%,rgba(250,247,242,.38) 100%)}
+.celebration-roller{position:absolute;z-index:2;top:-105%;bottom:0;width:18%;background-color:rgba(222,214,199,.62);background-image:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.36) 0 1px,rgba(96,79,61,.14) 1px 2px,transparent 2px 5px),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.2) 0 1px,rgba(91,74,57,.09) 1px 2px,transparent 2px 6px);
+  border-bottom:7px solid rgba(152,138,118,.66);box-shadow:0 18px 40px rgba(28,24,22,.16);opacity:0}
+.celebration-roller:nth-of-type(1){left:50%}.celebration-roller:nth-of-type(2){left:69%;width:12%}.celebration-roller:nth-of-type(3){left:83%;width:15%}
+.confirm-step.celebrate-in .celebration-roller{animation:finalRoll 1.9s cubic-bezier(.76,0,.18,1) both}
+.confirm-step.celebrate-in .celebration-roller:nth-of-type(2){animation-delay:.1s}.confirm-step.celebrate-in .celebration-roller:nth-of-type(3){animation-delay:.2s}
+@keyframes finalSceneBreath{to{transform:scale(1.075) translate3d(-1%,0,0)}}
+@keyframes finalPillow{to{transform:scale(1.052) translate3d(7px,-7px,0)}}
+@keyframes finalRug{to{transform:scale(1.047) translate3d(-6px,6px,0)}}
+@keyframes finalRoll{0%{transform:translateY(0);opacity:0}14%{opacity:.92}56%{transform:translateY(105%);opacity:.92}100%{transform:translateY(210%);opacity:0}}
+.confirm-step .step-content{position:relative;z-index:4}
+.confirm-summary{display:flex;flex-direction:column;min-width:0}
+.confirm-score{margin-top:16px;padding-block:14px;border-block:1px solid rgba(142,77,31,.28);color:var(--fg-soft)}
+.confirm-chances{display:flex;align-items:flex-end;gap:12px}
+.confirm-chances strong{font-family:var(--font-display);font-size:clamp(4.8rem,18vw,8.2rem);font-weight:800;line-height:.72;letter-spacing:-.075em;color:var(--cta-deep);font-variant-numeric:tabular-nums}
+.confirm-chances span{font-family:var(--font-display);font-size:1.05rem;font-weight:800;line-height:1.05;max-width:9ch;padding-bottom:4px}
+.confirm-points{margin-top:17px;display:flex;align-items:baseline;gap:6px;color:var(--fg-mute);font-size:.82rem}
+.confirm-points strong{font-family:var(--font-display);font-size:1.4rem;color:var(--accent-deep)}
+.confirm-proof{margin-top:9px;max-width:36ch;font-weight:700;font-size:.9rem;color:var(--fg-soft)}
+.confirm-prize-reminder{margin-top:8px;max-width:40ch;color:var(--fg-mute);font-size:.8rem}
+.confirm-prize-reminder strong{color:var(--accent-deep)}
+.confirm-step.celebrate-in .confirm-chances strong{animation:finalChanceLand 1.05s .3s cubic-bezier(.2,1.7,.35,1) both}
+.confirm-step.celebrate-in .confirm-proof{animation:finalProof .72s .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes finalChanceLand{0%{opacity:0;transform:translateY(28px) scale(.62)}65%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes finalProof{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.confirm-actions{margin-top:18px;align-self:stretch}
+.confirm-step .consent{position:relative;margin:0;min-height:64px;padding:15px 16px;align-items:center;border:1px solid transparent;border-radius:14px;
+  background:var(--cta);color:#fff;box-shadow:0 16px 34px -17px rgba(151,41,15,.9);transition:background .34s,box-shadow .34s,transform .34s,border-color .34s}
+.confirm-step .consent:hover{background:var(--cta-deep)}
+.confirm-step .consent:has(:focus-visible){outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
+.confirm-step .consent input{width:24px;height:24px;margin:0;accent-color:#fff;cursor:pointer}
+.confirm-step .consent label{display:block;min-height:0;color:#fff;font-weight:700;line-height:1.35}
+.confirm-step .consent a{color:#fff;text-decoration-color:rgba(255,255,255,.66)}
+.confirm-step.is-authorized .consent{background:rgba(250,247,242,.82);border-color:var(--border-strong);box-shadow:none;transform:scale(.985)}
+.confirm-step.is-authorized .consent label{color:var(--fg-soft);font-weight:600}.confirm-step.is-authorized .consent a{color:var(--accent-deep)}
+.confirm-step .cta{margin-top:12px}
+.confirm-step .cta:disabled{background:#D8D1C6;color:#81776E;box-shadow:none;animation:none;cursor:not-allowed;transform:none}
+.confirm-step.is-authorized .cta:not(:disabled){animation:brasa 3.4s ease-in-out infinite,confirmReady 1.5s ease-in-out infinite}
+@keyframes confirmReady{50%{box-shadow:0 15px 36px -9px rgba(198,58,33,.92);filter:saturate(1.12)}}
 .confirm-step .cta-sub{text-align:center}
+.confirm-step.is-authorized .confirm-score{animation:authorizedScore .8s cubic-bezier(.16,1,.3,1)}
+@keyframes authorizedScore{0%{transform:scale(.985)}45%{transform:scale(1.012)}100%{transform:none}}
 .rating-step .step-actions,.audio-step .step-actions,.text-step .step-actions,.confirm-step .step-actions{margin-top:20px;padding-top:0}
 
 /* Un único recorrido: la cortina roller es el gesto; escala y desplazamiento sostienen la continuidad. */
@@ -573,6 +619,9 @@ body{min-height:max(100vh,100dvh)}
   .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
   .rec-stop,.rec-stop::after,.flow-score.gain::after,.flow-score.gain .score-chances strong{animation:none}
+  .confirm-prize-base,.confirm-prize-pillow,.confirm-prize-rug{animation-duration:28s}
+  .confirm-step.celebrate-in .celebration-roller{animation-duration:1.25s}
+  .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof,.confirm-step.is-authorized .cta:not(:disabled){animation:none}
 }
 
 body:not(.done) footer{display:none}
@@ -598,6 +647,9 @@ body.done #flowApp{display:none}
   .step-inner{width:min(calc(100% - 80px),1120px)}
   .flow-step:not(.intro-step):not(.item-step) .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-content:start}
   .flow-step:not(.intro-step):not(.item-step) .step-content{grid-column:3 / span 8;width:auto;margin:0}
+  .confirm-step .step-content{grid-column:1 / -1!important;display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center}
+  .confirm-step .confirm-summary{grid-column:1 / span 7}
+  .confirm-step .confirm-actions{grid-column:8 / -1;margin-top:0}
   .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:12px;align-items:start;align-content:start}
   .item-step .item-heading{grid-column:1 / -1;grid-row:1}
   .item-step .item-stage{grid-column:1 / -1;grid-row:2;height:clamp(248px,39dvh,330px);margin-top:0}
@@ -700,13 +752,28 @@ body.done #flowApp{display:none}
       </div>
     </section>
     <section class="flow-step confirm-step" data-flow-step="confirm" aria-hidden="true">
+      <div class="confirm-world" aria-hidden="true">
+        <img class="confirm-prize-base" src="img/hero-premios.webp" alt="" />
+        <img class="confirm-prize-pillow" src="img/hero-premios.webp" alt="" />
+        <img class="confirm-prize-rug" src="img/hero-premios.webp" alt="" />
+        <i class="celebration-roller"></i><i class="celebration-roller"></i><i class="celebration-roller"></i>
+      </div>
       <div class="step-inner">
        <div class="step-content">
-        <h2 class="step-title">Ya casi está.</h2>
-        <p class="step-copy">Revisá tus chances y confirmá para entrar al sorteo.</p>
-        <p class="confirm-score"><strong id="confirmPts">0</strong> puntos te dan <strong id="confirmTickets">0</strong> <span id="confirmTicketsLabel">chances</span>.</p>
-        <div id="flowConsentMount"></div>
-        <div class="step-actions" id="flowSubmitMount"></div>
+        <div class="confirm-summary">
+          <h2 class="step-title" id="confirmTitle">Mirá todo lo que sumaste.</h2>
+          <p class="step-copy" id="confirmIntro">Tus aportes ya están listos. Falta autorizar su uso para entrar al sorteo.</p>
+          <div class="confirm-score" aria-live="polite">
+            <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">chances para ganar</span></div>
+            <div class="confirm-points"><strong id="confirmPts">0</strong><span>puntos logrados</span></div>
+            <p class="confirm-proof" id="confirmProof"></p>
+            <p class="confirm-prize-reminder"><strong>Premios de julio:</strong> 3 almohadones y 2 alfombras premium.</p>
+          </div>
+        </div>
+        <div class="confirm-actions">
+          <div id="flowConsentMount"></div>
+          <div class="step-actions" id="flowSubmitMount"></div>
+        </div>
        </div>
       </div>
     </section>
@@ -841,7 +908,7 @@ body.done #flowApp{display:none}
         <input type="checkbox" id="consent" />
         <label for="consent">Autorizo a Rollershow a compartir mis fotos, videos, audio y opinión en sus redes y su web. <a href="#" id="openBases">Bases del sorteo</a></label>
       </div>
-      <button class="cta" id="submitBtn">
+      <button class="cta" id="submitBtn" disabled>
         Confirmar y participar
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
@@ -1020,7 +1087,11 @@ function renderPuntos() {
   $("#flowTicketsLabel").textContent = t === 1 ? "chance" : "chances";
   $("#confirmPts").textContent = p;
   $("#confirmTickets").textContent = t;
-  $("#confirmTicketsLabel").textContent = t === 1 ? "chance" : "chances";
+  $("#confirmTicketsLabel").textContent = t === 1 ? "chance para ganar" : "chances para ganar";
+  const roomsShown = PRESUPUESTO.items.filter(item => state.archivos[item.id].length > 0).length;
+  $("#confirmProof").textContent = t === 1
+    ? `${roomsShown ? `Mostraste ${roomsShown === 1 ? "un ambiente" : roomsShown + " ambientes"}. ` : ""}Ya tenés una entrada en el sorteo.`
+    : `${roomsShown ? `Mostraste ${roomsShown === 1 ? "un ambiente" : roomsShown + " ambientes"}. ` : ""}No es una sola entrada: son ${t} oportunidades en el sorteo.`;
 }
 
 /* ---------- micro-recompensas ---------- */
@@ -1390,12 +1461,29 @@ function setupFlow() {
   $("#flowBack").addEventListener("click", () => goToFlow(flowIndex - 1));
   $("#ratingNext").addEventListener("click", () => goToFlow(flowIndex + 1));
   $("#audioNext").addEventListener("click", () => goToFlow(flowIndex + 1));
+  $("#consent").addEventListener("change", syncConsentState);
   $("#flowApp").addEventListener("click", event => {
     const next = event.target.closest("[data-flow-next]");
     if (next) goToFlow(flowIndex + 1);
   });
   updateFlowChrome();
   renderPuntos();
+  syncConsentState();
+}
+function syncConsentState() {
+  const checked = $("#consent").checked;
+  const step = $(".confirm-step"), submit = $("#submitBtn");
+  step.classList.toggle("is-authorized", checked);
+  submit.disabled = !checked;
+  submit.setAttribute("aria-disabled", String(!checked));
+  $("#confirmTitle").textContent = checked ? "Listo. Ahora entrá al sorteo." : "Mirá todo lo que sumaste.";
+  $("#confirmIntro").textContent = checked
+    ? "Ya autorizaste el uso de tu contenido. Confirmá y tu participación queda registrada."
+    : "Tus aportes ya están listos. Falta autorizar su uso para entrar al sorteo.";
+  if (checked) {
+    const live = $("#rewardLive");
+    live.textContent = `Autorización lista. Confirmá para participar con ${chancesDe(totalPuntos())} ${chancesDe(totalPuntos()) === 1 ? "chance" : "chances"}.`;
+  }
 }
 function updateFlowChrome() {
   $("#flowApp").dataset.current = flowIndex;
@@ -1417,11 +1505,14 @@ function goToFlow(target) {
   current.classList.add("leaving");
   current.classList.remove("active"); current.setAttribute("aria-hidden", "true");
   next.classList.remove("leaving"); next.classList.add("active", "entering"); next.setAttribute("aria-hidden", "false"); next.scrollTop = 0;
+  if (next.dataset.flowStep === "confirm") {
+    next.classList.remove("celebrate-in"); void next.offsetWidth; next.classList.add("celebrate-in");
+  }
   flowIndex = target; updateFlowChrome();
   requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("entering")));
   next.focus({ preventScroll: true });
   setTimeout(() => { flowBusy = false; }, 1040);
-  setTimeout(() => { current.classList.remove("leaving"); }, 1160);
+  setTimeout(() => { current.classList.remove("leaving"); if (current.dataset.flowStep === "confirm") current.classList.remove("celebrate-in"); }, 1160);
   setTimeout(() => { app.classList.remove("curtain-running"); }, 1240);
 }
 setupFlow();

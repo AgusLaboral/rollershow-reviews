@@ -60,7 +60,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
-      !initial.copy.text?.includes('frase que ayude') || initial.copy.confirm !== 'Ya casi está.' ||
+      !initial.copy.text?.includes('frase que ayude') || initial.copy.confirm !== 'Mirá todo lo que sumaste.' ||
       !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('duplicar tus chances')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
@@ -163,9 +163,35 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
     await page.click('.text-step.active .step-primary'); await waitCurtain(page);
 
-    await page.click('#submitBtn');
-    if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('submit pasó sin consentimiento');
-    await page.check('#consent'); await page.click('#submitBtn'); await page.waitForTimeout(1300);
+    const confirmBefore = await page.evaluate(() => ({
+      submitDisabled: document.querySelector('#submitBtn').disabled,
+      authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
+      rollers: document.querySelectorAll('.confirm-step .celebration-roller').length,
+      prizes: document.querySelectorAll('.confirm-step .confirm-world img').length,
+      proof: document.querySelector('#confirmProof').textContent,
+      consentBg: getComputedStyle(document.querySelector('#consentBox')).backgroundColor,
+      fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
+      concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
+    }));
+    if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 3 ||
+        !confirmBefore.proof.includes('oportunidades') || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
+        !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
+      fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
+    }
+    await page.screenshot({ path: `${OUT}/canonical-390-confirm-consent.png` });
+    if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('el flujo terminó antes del consentimiento');
+    await page.check('#consent'); await page.waitForTimeout(250);
+    const confirmAfter = await page.evaluate(() => ({
+      submitDisabled: document.querySelector('#submitBtn').disabled,
+      authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
+      title: document.querySelector('#confirmTitle').textContent,
+      live: document.querySelector('#rewardLive').textContent,
+    }));
+    if (confirmAfter.submitDisabled || !confirmAfter.authorized || !confirmAfter.title.includes('sorteo') || !confirmAfter.live.includes('Autorización lista')) {
+      fails.push(`confirmación autorizada: relevo de CTA incompleto ${JSON.stringify(confirmAfter)}`);
+    }
+    await page.screenshot({ path: `${OUT}/canonical-390-confirm-ready.png` });
+    await page.click('#submitBtn'); await page.waitForTimeout(1300);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
@@ -256,6 +282,12 @@ const reviewState = await dpage.evaluate(() => ({
 }));
 if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
     !reviewState.continueVisible || reviewState.skipVisible) fails.push(`audio detenido: revisión incompleta ${JSON.stringify(reviewState)}`);
+await dpage.click('#audioNext'); await waitCurtain(dpage);
+await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
+await dpage.click('.text-step.active .step-primary'); await waitCurtain(dpage);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });
+await dpage.check('#consent'); await dpage.waitForTimeout(250);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-ready.png` });
 await dctx.close();
 
 await browser.close();

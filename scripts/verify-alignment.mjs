@@ -110,11 +110,16 @@ for (const viewport of viewports) {
         fails.push(`${viewport.width}px ${step.kind}: jerarquía interna fuera del grid o con ruido estructural`);
       }
     }
-    for (const step of report.steps.filter(step => step.content && !step.kind.startsWith('item-'))) {
+    for (const step of report.steps.filter(step => step.content && !step.kind.startsWith('item-') && step.kind !== 'confirm')) {
       if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||
           !close(step.content.left, expectedContentLeft) || !close(step.content.right, expectedContentRight)) {
         fails.push(`${viewport.width}px ${step.kind}: contenido no ocupa columnas 3 a 10`);
       }
+    }
+    const confirm = report.steps.find(step => step.kind === 'confirm');
+    if (!close(confirm.inner.left, report.master.left) || !close(confirm.inner.right, report.master.right) ||
+        !close(confirm.content.left, report.master.left) || !close(confirm.content.right, report.master.right)) {
+      fails.push(`${viewport.width}px confirm: celebración final fuera del grid maestro`);
     }
   } else {
     const contentWidth = Math.min(viewport.width - 40, 520);
