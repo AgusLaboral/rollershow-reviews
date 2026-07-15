@@ -203,16 +203,20 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         highlighted: button.classList.contains('google-focus'),
         host: url.hostname,
         path: url.pathname,
-        api: url.searchParams.get('api'),
-        query: url.searchParams.get('query'),
+        href: button.href,
       };
     });
     if (!googleHandoff.focused || !googleHandoff.highlighted) fails.push(`Google no recibe foco al finalizar ${JSON.stringify(googleHandoff)}`);
-    if (googleHandoff.host !== 'www.google.com' || !googleHandoff.path.startsWith('/maps/search/') || googleHandoff.api !== '1' || !googleHandoff.query?.includes('RollerShow')) {
-      fails.push(`enlace oficial de Google Maps incorrecto ${JSON.stringify(googleHandoff)}`);
+    if (googleHandoff.host !== 'www.google.com'
+      || !googleHandoff.path.startsWith('/maps/place/Cortinas+RollerShow/')
+      || !googleHandoff.href.includes('0x95bcb6719099596b:0x4354517b56352268')
+      || !googleHandoff.href.includes('!9m1!1b1')) {
+      fails.push(`enlace directo al compositor de reseñas incorrecto ${JSON.stringify(googleHandoff)}`);
     }
 
     const [popup] = await Promise.all([ctx.waitForEvent('page'), page.click('#gReviewBtn')]);
+    await popup.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
+    if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
     await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
     if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');

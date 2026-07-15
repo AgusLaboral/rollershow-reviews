@@ -119,7 +119,7 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - El último ambiente ya no empuja “Después: tu experiencia” al fondo de una columna artificialmente alta; queda ligado al bloque de acción con un espacio controlado.
 - La cortina dura 1,2 s: arranca casi detenida, acelera al cubrir y luego revela. Se verificó cuadro por cuadro y se retiraron filtros de composición inestables que generaban cuadros negros.
 - La portada suma tres capas recortadas del producto con movimientos lentos independientes, sin agregar requests ni distraer del único CTA.
-- Al confirmar, el foco y el scroll llegan al botón de Google con un pulso visible. El enlace viejo con un `placeid` inválido se reemplazó por una URL universal oficial de Google Maps al showroom de Roseti 1674.
+- Al confirmar, el foco y el scroll llegan al botón de Google con un pulso visible. El CTA usa la URL directa del showroom de Roseti 1674 con la acción `!9m1!1b1`, que abre el compositor de reseñas (o primero el login de Google si no hay sesión).
 - Los tests ahora cubren el acople vertical del próximo paso, el timing de la cortina, las capas independientes de portada, el foco final y la estructura del enlace de Google.
 
 ## 13. Replanteo real de las pantallas de producto — 2026-07-15

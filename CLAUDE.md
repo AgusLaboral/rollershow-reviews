@@ -85,7 +85,7 @@ Después de cada push: esperar la propagación (`curl` el HTML hasta ver el camb
 1. **Integración con la API real**: reemplazar el bloque `PRESUPUESTO` hardcodeado por `GET /api/v2/presupuesto/:token` (cliente, vendedor con foto real, ítems comprados) y el `enviar()` simulado por `POST /api/v2/reviews` (multipart: fotos/video/audio/estrellas/texto/consentimiento). **Los puntos deben recalcularse server-side siempre** — nunca confiar en el valor que manda el cliente.
 2. **Foto real del vendedor**: hoy usa un placeholder (`img/perfil-01.jpg`, nombre "Marcelo"). Traerla del CRM por presupuesto.
 3. **Upload progresivo + compresión de imágenes** client-side (canvas, máx ~1600px, JPEG q0.82) antes de subir — hoy el mockup solo previsualiza localmente.
-4. **Segundo local (Villa Carlos Paz)**: la página de gracias usa una URL universal oficial de Google Maps que busca `Cortinas RollerShow, Roseti 1674, CABA`. Falta conseguir el Place ID directo y decidir si el presupuesto debe elegir entre CABA y Villa Carlos Paz.
+4. **Segundo local (Villa Carlos Paz)**: la página de gracias usa el enlace directo al compositor de reseñas de CABA, confirmado por Agus (`!9m1!1b1`). Falta conseguir el equivalente del local de Villa Carlos Paz y decidir si el presupuesto debe elegir el destino.
 5. **Imagen y asignación final de premios**: la comunicación aprobada dice `3 almohadones y 2 alfombras premium entre 3 ganadores`. El hero (`img/hero-premios.jpg`) sigue siendo representativo/generado. Falta definir qué recibe cada ganador y reemplazarlo por fotos reales si se lanza.
 6. **Moderación**: alguien (¿Cami?) tiene que revisar fotos/audios antes de usarlos en marketing real. Es un proceso humano, no algo que resolver en código.
 

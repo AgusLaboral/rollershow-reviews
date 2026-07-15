@@ -935,8 +935,9 @@ body.done #flowApp{display:none}
          de Google Business Profile para esto), así que la confirmación es
          auto-reportada por el cliente. Rollershow asume ese margen de
          confianza, igual que ya confía en que las fotos subidas son reales.
-         Link real del local de CABA (ftid confirmado por Agus, redirige al
-         login de Google antes de dejar la reseña, como corresponde).
+         Link directo al compositor de reseñas del local de CABA, confirmado
+         por Agus. El segmento !9m1!1b1 abre la acción de escribir la opinión;
+         Google puede pedir login primero si no hay una sesión iniciada.
          TODO(Nico): Rollershow tiene 2 locales (CABA y Villa Carlos Paz) —
          este mockup usa siempre el de CABA. Si el presupuesto trae el local
          de origen, elegir el link según corresponda; si no, confirmar con
@@ -944,7 +945,7 @@ body.done #flowApp{display:none}
     <div class="g-block" id="gBlock">
       <h3>Podés duplicar tus chances</h3>
       <p id="gIntro">Dejá una reseña en Google y, cuando vuelvas, confirmala acá. Tus puntos se duplican.</p>
-      <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/search/?api=1&amp;query=Cortinas%20RollerShow%2C%20Roseti%201674%2C%20CABA" target="_blank" rel="noopener">
+      <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/place/Cortinas+RollerShow/@-34.5819602,-58.4652317,20z/data=!4m8!3m7!1s0x95bcb6719099596b:0x4354517b56352268!8m2!3d-34.5817708!4d-58.4657373!9m1!1b1!16s%2Fg%2F11ddzr18df?entry=ttu&amp;g_ep=EgoyMDI2MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
         Dejar mi reseña en Google
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
