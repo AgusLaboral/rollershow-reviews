@@ -89,6 +89,20 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (vp.w === 390) {
     await page.click('#startFlow'); await waitCurtain(page);
     if (await page.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-1') fails.push('el CTA no abre la primera cortina');
+    const scoreRoller = await page.evaluate(() => {
+      const score = document.querySelector('.flow-score');
+      const roller = document.querySelector('.score-roller');
+      const rect = roller.getBoundingClientRect();
+      return {
+        width:Math.round(rect.width), height:Math.round(rect.height),
+        visible:getComputedStyle(roller).display !== 'none' && getComputedStyle(roller).opacity !== '0',
+        material:getComputedStyle(roller).backgroundImage,
+        fullRule:getComputedStyle(score).borderBottomWidth,
+      };
+    });
+    if (!scoreRoller.visible || scoreRoller.width > 180 || scoreRoller.height < 8 || !scoreRoller.material.includes('linear-gradient') || scoreRoller.fullRule !== '0px') {
+      fails.push(`puntaje: el roller persistente o la eliminación de la línea falló ${JSON.stringify(scoreRoller)}`);
+    }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
     await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);

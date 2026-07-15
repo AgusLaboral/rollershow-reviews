@@ -188,3 +188,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Cambiar el CTA a `Terminar y guardar`; al detener muestra la onda registrada, `+30 puntos`, el nuevo total y la misma transferencia usada en el resto del flujo.
 - [x] Jerarquizar el copy de estrellas, audio y texto en beneficio principal más instrucción secundaria, sin sumar cajas ni acortar información necesaria.
 - [x] Probar onda real, guardado, recompensa, trayectoria, colisiones y geometría de las nueve etapas entre 320 y 1920 px.
+
+## 21. Roller persistente como origen de la transición — 2026-07-15
+
+- [x] Eliminar la regla horizontal que quedaba colgada debajo del puntaje.
+- [x] Mantener un cilindro roller gris con volumen leve directamente debajo de chances/puntos.
+- [x] Al cambiar de etapa, desplegar ese mismo cilindro hasta el ancho del grid y bajar desde ahí la tela sunscreen.
+- [x] Alinear roller, tela, progreso y contenido al mismo grid en mobile y desktop.
+- [x] Verificar por cuadro el estado en reposo, el despliegue y el cierre limpio de la transición.

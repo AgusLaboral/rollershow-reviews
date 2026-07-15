@@ -8,8 +8,9 @@ const fails = [];
 for (const variant of ['ambientes']) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
   await page.goto(`${BASE}?v=${variant}`, { waitUntil: 'networkidle' });
+  const idleRoller = await page.evaluate(() => document.querySelector('.score-roller').getBoundingClientRect().width);
   await page.click('#startFlow');
-  await page.waitForTimeout(60);
+  await page.waitForTimeout(220);
   const motion = await page.evaluate(() => {
     const incoming = document.querySelector('.flow-step.active');
     const outgoing = document.querySelector('.flow-step.leaving');
@@ -21,6 +22,7 @@ for (const variant of ['ambientes']) {
     } : null;
     const roller = document.querySelector('.roller-wipe');
     const fabric = document.querySelector('.roller-fabric');
+    const scoreRoller = document.querySelector('.score-roller');
     const heading = document.querySelector('.flow-step.active .item-heading');
     const visual = document.querySelector('.flow-step.active .item-visual');
     const task = document.querySelector('.flow-step.active .item-task');
@@ -44,8 +46,19 @@ for (const variant of ['ambientes']) {
         color: getComputedStyle(fabric).backgroundColor,
         noise: getComputedStyle(fabric, '::after').backgroundImage,
       },
+      scoreRoller: {
+        width:scoreRoller.getBoundingClientRect().width,
+        height:scoreRoller.getBoundingClientRect().height,
+        right:scoreRoller.getBoundingClientRect().right,
+        wipeLeft:roller.getBoundingClientRect().left,
+        wipeRight:roller.getBoundingClientRect().right,
+        material:getComputedStyle(scoreRoller).backgroundImage,
+        animation:scoreRoller.getAnimations()[0]?.animationName,
+        keyframes:scoreRoller.getAnimations()[0]?.effect.getKeyframes().length || 0,
+      },
     };
   });
+  await page.screenshot({ path:'C:/Users/Agus/Desktop/rollershow-reviews/_scratch/canonical-1280-roller-deploy.png' });
   if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
@@ -58,6 +71,11 @@ for (const variant of ['ambientes']) {
   }
   if (motion.roller.duration !== '1.2s' || motion.roller.keyframes?.length < 5 || !motion.roller.keyframes?.[0]?.easing.includes('cubic-bezier')) {
     fails.push(`${variant}: la bajada no conserva el arranque lento y la aceleración ${JSON.stringify(motion.roller.keyframes)}`);
+  }
+  if (idleRoller > 145 || motion.scoreRoller.width <= idleRoller || motion.scoreRoller.height < 8 ||
+      !motion.scoreRoller.material.includes('linear-gradient') || motion.scoreRoller.animation !== 'scoreRollDeploy' || motion.scoreRoller.keyframes < 4 ||
+      Math.abs(motion.scoreRoller.right - motion.scoreRoller.wipeRight) > 2) {
+    fails.push(`${variant}: el roller persistente no se despliega como origen físico ${JSON.stringify({ idleRoller, ...motion.scoreRoller })}`);
   }
   await page.waitForTimeout(1250);
   const settled = await page.evaluate(() => ({

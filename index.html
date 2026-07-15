@@ -353,19 +353,23 @@ body{min-height:max(100vh,100dvh)}
 .flow-rail i{display:block;width:0;height:100%;border-radius:inherit;background:var(--cta);transition:width .35s cubic-bezier(.22,1,.36,1)}
 .flow-shell[data-current="0"] .flow-rail{opacity:0}
 .flow-score{position:absolute;z-index:28;left:20px;right:20px;top:67px;min-height:50px;display:flex;justify-content:flex-end;gap:8px;align-items:center;
-  padding-bottom:8px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg) 72%,rgba(250,247,242,0));
+  padding-bottom:10px;background:linear-gradient(180deg,var(--bg) 72%,rgba(250,247,242,0));
   font-size:.72rem;color:var(--fg-mute);font-variant-numeric:tabular-nums;
   transition:opacity .2s,transform .2s,color .2s;transform-style:preserve-3d}
 .flow-score strong{display:inline-block;font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep);transform-origin:center}
 .flow-score .score-chances strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
 .flow-score i{width:1px;height:14px;background:var(--border)}
-.flow-score::after{content:"";position:absolute;right:0;bottom:-1px;width:min(100%,180px);height:2px;background:var(--border);transform-origin:right}
+.score-roller{position:absolute;z-index:2;right:0;bottom:0;width:142px;height:10px;border-radius:99px;transform-origin:right center;
+  border:1px solid rgba(92,79,64,.34);background:linear-gradient(180deg,#F1ECE4 0%,#D6CCBE 28%,#A99B88 55%,#877864 72%,#C9BCA9 100%);
+  box-shadow:inset 0 1px rgba(255,255,255,.8),inset 0 -2px 3px rgba(63,53,43,.2),0 5px 11px rgba(42,35,29,.2);will-change:width,transform}
+.score-roller::before,.score-roller::after{content:"";position:absolute;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:linear-gradient(90deg,#776A59,#C7BAA7);box-shadow:inset 0 0 0 1px rgba(67,57,47,.22)}
+.score-roller::before{left:-3px}.score-roller::after{right:-3px;transform:scaleX(-1)}
 .flow-score.gain{color:var(--cta)}
-.flow-score.gain::after{background:var(--cta);animation:scoreCharge .72s cubic-bezier(.16,1,.3,1) both}
+.flow-score.gain .score-roller{animation:scoreRollReceive .72s cubic-bezier(.16,1,.3,1) both}
 .flow-score.gain .score-chances strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
 .flow-score.receive-points{animation:scoreReceive .72s cubic-bezier(.16,1,.3,1) both}
 .flow-score.new-chance .score-chances{animation:chanceGlow .9s cubic-bezier(.16,1,.3,1) both}
-@keyframes scoreCharge{0%{transform:scaleX(.08);opacity:.2}58%{transform:scaleX(1);opacity:1}100%{opacity:.45}}
+@keyframes scoreRollReceive{0%{transform:scaleX(.72);filter:brightness(1)}48%{transform:scaleX(1.06);filter:brightness(1.3)}100%{transform:none;filter:brightness(1)}}
 @keyframes chanceLand{0%{transform:translateY(6px) scale(.72);opacity:.4}62%{transform:translateY(-2px) scale(1.22)}100%{transform:none;opacity:1}}
 @keyframes scoreReceive{0%{transform:perspective(500px) rotateX(0) translateY(0)}42%{transform:perspective(500px) rotateX(-8deg) translateY(-3px)}100%{transform:none}}
 @keyframes chanceGlow{0%{text-shadow:none}45%{text-shadow:0 0 22px rgba(198,58,33,.48)}100%{text-shadow:none}}
@@ -381,10 +385,9 @@ body{min-height:max(100vh,100dvh)}
 .score-transfer::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:30px;transform:translateX(-50%);background:linear-gradient(rgba(198,58,33,.5),transparent)}
 
 /* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
-.roller-wipe{position:absolute;z-index:24;inset:66px 0 0;overflow:hidden;pointer-events:none;visibility:hidden}
-.roller-tube{position:absolute;z-index:3;left:0;right:0;top:-12px;height:24px;background:linear-gradient(180deg,#E8E0D4,#B8AA96);
-  border-bottom:1px solid rgba(74,64,57,.3);box-shadow:0 7px 22px rgba(28,24,22,.2);opacity:0}
-.roller-fabric{position:absolute;inset:-2px 0 0;overflow:hidden;background-color:rgba(221,213,200,.46);background-image:
+.roller-wipe{position:absolute;z-index:24;inset:117px 20px 0;overflow:hidden;pointer-events:none;visibility:hidden}
+.roller-tube{display:none}
+.roller-fabric{position:absolute;inset:0;overflow:hidden;background-color:rgba(221,213,200,.46);background-image:
   linear-gradient(102deg,rgba(255,255,255,.3),transparent 24%,rgba(116,98,78,.08) 52%,transparent 78%,rgba(255,255,255,.22)),
   repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 1px,rgba(92,76,60,.16) 1px 2px,transparent 2px 4px),
   repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,rgba(91,74,57,.11) 1px 2px,transparent 2px 5px);
@@ -397,8 +400,14 @@ body{min-height:max(100vh,100dvh)}
 .roller-bar{position:absolute;z-index:4;left:0;right:0;bottom:0;height:11px;background:linear-gradient(180deg,#D2C8B8,#9C8D78);
   border-top:1px solid rgba(255,255,255,.52);box-shadow:0 9px 21px rgba(28,24,22,.3)}
 .flow-shell.curtain-running .roller-wipe{visibility:visible}
-.flow-shell.curtain-running .roller-tube{animation:rollerTube 1.2s ease both}
+.flow-shell.curtain-running .score-roller{animation:scoreRollDeploy 1.2s linear both}
 .flow-shell.curtain-running .roller-fabric{animation:rollerPass 1.2s linear both}
+@keyframes scoreRollDeploy{
+  0%{width:142px;transform:translateY(0);animation-timing-function:cubic-bezier(.16,1,.3,1)}
+  18%,68%{width:100%;transform:translateY(0)}
+  82%{width:100%;transform:translateY(-1px);animation-timing-function:cubic-bezier(.16,1,.3,1)}
+  100%{width:142px;transform:translateY(0)}
+}
 @keyframes rollerPass{
   0%{transform:translate3d(0,-100%,0);animation-timing-function:cubic-bezier(.72,0,1,1)}
   18%{transform:translate3d(0,-94%,0);animation-timing-function:cubic-bezier(.5,0,.18,1)}
@@ -406,7 +415,6 @@ body{min-height:max(100vh,100dvh)}
   68%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(.16,1,.3,1)}
   100%{transform:translate3d(0,-104%,0)}
 }
-@keyframes rollerTube{0%,100%{opacity:0}4%,94%{opacity:1}}
 
 .flow-viewport{height:100%;position:relative;overflow:hidden}
 .flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:132px 20px max(24px,env(safe-area-inset-bottom));background:var(--bg);
@@ -626,7 +634,7 @@ body{min-height:max(100vh,100dvh)}
 @media (prefers-reduced-motion:reduce){
   .intro-base,.intro-float{animation-duration:24s;transform:scale(1.015)}
   .flow-shell.curtain-running .roller-fabric{animation-duration:.74s}
-  .flow-shell.curtain-running .roller-tube{animation-duration:.74s}
+  .flow-shell.curtain-running .score-roller{animation-duration:.74s}
   .variant-ambientes .flow-step{transition-duration:.38s;filter:none}
   .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
   .variant-ambientes .flow-step.active{transform:none}
@@ -634,7 +642,7 @@ body{min-height:max(100vh,100dvh)}
   .stage-user-media{animation-duration:.2s}.stage-score-burst,.stage-score-burst::before,.stage-score-burst::after{animation-duration:1.15s}
   .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
-  .rec-stop,.rec-stop::after,.flow-score.gain::after,.flow-score.gain .score-chances strong,.flow-score.receive-points,.flow-score.new-chance .score-chances{animation:none}
+  .rec-stop,.rec-stop::after,.flow-score.gain .score-chances strong,.flow-score.receive-points,.flow-score.new-chance .score-chances{animation:none}
   .confirm-prize-base,.confirm-prize-pillow,.confirm-prize-rug{animation-duration:28s}
   .confirm-step.celebrate-in .celebration-roller{animation-duration:1.25s}
   .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof,.confirm-step.is-authorized .cta:not(:disabled){animation:none}
@@ -669,6 +677,7 @@ body.done #flowApp{display:none}
   .flow-head{left:50%;right:auto;width:min(calc(100% - 80px),1120px);padding-inline:0;transform:translateX(-50%)}
   .flow-rail{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
   .flow-score{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
+  .roller-wipe{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
   .flow-step{padding-inline:0}
   .step-inner{width:min(calc(100% - 80px),1120px)}
   .flow-step:not(.intro-step):not(.item-step) .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-content:start}
@@ -709,7 +718,7 @@ body.done #flowApp{display:none}
   </header>
   <div class="flow-rail" id="flowRail" role="progressbar" aria-label="Progreso del formulario" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"><i id="flowRailFill"></i></div>
   <div class="flow-score" id="flowScore" aria-live="polite">
-    <span class="score-chances"><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span><i></i><span><strong id="flowPts">0</strong> puntos</span>
+    <span class="score-chances"><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span><i></i><span><strong id="flowPts">0</strong> puntos</span><span class="score-roller" aria-hidden="true"></span>
   </div>
   <div class="roller-wipe" aria-hidden="true">
     <div class="roller-tube"></div>
