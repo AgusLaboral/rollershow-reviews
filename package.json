@@ -1,0 +1,13 @@
+{
+  "name": "rollershow-reviews",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Mockup: reviews + fotos de clientes con sorteo mensual (Rollershow)",
+  "scripts": {
+    "serve": "python -m http.server 8899",
+    "verify": "node scripts/verify-reviews.mjs && node scripts/verify-alignment.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}

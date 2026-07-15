@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
+const browser = await chromium.launch();
+const ctx = await browser.newContext({ viewport: { width: 768, height: 1024 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+const page = await ctx.newPage();
+await page.goto(URL, { waitUntil: 'networkidle' });
+await page.waitForTimeout(1000);
+await page.screenshot({ path: 'C:/Users/Agus/Desktop/rollershow-reviews/_scratch/desk-768-fold.png' });
+await ctx.close();
+await browser.close();
+console.log('tablet done');
