@@ -3,7 +3,6 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
-const VARIANT = new globalThis.URL(URL).searchParams.get('v') === 'scroll' ? 'scroll' : 'ambientes';
 const OUT = 'C:/Users/Agus/Desktop/rollershow-reviews/_scratch';
 await mkdir(OUT, { recursive: true });
 
@@ -51,12 +50,12 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  await page.screenshot({ path: `${OUT}/${VARIANT}-${vp.w}-intro.png` });
+  await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
 
   if (vp.w === 390) {
     await page.click('#startFlow'); await waitCurtain(page);
     if (await page.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-1') fails.push('el CTA no abre la primera cortina');
-    await page.screenshot({ path: `${OUT}/${VARIANT}-390-item.png` });
+    await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
     await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(300);
@@ -79,6 +78,7 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('submit pasó sin consentimiento');
     await page.check('#consent'); await page.click('#submitBtn'); await page.waitForTimeout(1300);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
+    if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
 
     const [popup] = await Promise.all([ctx.waitForEvent('page'), page.click('#gReviewBtn')]);
@@ -106,13 +106,7 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'networkidle' });
-await dpage.screenshot({ path: `${OUT}/${VARIANT}-1280-intro.png` });
-if (VARIANT === 'scroll') {
-  await dpage.click('#startFlow'); await waitCurtain(dpage);
-  await dpage.evaluate(() => { const step = document.querySelector('.flow-step.active'); step.scrollTop = step.scrollHeight; });
-  await dpage.mouse.wheel(0, 900); await waitCurtain(dpage);
-  if (await dpage.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-2') fails.push('el scroll no avanza de item-1 a item-2');
-}
+await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 await dctx.close();
 
 await browser.close();

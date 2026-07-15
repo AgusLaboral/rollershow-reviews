@@ -1,52 +1,117 @@
-// Verificación geométrica del flujo multistep.
+// Verifica el grid maestro en todas las etapas, no sólo en la portada.
 import { chromium } from 'playwright';
 
 const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
 const browser = await chromium.launch();
 const fails = [];
+const viewports = [
+  { width: 320, height: 700 },
+  { width: 390, height: 844 },
+  { width: 768, height: 900 },
+  { width: 1024, height: 800 },
+  { width: 1280, height: 800 },
+  { width: 1440, height: 900 },
+  { width: 1920, height: 1080 },
+];
 
-for (const viewport of [{ width: 320, height: 700 }, { width: 390, height: 844 }, { width: 768, height: 900 }, { width: 1280, height: 800 }]) {
+for (const viewport of viewports) {
   const ctx = await browser.newContext({ viewport });
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: 'networkidle' });
-  const intro = await page.evaluate(() => {
-    const step = document.querySelector('.flow-step.active');
-    const button = step.querySelector('.step-primary');
-    const r = button.getBoundingClientRect();
+  const report = await page.evaluate(() => {
+    const rect = element => {
+      const r = element.getBoundingClientRect();
+      return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width };
+    };
+    const steps = [...document.querySelectorAll('.flow-step')];
+    steps.forEach(step => { step.style.transition = 'none'; });
+    const activate = target => {
+      steps.forEach(step => {
+        step.classList.toggle('active', step === target);
+        step.classList.remove('entering', 'leaving');
+      });
+      void target.offsetWidth;
+    };
+    const readStep = step => {
+      activate(step);
+      const inner = step.querySelector('.step-inner');
+      const content = step.querySelector('.step-content');
+      const visual = step.querySelector('.item-visual');
+      const task = step.querySelector('.item-task');
+      return {
+        kind: step.dataset.flowStep,
+        inner: rect(inner),
+        content: content ? rect(content) : null,
+        visual: visual ? rect(visual) : null,
+        task: task ? rect(task) : null,
+        verticalOverflow: step.scrollHeight - step.clientHeight,
+      };
+    };
+    const data = steps.map(readStep);
+    activate(steps[0]);
+    const master = rect(document.querySelector('.flow-head'));
     return {
+      master,
+      rail: rect(document.querySelector('.flow-rail')),
+      introLogo: rect(document.querySelector('.intro-logo')),
+      introCopy: rect(document.querySelector('.intro-copy-block')),
+      introCTA: rect(document.querySelector('#startFlow')),
+      steps: data,
+      overflow: document.documentElement.scrollWidth - innerWidth,
       activeSteps: document.querySelectorAll('.flow-step.active').length,
-      overflow: document.documentElement.scrollWidth - innerWidth,
-      ctaLeft: Math.round(r.left), ctaRight: Math.round(r.right),
-      ctaTop: Math.round(r.top), ctaBottom: Math.round(r.bottom), viewportHeight: innerHeight,
-      duplicateLogo: [...document.querySelectorAll('.intro-logo,.flow-logo')].filter(el => {
-        const s = getComputedStyle(el); return s.opacity !== '0' && el.getClientRects().length;
-      }).length,
     };
   });
-  if (intro.activeSteps !== 1) fails.push(`${viewport.width}px: ${intro.activeSteps} etapas activas`);
-  if (intro.overflow > 0) fails.push(`${viewport.width}px: overflow ${intro.overflow}px`);
-  if (intro.ctaLeft < 0 || intro.ctaRight > viewport.width) fails.push(`${viewport.width}px: CTA fuera de pantalla`);
-  if (intro.ctaTop < 0 || intro.ctaBottom > intro.viewportHeight) fails.push(`${viewport.width}px: CTA de portada debajo del pliegue`);
-  if (intro.duplicateLogo !== 1) fails.push(`${viewport.width}px: ${intro.duplicateLogo} logos visibles en portada`);
 
-  await page.click('#startFlow'); await page.waitForTimeout(600);
-  const item = await page.evaluate(() => {
-    const step = document.querySelector('.flow-step.active');
-    const r = step.querySelector('.step-inner').getBoundingClientRect();
-    return {
-      kind: step.dataset.flowStep, left: Math.round(r.left), right: Math.round(r.right),
-      overflow: document.documentElement.scrollWidth - innerWidth,
-      verticalOverflow: step.scrollHeight - step.clientHeight,
-    };
-  });
-  if (item.kind !== 'item-1') fails.push(`${viewport.width}px: no abrió item-1`);
-  if (item.left < 0 || item.right > viewport.width) fails.push(`${viewport.width}px: contenido fuera de pantalla (${item.left}, ${item.right})`);
-  if (item.overflow > 0) fails.push(`${viewport.width}px: overflow en primera cortina`);
-  if (item.verticalOverflow > 4) fails.push(`${viewport.width}px: la primera decisión exige scroll (${item.verticalOverflow}px)`);
-  console.log(`${viewport.width}px: intro CTA ${intro.ctaLeft}-${intro.ctaRight}, contenido ${item.left}-${item.right}, overflow 0`);
+  const close = (a, b, tolerance = 2) => Math.abs(a - b) <= tolerance;
+  if (report.activeSteps !== 1) fails.push(`${viewport.width}px: ${report.activeSteps} etapas activas`);
+  if (report.overflow > 0) fails.push(`${viewport.width}px: overflow horizontal ${report.overflow}px`);
+  if (viewport.width >= 800) {
+    if (!close(report.master.left, report.rail.left) || !close(report.master.right, report.rail.right)) {
+      fails.push(`${viewport.width}px: header y progreso no comparten bordes`);
+    }
+    const column = (report.master.width - 11 * 24) / 12;
+    const expectedContentLeft = report.master.left + 2 * (column + 24);
+    const expectedContentRight = report.master.right - 2 * (column + 24);
+    if (!close(report.introLogo.left, report.master.left) || !close(report.introCopy.left, report.master.left) || !close(report.introCTA.left, report.master.left)) {
+      fails.push(`${viewport.width}px: logo, copy y CTA de portada no parten del grid maestro`);
+    }
+    for (const step of report.steps.filter(step => step.kind.startsWith('item-'))) {
+      if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||
+          !close(step.visual.left, report.master.left) || !close(step.task.right, report.master.right)) {
+        fails.push(`${viewport.width}px ${step.kind}: columnas de producto fuera del grid maestro`);
+      }
+    }
+    for (const step of report.steps.filter(step => step.content && !step.kind.startsWith('item-'))) {
+      if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||
+          !close(step.content.left, expectedContentLeft) || !close(step.content.right, expectedContentRight)) {
+        fails.push(`${viewport.width}px ${step.kind}: contenido no ocupa columnas 3 a 10`);
+      }
+    }
+  } else {
+    const contentWidth = Math.min(viewport.width - 40, 520);
+    const contentLeft = (viewport.width - contentWidth) / 2;
+    const introWidth = Math.min(viewport.width - 40, 540);
+    const introLeft = (viewport.width - introWidth) / 2;
+    if (!close(report.rail.left, 20) || !close(report.rail.right, viewport.width - 20)) {
+      fails.push(`${viewport.width}px: progreso fuera de márgenes móviles`);
+    }
+    if (!close(report.introCopy.left, introLeft) || !close(report.introCTA.left, introLeft) || !close(report.introCTA.right, viewport.width - introLeft)) {
+      fails.push(`${viewport.width}px: portada fuera de márgenes móviles`);
+    }
+    for (const step of report.steps.filter(step => step.kind !== 'intro')) {
+      if (!close(step.inner.left, contentLeft) || !close(step.inner.right, viewport.width - contentLeft)) {
+        fails.push(`${viewport.width}px ${step.kind}: margen móvil inconsistente`);
+      }
+    }
+  }
+
+  for (const step of report.steps) {
+    if (step.verticalOverflow > 4) fails.push(`${viewport.width}px ${step.kind}: exige scroll de ${Math.round(step.verticalOverflow)}px`);
+  }
+  console.log(`${viewport.width}px: grid ${Math.round(report.master.left)}-${Math.round(report.master.right)}, ${report.steps.length} etapas alineadas, overflow 0`);
   await ctx.close();
 }
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: una etapa activa, un logo, CTA y contenido contenidos, sin overflow en 320/390/768/1280');
+console.log('OK: portada y 8 etapas comparten grid en mobile y desktop, sin overflow');

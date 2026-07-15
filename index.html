@@ -207,7 +207,7 @@ section{padding:38px 0 6px}
 /* ---------- Gracias ---------- */
 #gracias{display:none;position:relative;overflow:hidden;text-align:center;padding:64px 0 70px}
 body.done #gracias{display:block}
-body.done #app,body.done .chancebar{display:none}
+body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{display:none}
 .gr-badge{width:74px;height:74px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;
   margin:0 auto 20px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
 .gr-badge svg{width:34px;height:34px}
@@ -352,15 +352,20 @@ body{min-height:100dvh}
 
 /* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
 .roller-wipe{position:absolute;z-index:24;inset:66px 0 0;overflow:hidden;pointer-events:none;visibility:hidden}
-.roller-tube{position:absolute;z-index:2;left:0;right:0;top:-13px;height:26px;background:#D9CCB9;
-  border-bottom:1px solid rgba(74,64,57,.24);box-shadow:0 8px 22px rgba(28,24,22,.18);opacity:0}
-.roller-fabric{position:absolute;inset:-2px 0 0;background:
-  linear-gradient(90deg,rgba(255,255,255,.2),transparent 18%,rgba(103,87,72,.08) 51%,transparent 82%,rgba(255,255,255,.16)),
-  repeating-linear-gradient(90deg,#E8DDCC 0,#E8DDCC 5px,#E1D3BF 6px,#E9DECD 11px);
-  box-shadow:0 24px 70px rgba(28,24,22,.28);transform:translate3d(0,-104%,0);will-change:transform}
-.roller-fabric::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(70,56,45,.025) 4px)}
-.roller-bar{position:absolute;z-index:2;left:0;right:0;bottom:0;height:12px;background:linear-gradient(180deg,#CDBEA8,#A99880);
-  border-top:1px solid rgba(255,255,255,.45);box-shadow:0 8px 18px rgba(28,24,22,.28)}
+.roller-tube{position:absolute;z-index:3;left:0;right:0;top:-12px;height:24px;background:linear-gradient(180deg,#E8E0D4,#B8AA96);
+  border-bottom:1px solid rgba(74,64,57,.3);box-shadow:0 7px 22px rgba(28,24,22,.2);opacity:0}
+.roller-fabric{position:absolute;inset:-2px 0 0;overflow:hidden;background-color:rgba(221,213,200,.46);background-image:
+  linear-gradient(102deg,rgba(255,255,255,.3),transparent 24%,rgba(116,98,78,.08) 52%,transparent 78%,rgba(255,255,255,.22)),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 1px,rgba(92,76,60,.16) 1px 2px,transparent 2px 4px),
+  repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,rgba(91,74,57,.11) 1px 2px,transparent 2px 5px);
+  -webkit-backdrop-filter:blur(8px) saturate(.72) contrast(1.08);backdrop-filter:blur(8px) saturate(.72) contrast(1.08);
+  box-shadow:0 28px 72px rgba(28,24,22,.3);transform:translate3d(0,-104%,0);will-change:transform}
+.roller-fabric::before{content:"";position:absolute;inset:0;z-index:1;background:
+  radial-gradient(ellipse at 24% 18%,rgba(255,255,255,.23),transparent 38%),
+  linear-gradient(90deg,transparent,rgba(255,255,255,.16) 48%,transparent 68%);mix-blend-mode:screen}
+.roller-fabric::after{content:"";position:absolute;inset:0;z-index:2;opacity:.42;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55 .08' numOctaves='3' seed='12'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.34'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
+.roller-bar{position:absolute;z-index:4;left:0;right:0;bottom:0;height:11px;background:linear-gradient(180deg,#D2C8B8,#9C8D78);
+  border-top:1px solid rgba(255,255,255,.52);box-shadow:0 9px 21px rgba(28,24,22,.3)}
 .flow-shell.curtain-running .roller-wipe{visibility:visible}
 .flow-shell.curtain-running .roller-tube{animation:rollerTube .9s ease both}
 .flow-shell.curtain-running .roller-fabric{animation:rollerPass .9s cubic-bezier(.65,0,.18,1) both}
@@ -463,8 +468,9 @@ body{min-height:100dvh}
 .confirm-score strong{font-family:var(--font-display);display:block;font-size:2rem;line-height:1;color:#E19A62}
 .confirm-score span{font-size:.72rem;color:#D6CBC2}.confirm-step .consent{margin-top:16px}
 .confirm-step .cta-sub{text-align:center}
+.rating-step .step-actions,.audio-step .step-actions,.text-step .step-actions,.confirm-step .step-actions{margin-top:20px;padding-top:0}
 
-/* Dos prototipos comparables, mismo flujo y distinto eje físico. */
+/* Un único recorrido: la cortina roller es el gesto; la profundidad sostiene la continuidad. */
 .item-visual,.item-task,.step-content{will-change:transform,opacity;transition:transform .82s cubic-bezier(.16,1,.3,1),opacity .5s ease-out}
 
 /* Ambientes: la cámara atraviesa un ambiente y el siguiente llega desde el fondo. */
@@ -481,29 +487,14 @@ body{min-height:100dvh}
 .variant-ambientes .flow-step.active:not(.entering) .curtain-photo>img{animation:roomDepth 7s ease-in-out infinite alternate}
 @keyframes roomDepth{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.075) translate3d(-1.2%,-.8%,0)}}
 
-/* Scroll: dos pantallas coexisten y recorren casi un viewport completo. */
-.variant-scroll .flow-step{transform:translate3d(0,94%,0) scale(.96);filter:blur(5px);
-  transition-duration:.48s,.72s,.5s,.72s}
-.variant-scroll .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0)}
-.variant-scroll .flow-step.active.entering{opacity:.55;transform:translate3d(0,94%,0) scale(.96);filter:blur(5px)}
-.variant-scroll .flow-shell[data-direction="forward"] .flow-step.leaving{opacity:.2;transform:translate3d(0,-94%,0) scale(.96);filter:blur(5px)}
-.variant-scroll .flow-shell[data-direction="back"] .flow-step.active.entering{opacity:.55;transform:translate3d(0,-94%,0) scale(.96);filter:blur(5px)}
-.variant-scroll .flow-shell[data-direction="back"] .flow-step.leaving{opacity:.2;transform:translate3d(0,94%,0) scale(.96);filter:blur(5px)}
-.variant-scroll .flow-step.active.entering .item-visual{opacity:.45;transform:translate3d(0,14%,0)}
-.variant-scroll .flow-step.active.entering .item-task{opacity:.25;transform:translate3d(0,26%,0)}
-.variant-scroll .flow-step.active.entering .step-content{opacity:.3;transform:translate3d(0,18%,0)}
-.variant-scroll .item-step .next-peek::after{content:"deslizá";margin-left:auto;font-weight:700;color:var(--accent-deep)}
-
 /* La animación sigue activa, pero con menos recorrido para quien lo solicita. */
 @media (prefers-reduced-motion:reduce){
   .intro-scene img{animation-duration:18s;transform:scale(1.015)}
   .flow-shell.curtain-running .roller-fabric{animation-duration:.68s}
   .flow-shell.curtain-running .roller-tube{animation-duration:.68s}
-  .variant-ambientes .flow-step,.variant-scroll .flow-step{transition-duration:.38s;filter:none}
+  .variant-ambientes .flow-step{transition-duration:.38s;filter:none}
   .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
-  .variant-ambientes .flow-step.active,.variant-scroll .flow-step.active{transform:scale(1)}
-  .variant-scroll .flow-step,.variant-scroll .flow-step.active.entering{transform:translate3d(0,18%,0)}
-  .variant-scroll .flow-shell[data-direction="forward"] .flow-step.leaving{transform:translate3d(0,-18%,0)}
+  .variant-ambientes .flow-step.active{transform:scale(1)}
   .next-peek{animation-duration:5s}
 }
 
@@ -522,13 +513,17 @@ body.done #flowApp{display:none}
   .step-actions{padding-top:12px;gap:6px}
   .next-peek{margin-top:12px;padding-top:10px}
 }
+@media (max-width:799px){
+  .roller-fabric{-webkit-backdrop-filter:none;backdrop-filter:none;background-color:rgba(221,213,200,.54)}
+}
 @media (min-width:800px){
   .flow-head{left:50%;right:auto;width:min(calc(100% - 80px),1120px);padding-inline:0;transform:translateX(-50%)}
   .flow-rail{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
   .flow-score{right:max(40px,calc((100vw - 1120px)/2))}
   .flow-step{padding-inline:0}
   .step-inner{width:min(calc(100% - 80px),1120px)}
-  .step-content{width:min(100%,680px);margin-inline:auto}
+  .flow-step:not(.intro-step):not(.item-step) .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-content:start}
+  .flow-step:not(.intro-step):not(.item-step) .step-content{grid-column:3 / span 8;width:auto;margin:0}
   .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start;align-content:start}
   .item-step .item-visual{grid-column:1 / span 7}
   .item-step .item-task{grid-column:8 / -1}
@@ -538,6 +533,7 @@ body.done #flowApp{display:none}
   .item-step .next-peek{margin-top:auto}
   .item-step.has-media .upload-zone{min-height:64px}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
+  .intro-step .intro-logo{left:0}
   .intro-step .intro-copy-block{width:min(100%,500px)}
   .intro-step .intro-copy-block .step-primary{width:max-content;min-width:270px}
   .intro-scene::after{background:linear-gradient(90deg,rgba(250,247,242,.98) 0%,rgba(250,247,242,.9) 40%,rgba(250,247,242,.08) 72%)}
@@ -895,8 +891,7 @@ const state = { archivos: {}, estrellas: 0, audioBlob: null, textoOk: false, env
 PRESUPUESTO.items.forEach(i => state.archivos[i.id] = []);
 
 const $ = s => document.querySelector(s);
-const requestedVariant = new URLSearchParams(location.search).get("v");
-const FLOW_VARIANT = requestedVariant === "scroll" ? "scroll" : "ambientes";
+const FLOW_VARIANT = "ambientes";
 document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
@@ -1187,7 +1182,6 @@ function setupFlow() {
     const next = event.target.closest("[data-flow-next]");
     if (next) goToFlow(flowIndex + 1);
   });
-  setupScrollGestures();
   updateFlowChrome();
   renderPuntos();
 }
@@ -1217,36 +1211,6 @@ function goToFlow(target) {
   setTimeout(() => { flowBusy = false; }, 620);
   setTimeout(() => { current.classList.remove("leaving"); }, 860);
   setTimeout(() => { app.classList.remove("curtain-running"); }, 940);
-}
-function setupScrollGestures() {
-  if (FLOW_VARIANT !== "scroll") return;
-  const shell = $("#flowApp");
-  let touchY = null;
-  const itemIsActive = () => flowSteps[flowIndex]?.dataset.flowStep?.startsWith("item-");
-  const canChange = direction => {
-    const step = flowSteps[flowIndex];
-    if (!itemIsActive()) return false;
-    if (direction > 0) return step.scrollTop + step.clientHeight >= step.scrollHeight - 4;
-    return step.scrollTop <= 4;
-  };
-  shell.addEventListener("wheel", event => {
-    if (Math.abs(event.deltaY) < 28) return;
-    const direction = event.deltaY > 0 ? 1 : -1;
-    if (!canChange(direction)) return;
-    event.preventDefault(); goToFlow(flowIndex + direction);
-  }, { passive: false });
-  shell.addEventListener("touchstart", event => {
-    if (event.target.closest("button,label,input,textarea,a")) { touchY = null; return; }
-    touchY = event.changedTouches[0].clientY;
-  }, { passive: true });
-  shell.addEventListener("touchend", event => {
-    if (touchY == null) return;
-    const delta = touchY - event.changedTouches[0].clientY;
-    touchY = null;
-    if (Math.abs(delta) < 80) return;
-    const direction = delta > 0 ? 1 : -1;
-    if (canChange(direction)) goToFlow(flowIndex + direction);
-  }, { passive: true });
 }
 setupFlow();
 

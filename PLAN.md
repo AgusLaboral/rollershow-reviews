@@ -105,3 +105,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Corrección final: una cortina roller texturada baja, cubre la escena y sube para revelar el ambiente siguiente. No usa pliegues ni teatralidad; funciona sobre las dos variantes y refuerza la marca sin sumar decisiones.
 - En desktop se eliminó el centrado vertical accidental del grid de cada ambiente. Imagen, título y uploader parten del mismo borde superior útil; en portada, promesa, premio, fecha y CTA forman un solo bloque.
 - Se agregó `scripts/verify-motion.mjs`: falla si la cortina roller no participa, si las escenas no coexisten, no usan transforms distintos, no terminan limpias o rompen el grid maestro.
+
+## 11. Consolidación visual y grid completo — 2026-07-15
+
+- Se eliminó la variante vertical: detrás de la cortina la diferencia no llegaba a leerse y mantenía dos comportamientos sin beneficio para la persona. Queda un único recorrido oficial con profundidad.
+- El material de la cortina pasó a sunscreen translúcido: trama tejida bidireccional, ruido fractal SVG, microvariación tonal y `backdrop-filter` para ver el ambiente refractado. Implementación nativa, sin sumar React, Three.js ni dependencias.
+- Todas las etapas usan el mismo grid maestro. Producto ocupa columnas 1–7 y 8–12; calificación, audio, texto y confirmación ocupan columnas 3–10. Logo, copy y CTA de portada comparten el borde izquierdo del grid.
+- En mobile, las acciones de experiencia dejaron de quedar aisladas al fondo: aparecen inmediatamente después del bloque al que responden.
+- `scripts/verify-alignment.mjs` recorre las 9 etapas completas en 320/390/768/1024/1280/1440/1920 px; ya no valida sólo portada y primera cortina.

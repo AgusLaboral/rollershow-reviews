@@ -1,11 +1,11 @@
-// Verifica que las dos variantes tengan movimiento grande, distinto y un grid común.
+// Verifica el gesto único: material sunscreen, profundidad y grid maestro.
 import { chromium } from 'playwright';
 
 const BASE = process.argv[2] || 'http://127.0.0.1:8899/index.html';
 const browser = await chromium.launch();
 const fails = [];
 
-for (const variant of ['ambientes', 'scroll']) {
+for (const variant of ['ambientes']) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
   await page.goto(`${BASE}?v=${variant}`, { waitUntil: 'networkidle' });
   await page.click('#startFlow');
@@ -27,6 +27,10 @@ for (const variant of ['ambientes', 'scroll']) {
       roller: {
         visible: getComputedStyle(roller).visibility,
         transform: getComputedStyle(fabric).transform,
+        backdrop: getComputedStyle(fabric).backdropFilter || getComputedStyle(fabric).webkitBackdropFilter,
+        background: getComputedStyle(fabric).backgroundImage,
+        color: getComputedStyle(fabric).backgroundColor,
+        noise: getComputedStyle(fabric, '::after').backgroundImage,
       },
     };
   });
@@ -34,6 +38,9 @@ for (const variant of ['ambientes', 'scroll']) {
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
   if (motion.roller.visible !== 'visible' || motion.roller.transform === 'none') fails.push(`${variant}: falta la cortina roller`);
+  if (!motion.roller.backdrop.includes('blur') || !motion.roller.noise.includes('data:image/svg+xml') || !motion.roller.color.startsWith('rgba')) {
+    fails.push(`${variant}: el material no combina transparencia, frost y microtextura ${JSON.stringify(motion.roller)}`);
+  }
   await page.waitForTimeout(900);
   const settled = await page.evaluate(() => ({
     active: document.querySelectorAll('.flow-step.active').length,
@@ -45,6 +52,18 @@ for (const variant of ['ambientes', 'scroll']) {
   console.log(`${variant}: cortina ${motion.roller.transform}, entrada ${motion.incoming?.transform}, salida ${motion.outgoing?.transform}`);
   await page.close();
 }
+
+const reducedContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+const reducedPage = await reducedContext.newPage();
+await reducedPage.goto(BASE, { waitUntil: 'networkidle' });
+await reducedPage.click('#startFlow');
+await reducedPage.waitForTimeout(60);
+const reduced = await reducedPage.evaluate(() => ({
+  visible: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
+  duration: getComputedStyle(document.querySelector('.roller-fabric')).animationDuration,
+}));
+if (reduced.visible !== 'visible' || reduced.duration !== '0.68s') fails.push(`reduced-motion: coreografía alternativa ausente ${JSON.stringify(reduced)}`);
+await reducedContext.close();
 
 for (const width of [1024, 1280, 1440, 1920]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -67,4 +86,4 @@ for (const width of [1024, 1280, 1440, 1920]) {
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: cortina roller, profundidad, scroll físico, coexistencia de escenas y grid maestro verificados');
+console.log('OK: cortina roller sunscreen, profundidad, coexistencia de escenas y grid maestro verificados');
