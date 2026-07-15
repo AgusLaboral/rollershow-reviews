@@ -61,7 +61,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
       !initial.copy.text?.includes('frase que ayude') || !initial.copy.confirm?.startsWith('Mostraste ') ||
-      !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('duplicar tus chances')) {
+      !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('Duplicá tus chances')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
   const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
@@ -213,10 +213,32 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       fails.push(`confirmación autorizada: relevo de CTA incompleto ${JSON.stringify(confirmAfter)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-confirm-ready.png` });
-    await page.click('#submitBtn'); await page.waitForTimeout(1300);
+    await page.click('#submitBtn'); await page.waitForTimeout(3300);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
+    const celebration = await page.evaluate(() => {
+      const chance = document.querySelector('.gr-chances strong');
+      const points = document.querySelector('.gr-points strong');
+      const chanceSurface = getComputedStyle(document.querySelector('.gr-chances'));
+      const canvas = document.querySelector('#celebrationCanvas');
+      return {
+        title: document.querySelector('#thanksTitle')?.textContent,
+        chanceSize: parseFloat(getComputedStyle(chance).fontSize),
+        pointsSize: parseFloat(getComputedStyle(points).fontSize),
+        surface: chanceSurface.backgroundColor,
+        border: chanceSurface.borderTopWidth,
+        canvasWidth: canvas.width,
+        particles: window.__celebrationState?.particles || 0,
+        running: window.__celebrationState?.running || false,
+        oldConfetti: document.querySelectorAll('.confetti').length,
+      };
+    });
+    if (!celebration.title?.startsWith('¡Lo hiciste') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
+        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
+        celebration.particles < 35 || !celebration.running || celebration.oldConfetti !== 0) {
+      fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
+    }
     const googleHandoff = await page.evaluate(() => {
       const button = document.querySelector('#gReviewBtn');
       const url = new URL(button.href);
@@ -235,8 +257,12 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       || !googleHandoff.href.includes('!9m1!1b1')) {
       fails.push(`enlace directo al compositor de reseñas incorrecto ${JSON.stringify(googleHandoff)}`);
     }
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(120);
+    await page.screenshot({ path: `${OUT}/canonical-390-thanks.png`, fullPage:true });
+    await page.locator('#gReviewBtn').scrollIntoViewIfNeeded();
 
-    const [popup] = await Promise.all([ctx.waitForEvent('page'), page.click('#gReviewBtn')]);
+    const [popup] = await Promise.all([ctx.waitForEvent('page'), page.locator('#gReviewBtn').click({ force:true, noWaitAfter:true })]);
     await popup.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
     if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
@@ -323,6 +349,10 @@ await dpage.click('.text-step.active .step-primary'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });
 await dpage.check('#consent'); await dpage.waitForTimeout(250);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-ready.png` });
+await dpage.click('#submitBtn'); await dpage.waitForTimeout(1800);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
+await dpage.waitForTimeout(1500);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks.png`, fullPage:true });
 await dctx.close();
 
 await browser.close();

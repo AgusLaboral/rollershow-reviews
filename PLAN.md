@@ -204,3 +204,13 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Hacer transparente el chrome del puntaje en el último paso para que la escena no quede cortada por un rectángulo opaco.
 - [x] Regenerar el hero en 1536×1024 con exactamente 3 almohadones y 2 alfombras, y servir una variante responsive de 768 px.
 - [x] Agregar regresiones automáticas para copy, transparencia, calidad del asset y alineación interna del cierre.
+
+## 23. Finale Innovatron y foco en Google — 2026-07-15
+
+- [x] Reemplazar la pantalla clara centrada por una escena final profunda y asimétrica.
+- [x] Eliminar las cards de puntos/chances y convertir ambos valores en monumentos tipográficos, con chances como logro principal.
+- [x] Sustituir 36 piezas DOM por un canvas físico responsive con fibras, cintas y fragmentos de tela; gravedad, drag, profundidad, viento y repulsión ambiental.
+- [x] Revelar la escena mediante cinco paños roller que se recogen con timing escalonado.
+- [x] Reservar zonas de exclusión para que las partículas pasen por detrás de copy, labels y acciones.
+- [x] Hacer que Google tome foco y pulso permanente una vez asentado el festejo.
+- [x] Conservar una coreografía alternativa en reduced motion, DPR limitado y cantidad de partículas escalada para mobile.
