@@ -72,7 +72,7 @@ for (const variant of ['ambientes']) {
   if (motion.roller.duration !== '1.2s' || motion.roller.keyframes?.length < 5 || !motion.roller.keyframes?.[0]?.easing.includes('cubic-bezier')) {
     fails.push(`${variant}: la bajada no conserva el arranque lento y la aceleración ${JSON.stringify(motion.roller.keyframes)}`);
   }
-  if (idleRoller > 145 || motion.scoreRoller.width <= idleRoller || motion.scoreRoller.height < 8 ||
+  if (Math.abs(idleRoller - (motion.scoreRoller.wipeRight - motion.scoreRoller.wipeLeft)) > 2 || Math.abs(motion.scoreRoller.width - idleRoller) > 2 || motion.scoreRoller.height < 8 ||
       !motion.scoreRoller.material.includes('linear-gradient') || motion.scoreRoller.animation !== 'scoreRollDeploy' || motion.scoreRoller.keyframes < 4 ||
       Math.abs(motion.scoreRoller.right - motion.scoreRoller.wipeRight) > 2) {
     fails.push(`${variant}: el roller persistente no se despliega como origen físico ${JSON.stringify({ idleRoller, ...motion.scoreRoller })}`);

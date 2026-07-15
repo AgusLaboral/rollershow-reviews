@@ -192,10 +192,16 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 ## 21. Roller persistente como origen de la transición — 2026-07-15
 
 - [x] Eliminar la regla horizontal que quedaba colgada debajo del puntaje.
-- [x] Mantener un cilindro roller gris con volumen leve directamente debajo de chances/puntos.
-- [x] Al cambiar de etapa, desplegar ese mismo cilindro hasta el ancho del grid y bajar desde ahí la tela sunscreen.
+- [x] Mantener el rollo físico de la cortina a todo el ancho del grid directamente debajo de chances/puntos, sin convertirlo en un objeto 3D decorativo.
+- [x] Al cambiar de etapa, bajar desde ese mismo rollo la tela sunscreen sin alterar su ancho.
 - [x] Alinear roller, tela, progreso y contenido al mismo grid en mobile y desktop.
 - [x] Verificar por cuadro el estado en reposo, el despliegue y el cierre limpio de la transición.
+
+## 25. Corrección de identidad física y jerarquía del ambiente — 2026-07-15
+
+- [x] Corregir el roller corto y brillante: el rollo de cortina permanece full width en reposo y durante la transición.
+- [x] Integrar `Seguir sin foto` dentro de la superficie de carga y alinearlo exactamente con el CTA principal.
+- [x] Verificar la relación CTA → acción secundaria y el ancho del roller en 320, 390, 768, 1024, 1165, 1280, 1440 y 1920 px.
 
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 

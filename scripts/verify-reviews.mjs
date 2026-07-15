@@ -95,13 +95,23 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       const rect = roller.getBoundingClientRect();
       return {
         width:Math.round(rect.width), height:Math.round(rect.height),
+        scoreWidth:Math.round(score.getBoundingClientRect().width),
         visible:getComputedStyle(roller).display !== 'none' && getComputedStyle(roller).opacity !== '0',
         material:getComputedStyle(roller).backgroundImage,
         fullRule:getComputedStyle(score).borderBottomWidth,
       };
     });
-    if (!scoreRoller.visible || scoreRoller.width > 180 || scoreRoller.height < 8 || !scoreRoller.material.includes('linear-gradient') || scoreRoller.fullRule !== '0px') {
+    if (!scoreRoller.visible || Math.abs(scoreRoller.width-scoreRoller.scoreWidth) > 2 || scoreRoller.height < 8 || !scoreRoller.material.includes('linear-gradient') || scoreRoller.fullRule !== '0px') {
       fails.push(`puntaje: el roller persistente o la eliminación de la línea falló ${JSON.stringify(scoreRoller)}`);
+    }
+    const skipPlacement = await page.evaluate(() => {
+      const step=document.querySelector('.item-step.active'), stage=step.querySelector('.item-stage').getBoundingClientRect();
+      const prompt=step.querySelector('.upload-prompt').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
+      return {inside:!!step.querySelector('.item-task>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom}};
+    });
+    if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top < skipPlacement.prompt.bottom - 1 ||
+        Math.abs(skipPlacement.skip.left-skipPlacement.prompt.left) > 2 || Math.abs(skipPlacement.skip.right-skipPlacement.prompt.right) > 2) {
+      fails.push(`seguir sin foto: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
@@ -265,7 +275,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.evaluate(() => scrollTo(0, 0));
     await page.waitForTimeout(120);
     await page.screenshot({ path: `${OUT}/canonical-390-thanks.png`, fullPage:true });
-    await page.locator('#gReviewBtn').scrollIntoViewIfNeeded();
+    await page.locator('#gReviewBtn').evaluate(el => el.scrollIntoView({block:'center', behavior:'instant'}));
 
     const [popup] = await Promise.all([ctx.waitForEvent('page'), page.locator('#gReviewBtn').click({ force:true, noWaitAfter:true })]);
     await popup.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
