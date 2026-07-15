@@ -104,9 +104,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       remove: !!document.querySelector('.item-step.active .stage-remove'),
       addMore: getComputedStyle(document.querySelector('.item-step.active .upload-more-action')).display !== 'none',
       randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight,.score-paper').length,
+      bannedSeparators: /[·—]/.test(document.querySelector('.item-step.active .stage-score-burst')?.innerText || ''),
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
-        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0) {
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
@@ -136,6 +137,19 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     pts = await page.textContent('#flowPts');
     if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
     await page.click('#ratingNext'); await waitCurtain(page);
+    await page.evaluate(() => renderAudio('recording'));
+    const mobileRecording = await page.evaluate(() => {
+      const stop = document.querySelector('#recStop');
+      const content = document.querySelector('.audio-step .step-content');
+      return {
+        stopWidth: Math.round(stop.getBoundingClientRect().width),
+        contentWidth: Math.round(content.getBoundingClientRect().width),
+        actionsHidden: getComputedStyle(document.querySelector('.audio-step .step-actions')).display === 'none',
+      };
+    });
+    if (mobileRecording.stopWidth < mobileRecording.contentWidth - 2 || !mobileRecording.actionsHidden) fails.push(`audio mobile: jerarquía incorrecta ${JSON.stringify(mobileRecording)}`);
+    await page.screenshot({ path: `${OUT}/canonical-390-audio-recording.png` });
+    await page.evaluate(() => renderAudio('idle'));
     await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
     await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
     const textReward = await page.evaluate(() => ({
@@ -205,6 +219,42 @@ await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(120);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
+
+// Audio: durante la grabación, detener es la única acción dominante. Detener no avanza.
+await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
+for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
+await dpage.locator('#stars button').nth(4).click();
+await dpage.click('#ratingNext'); await waitCurtain(dpage);
+await dpage.evaluate(() => renderAudio('recording'));
+const recordingState = await dpage.evaluate(() => {
+  const step = document.querySelector('.audio-step');
+  const stop = document.querySelector('#recStop');
+  const box = stop.getBoundingClientRect();
+  return {
+    recording: step.classList.contains('is-recording'),
+    stopCopy: stop.textContent.trim(),
+    stopWidth: Math.round(box.width),
+    contentWidth: Math.round(step.querySelector('.step-content').getBoundingClientRect().width),
+    skipVisible: getComputedStyle(step.querySelector('.step-actions')).display !== 'none',
+    activeStep: document.querySelector('.flow-step.active')?.dataset.flowStep,
+  };
+});
+if (!recordingState.recording || recordingState.stopCopy !== 'Terminar grabación' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
+    recordingState.skipVisible || recordingState.activeStep !== 'audio') fails.push(`audio grabando: jerarquía incorrecta ${JSON.stringify(recordingState)}`);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
+
+await dpage.evaluate(() => { state.audioBlob = new Blob(['audio'], { type:'audio/webm' }); renderAudio('recorded'); });
+const reviewState = await dpage.evaluate(() => ({
+  recorded: document.querySelector('.audio-step')?.classList.contains('has-audio'),
+  recording: document.querySelector('.audio-step')?.classList.contains('is-recording'),
+  player: !!document.querySelector('.voice-note'),
+  rerecord: !!document.querySelector('#reRec'),
+  remove: !!document.querySelector('#delRec'),
+  continueVisible: getComputedStyle(document.querySelector('#audioNext')).display !== 'none',
+  skipVisible: getComputedStyle(document.querySelector('.step-audio-skip')).display !== 'none',
+}));
+if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
+    !reviewState.continueVisible || reviewState.skipVisible) fails.push(`audio detenido: revisión incompleta ${JSON.stringify(reviewState)}`);
 await dctx.close();
 
 await browser.close();

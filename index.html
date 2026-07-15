@@ -162,15 +162,21 @@ section{padding:38px 0 6px}
   padding:13px 20px;font-weight:700;font-size:.95rem;box-shadow:0 6px 18px -6px rgba(37,211,102,.55);transition:transform .15s}
 .rec-btn:active{transform:scale(.97)}
 .rec-btn svg{width:19px;height:19px;flex:none}
-.rec-live{display:flex;align-items:center;gap:12px;background:var(--bg-muted);border-radius:999px;padding:9px 12px;min-width:0}
+.rec-live{display:flex;align-items:center;gap:12px;background:var(--bg-muted);border:1px solid var(--border);border-radius:14px;padding:13px 14px;min-width:0}
 .rec-dot{width:11px;height:11px;border-radius:50%;background:var(--danger);flex:none;animation:pulse 1.1s infinite}
 @keyframes pulse{50%{opacity:.25}}
 .rec-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:.92rem;min-width:44px}
 .eq{display:flex;align-items:center;gap:3px;flex:1;height:26px;min-width:0;overflow:hidden}
 .eq i{width:3px;border-radius:2px;background:var(--whatsapp-deep);animation:eq .9s ease-in-out infinite}
 @keyframes eq{0%,100%{height:22%}50%{height:95%}}
-.rec-stop{width:44px;height:44px;border-radius:50%;background:var(--bg-deep);color:#fff;display:grid;place-items:center;flex:none}
-.rec-stop svg{width:15px;height:15px}
+.rec-stop{position:relative;width:100%;min-height:58px;margin-top:12px;border-radius:14px;background:var(--cta);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:11px;font-weight:800;font-size:.98rem;
+  box-shadow:0 14px 34px -16px rgba(198,58,33,.9);animation:stopBreath 1.55s ease-in-out infinite}
+.rec-stop svg{width:16px;height:16px}
+.rec-stop::after{content:"";position:absolute;inset:-1px;border:2px solid rgba(198,58,33,.34);border-radius:inherit;animation:stopRing 1.55s ease-out infinite;pointer-events:none}
+.rec-helper{margin-top:9px;color:var(--fg-mute);font-size:.8rem;text-align:center}
+@keyframes stopBreath{50%{transform:scale(1.012);box-shadow:0 17px 38px -14px rgba(198,58,33,.95)}}
+@keyframes stopRing{0%,35%{opacity:0;transform:scale(1)}55%{opacity:.72}100%{opacity:0;transform:scale(1.045)}}
 .voice-note{display:flex;align-items:center;gap:11px;background:var(--whatsapp-soft);border:1px solid #C3E9CE;
   border-radius:999px;padding:8px 10px;min-width:0}
 .vn-play{width:44px;height:44px;border-radius:50%;background:var(--whatsapp-accessible);color:#fff;display:grid;place-items:center;flex:none}
@@ -329,8 +335,8 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
    FLUJO MULTISTEP. Concepto: un recorrido continuo por los ambientes.
    Una sola decisión y una sola acción primaria por pantalla.
    ========================================================================== */
-body{min-height:100dvh}
-.flow-shell{height:100dvh;min-height:560px;overflow:hidden;background:var(--bg);position:relative;isolation:isolate}
+body{min-height:max(100vh,100dvh)}
+.flow-shell{height:max(100vh,100dvh);min-height:560px;overflow:hidden;background:var(--bg);position:relative;isolation:isolate}
 .flow-head{position:absolute;z-index:30;left:0;right:0;top:0;height:64px;padding:10px 20px;
   display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;pointer-events:none}
 .flow-logo{width:148px;max-width:40vw;grid-column:2;justify-self:center;transition:opacity .2s}
@@ -346,11 +352,18 @@ body{min-height:100dvh}
   background:var(--border);overflow:hidden;transition:opacity .2s}
 .flow-rail i{display:block;width:0;height:100%;border-radius:inherit;background:var(--cta);transition:width .35s cubic-bezier(.22,1,.36,1)}
 .flow-shell[data-current="0"] .flow-rail{opacity:0}
-.flow-score{position:absolute;z-index:28;right:20px;top:76px;display:flex;gap:7px;align-items:center;
-  font-size:.72rem;color:var(--fg-mute);transition:opacity .2s,transform .2s,color .2s}
-.flow-score strong{font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep)}
+.flow-score{position:absolute;z-index:28;right:20px;top:73px;display:flex;gap:8px;align-items:baseline;
+  font-size:.72rem;color:var(--fg-mute);font-variant-numeric:tabular-nums;
+  transition:opacity .2s,transform .2s,color .2s}
+.flow-score strong{display:inline-block;font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep);transform-origin:center}
+.flow-score .score-chances strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
 .flow-score i{width:1px;height:14px;background:var(--border)}
-.flow-score.gain{color:var(--cta);transform:translateY(-2px)}
+.flow-score::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--border);transform-origin:left}
+.flow-score.gain{color:var(--cta)}
+.flow-score.gain::after{background:var(--cta);animation:scoreCharge .72s cubic-bezier(.16,1,.3,1) both}
+.flow-score.gain .score-chances strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
+@keyframes scoreCharge{0%{transform:scaleX(.08);opacity:.2}58%{transform:scaleX(1);opacity:1}100%{opacity:.45}}
+@keyframes chanceLand{0%{transform:translateY(6px) scale(.72);opacity:.4}62%{transform:translateY(-2px) scale(1.22)}100%{transform:none;opacity:1}}
 .flow-shell[data-current="0"] .flow-score{opacity:0;transform:translateY(-8px)}
 
 /* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
@@ -382,7 +395,7 @@ body{min-height:100dvh}
 @keyframes rollerTube{0%,100%{opacity:0}4%,94%{opacity:1}}
 
 .flow-viewport{height:100%;position:relative;overflow:hidden}
-.flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));
+.flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));background:var(--bg);
   opacity:0;visibility:hidden;pointer-events:none;transform:translateX(8%) scale(.985);
   transform-origin:50% 50%;
   transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.16,1,.3,1),visibility .72s}
@@ -472,6 +485,7 @@ body{min-height:100dvh}
 .stage-score-burst::after{content:"";position:absolute;z-index:1;left:0;right:0;bottom:0;height:8px;background:#B7AEA0;box-shadow:0 -5px 12px rgba(30,26,23,.18);animation:rewardBar 1.55s ease both}
 .stage-score-burst strong{position:relative;z-index:2;font-family:var(--font-display);font-size:clamp(4.4rem,18vw,7.5rem);line-height:.8;letter-spacing:-.06em;text-shadow:0 8px 30px rgba(0,0,0,.28);animation:scoreLand 1.55s cubic-bezier(.16,1,.3,1) both}
 .stage-score-burst>span{position:relative;z-index:2;margin-top:12px;font-family:var(--font-display);font-size:.84rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:scoreLabel 1.55s ease both}
+.stage-score-burst>em{position:relative;z-index:2;margin-top:8px;font-size:.86rem;font-style:normal;font-weight:700;animation:scoreLabel 1.55s ease both}
 @keyframes scoreVeil{0%,100%{opacity:0}7%,84%{opacity:1}}
 @keyframes rewardRoller{0%{transform:scaleY(0)}24%,68%{transform:scaleY(1)}100%{transform:scaleY(0)}}
 @keyframes rewardBar{0%,12%,100%{opacity:0}24%,68%{opacity:1}}
@@ -496,6 +510,9 @@ body{min-height:100dvh}
 .audio-step .focus-panel,.text-step .focus-panel{background:transparent;border:0;border-radius:0;padding:0;box-shadow:none}
 .audio-step .step-audio-next{display:none}.audio-step.has-audio .step-audio-next{display:flex}
 .audio-step.has-audio .step-audio-skip{display:none}
+.audio-step.is-recording .step-actions{display:none}
+.audio-earned{margin-top:12px;padding:12px 0;border-block:1px solid var(--border);color:var(--fg-soft);font-size:.88rem}
+.audio-earned strong{display:block;color:var(--cta-deep);font-family:var(--font-display);font-size:1rem;margin-bottom:2px}
 .text-step textarea{display:block;width:100%;min-height:180px;margin:0;border:1px solid var(--border-strong);border-radius:12px;
   padding:14px 15px;font:inherit;font-size:1rem;line-height:1.5;resize:none;background:var(--bg);color:var(--fg)}
 .text-step textarea:focus{outline:3px solid rgba(198,58,33,.2);border-color:var(--cta)}
@@ -555,6 +572,7 @@ body{min-height:100dvh}
   .stage-user-media{animation-duration:.2s}.stage-score-burst,.stage-score-burst::before,.stage-score-burst::after{animation-duration:1.15s}
   .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
+  .rec-stop,.rec-stop::after,.flow-score.gain::after,.flow-score.gain .score-chances strong{animation:none}
 }
 
 body:not(.done) footer{display:none}
@@ -613,7 +631,7 @@ body.done #flowApp{display:none}
   </header>
   <div class="flow-rail" id="flowRail" role="progressbar" aria-label="Progreso del formulario" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"><i id="flowRailFill"></i></div>
   <div class="flow-score" id="flowScore" aria-live="polite">
-    <span><strong id="flowPts">0</strong> puntos</span><i></i><span><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span>
+    <span class="score-chances"><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span><i></i><span><strong id="flowPts">0</strong> puntos</span>
   </div>
   <div class="roller-wipe" aria-hidden="true">
     <div class="roller-tube"></div>
@@ -995,7 +1013,7 @@ function renderPuntos() {
   const flowPts = $("#flowPts"), flowScore = $("#flowScore");
   if (flowPts.textContent != p) {
     flowScore.classList.remove("gain"); void flowScore.offsetWidth; flowScore.classList.add("gain");
-    setTimeout(() => flowScore.classList.remove("gain"), 450);
+    setTimeout(() => flowScore.classList.remove("gain"), 900);
   }
   flowPts.textContent = p;
   $("#flowTickets").textContent = t;
@@ -1014,30 +1032,55 @@ const REWARD_COPY = {
   text: ["Tu opinión quedó lista.", "Esa frase puede ayudar.", "Gracias por sumar este detalle."]
 };
 const rewardTurns = {};
-function celebrateAction(kind, { points = 0, anchor = null, detail = "Acción completada" } = {}) {
+function rewardResult(beforePoints, afterPoints, updated = false) {
+  const beforeChances = chancesDe(beforePoints), afterChances = chancesDe(afterPoints);
+  const gained = Math.max(0, afterChances - beforeChances);
+  if (updated) return `Conservás tus ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
+  if (gained > 0) return `${gained === 1 ? "Una chance más de ganar" : `${gained} chances más de ganar`}. Ya tenés ${afterChances}.`;
+  const missing = PTS_POR_CHANCE - (afterPoints % PTS_POR_CHANCE || PTS_POR_CHANCE);
+  return missing > 0 ? `Te faltan ${missing} puntos para sumar otra chance.` : `Ya tenés ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
+}
+function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Acción completada", updated = false } = {}) {
   const live = $("#rewardLive");
   if (!live) return;
   const choices = REWARD_COPY[kind] || REWARD_COPY.photo;
   const turn = rewardTurns[kind] || 0;
   rewardTurns[kind] = turn + 1;
   const message = choices[turn % choices.length];
-  live.textContent = points ? `${message} Sumaste ${points} puntos. ${detail}` : `${message} ${detail}`;
+  const afterPoints = totalPuntos();
+  const beforePoints = previousPoints == null ? Math.max(0, afterPoints - points) : previousPoints;
+  const outcome = rewardResult(beforePoints, afterPoints, updated);
+  live.textContent = points ? `${message} Sumaste ${points} puntos. ${outcome}` : `${message} ${outcome}`;
   const score = $("#flowScore");
   score.classList.remove("gain"); void score.offsetWidth; score.classList.add("gain");
-  setTimeout(() => score.classList.remove("gain"), 450);
+  setTimeout(() => score.classList.remove("gain"), 900);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate(18);
 }
 window.celebrateAction = celebrateAction;
 
-function celebrateMedia(step, points, detail) {
+function celebrateMedia(step, points, detail, previousPoints) {
   const stage = step.querySelector(".item-stage"), live = $("#rewardLive");
   stage.querySelector(".stage-score-burst")?.remove();
   stage.classList.add("is-rewarding");
   const burst = document.createElement("div");
   burst.className = "stage-score-burst";
-  burst.innerHTML = `<strong>+${points}</strong><span>puntos sumados</span>`;
+  const afterPoints = totalPuntos();
+  const outcome = rewardResult(previousPoints, afterPoints);
+  const gained = Math.max(0, chancesDe(afterPoints) - chancesDe(previousPoints));
+  const visualOutcome = gained > 0
+    ? `${gained} ${gained === 1 ? "chance" : "chances"} más. Ya tenés ${chancesDe(afterPoints)}`
+    : `${chancesDe(afterPoints)} ${chancesDe(afterPoints) === 1 ? "chance" : "chances"} en total`;
+  const kind = detail.startsWith("Video") ? "video" : "photo";
+  const choices = REWARD_COPY[kind];
+  const turn = rewardTurns[kind] || 0;
+  rewardTurns[kind] = turn + 1;
+  const message = choices[turn % choices.length];
+  burst.innerHTML = `<strong>+${points}</strong><span>puntos<br>${visualOutcome}</span><em>${message}</em>`;
   stage.appendChild(burst);
-  live.textContent = `${detail}. Sumaste ${points} puntos.`;
+  live.textContent = `${detail}. Sumaste ${points} puntos. ${outcome}`;
+  const score = $("#flowScore");
+  score.classList.remove("gain"); void score.offsetWidth; score.classList.add("gain");
+  setTimeout(() => score.classList.remove("gain"), 900);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate([18,28,22]);
   setTimeout(() => { burst.remove(); stage.classList.remove("is-rewarding"); }, 1600);
 }
@@ -1118,6 +1161,7 @@ PRESUPUESTO.items.forEach(item => {
 });
 
 function addFiles(itemId, fileList, previews, ownerStep = null) {
+  const previousPoints = totalPuntos();
   let addedPoints = 0, addedVideos = 0, addedPhotos = 0;
   [...fileList].forEach(file => {
     const esVideo = file.type.startsWith("video/");
@@ -1154,7 +1198,7 @@ function addFiles(itemId, fileList, previews, ownerStep = null) {
   if (ownerStep && addedPoints) {
     rewardClass(ownerStep, "media-reward");
     const label = addedVideos + addedPhotos === 1 ? (addedVideos ? "Video cargado" : "Foto cargada") : `${addedVideos + addedPhotos} archivos cargados`;
-    celebrateMedia(ownerStep, addedPoints, label);
+    celebrateMedia(ownerStep, addedPoints, label, previousPoints);
   }
 }
 
@@ -1192,6 +1236,7 @@ for (let i = 1; i <= 5; i++) {
   b.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>`;
   b.addEventListener("click", () => {
     const firstRating = state.estrellas === 0;
+    const previousPoints = totalPuntos();
     state.estrellas = i;
     [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < i));
     $("#starsWord").textContent = PALABRAS[i];
@@ -1200,7 +1245,7 @@ for (let i = 1; i <= 5; i++) {
     if (firstRating) {
       [...starsBox.children].forEach((star, index) => star.style.setProperty("--star-index", index));
       const step = $(".rating-step"); rewardClass(step, "rating-reward", 850);
-      celebrateAction("rating", { points:PUNTOS.estrellas, anchor:starsBox, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}` });
+      celebrateAction("rating", { points:PUNTOS.estrellas, previousPoints, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}` });
     }
   });
   starsBox.appendChild(b);
@@ -1214,7 +1259,10 @@ function fmt(s) { return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).p
 
 function renderAudio(stateName) {
   const flowAudioStep = $(".audio-step");
-  if (flowAudioStep) flowAudioStep.classList.toggle("has-audio", stateName === "recorded");
+  if (flowAudioStep) {
+    flowAudioStep.classList.toggle("has-audio", stateName === "recorded");
+    flowAudioStep.classList.toggle("is-recording", stateName === "recording");
+  }
   if (stateName === "idle") {
     audioUI.innerHTML = `<button type="button" class="rec-btn" id="recStart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
@@ -1226,8 +1274,9 @@ function renderAudio(stateName) {
     audioUI.innerHTML = `<div class="rec-live">
       <span class="rec-dot"></span><span class="rec-time" id="recTime">0:00</span>
       <div class="eq">${bars}</div>
-      <button type="button" class="rec-stop" id="recStop" aria-label="Frenar grabación"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>
-    </div>`;
+    </div>
+    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar grabación</button>
+    <p class="rec-helper">Después vas a poder escucharla, volver a grabarla o seguir.</p>`;
     $("#recStop").addEventListener("click", () => mediaRecorder && mediaRecorder.stop());
   }
   if (stateName === "recorded") {
@@ -1270,10 +1319,18 @@ async function startRec() {
     mediaRecorder.onstop = () => {
       clearInterval(recTimer);
       stream.getTracks().forEach(t => t.stop());
+      const previousPoints = totalPuntos();
       state.audioBlob = new Blob(chunks, { type: mediaRecorder.mimeType });
-      renderAudio("recorded"); renderPuntos();
+      const afterPoints = totalPuntos();
+      const audioOutcome = rewardResult(previousPoints, afterPoints, audioReplacing);
+      renderAudio("recorded");
+      const earned = document.createElement("div");
+      earned.className = "audio-earned";
+      earned.innerHTML = `<strong>${audioReplacing ? "Tu audio quedó actualizado" : `+${PUNTOS.audio} puntos. ${audioOutcome}`}</strong><span>${audioReplacing ? audioOutcome : "Tu voz ya suma a tu participación."}</span>`;
+      audioUI.appendChild(earned);
+      renderPuntos();
       const step = $(".audio-step"); rewardClass(step, "audio-reward", 900);
-      celebrateAction("audio", { points:audioReplacing ? 0 : PUNTOS.audio, anchor:$("#flowAudioMount"), detail:audioReplacing ? "Audio actualizado" : "Audio guardado" });
+      celebrateAction("audio", { points:audioReplacing ? 0 : PUNTOS.audio, previousPoints, detail:audioReplacing ? "Audio actualizado" : "Audio guardado", updated:audioReplacing });
       audioReplacing = false;
     };
     mediaRecorder.start();
@@ -1294,11 +1351,12 @@ renderAudio("idle");
 const reviewText = $("#reviewText");
 reviewText.addEventListener("input", () => {
   const wasComplete = state.textoOk;
+  const previousPoints = totalPuntos();
   state.textoOk = reviewText.value.trim().length >= 20; /* con 20 caracteres cuenta, para que "ok" no sume */
   saveLocal(); renderPuntos();
   if (!wasComplete && state.textoOk) {
     const step = $(".text-step"); rewardClass(step, "text-reward", 850);
-    celebrateAction("text", { points:PUNTOS.texto, anchor:reviewText, detail:"Opinión completada" });
+    celebrateAction("text", { points:PUNTOS.texto, previousPoints, detail:"Opinión completada" });
   }
 });
 

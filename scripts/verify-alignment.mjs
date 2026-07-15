@@ -75,12 +75,15 @@ for (const viewport of viewports) {
       steps: data,
       overflow: document.documentElement.scrollWidth - innerWidth,
       activeSteps: document.querySelectorAll('.flow-step.active').length,
+      shellHeight: document.querySelector('.flow-shell').getBoundingClientRect().height,
+      viewportHeight: innerHeight,
     };
   });
 
   const close = (a, b, tolerance = 2) => Math.abs(a - b) <= tolerance;
   if (report.activeSteps !== 1) fails.push(`${viewport.width}px: ${report.activeSteps} etapas activas`);
   if (report.overflow > 0) fails.push(`${viewport.width}px: overflow horizontal ${report.overflow}px`);
+  if (report.shellHeight < report.viewportHeight - 1) fails.push(`${viewport.width}px: el flujo sólo cubre ${report.shellHeight}px de ${report.viewportHeight}px`);
   if (viewport.width >= 800) {
     if (!close(report.master.left, report.rail.left) || !close(report.master.right, report.rail.right)) {
       fails.push(`${viewport.width}px: header y progreso no comparten bordes`);

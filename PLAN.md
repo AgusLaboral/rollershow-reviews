@@ -162,3 +162,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Separar los estados: antes de cargar manda el uploader; después manda continuar y “sumar otra” es secundario.
 - [x] Quitar cajas dobles en audio/texto y reemplazar las dos cards de confirmación por una frase.
 - [x] Medir ejes internos de título, superficie y acciones en cada ambiente y breakpoint.
+
+## 18. Audio y progreso con recompensa real — 2026-07-15
+
+- [x] Convertir `Terminar grabación` en CTA principal de ancho completo, con pulso propio y sin salida secundaria durante la captura.
+- [x] Separar detener de avanzar: al terminar aparecen escuchar, volver a grabar, borrar y recién entonces continuar.
+- [x] Dar jerarquía estable a chances antes que puntos y animar el cambio en el mismo contador, sin marcador flotante ni count-up genérico.
+- [x] Expresar cada logro con consecuencias exactas: puntos ganados, chances nuevas y total resultante; variar el incentivo local sin prometer cercanía determinista a un premio sorteado.
+- [x] Verificar estados de audio grabando/revisión y geometría mobile/desktop; hacer opaco el fondo de cada etapa para evitar transparencias de composición.
