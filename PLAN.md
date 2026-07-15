@@ -94,3 +94,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Movimiento: continuidad de `ambientes` y `scroll` preservada, con bloqueo real reducido a menos de medio segundo. La versión scroll conserva gesto y control visible alternativo.
 - Performance: hero responsive en WebP (768/1536 px). Lighthouse local: accesibilidad 100, buenas prácticas 100, performance 82; el principal costo restante es la tipografía remota y no se vuelve asíncrona para evitar salto visual.
 - Pruebas: flujo completo y geometría aprobados en `ambientes` y `scroll`, 320/360/390/768/1280 px, incluida la compuerta que falla si el CTA de portada queda debajo del pliegue o si la primera decisión exige scroll.
+
+## 10. Corrección de grid y movimiento — 2026-07-15
+
+- El pase anterior estaba funcional pero visualmente subcalibrado: ocultaba el plano saliente a los 70 ms, por lo que la profundidad no llegaba a leerse, y mezclaba un header de ancho completo con contenido de 980 px.
+- Nuevo grid maestro de 1120 px: en 1024/1280/1440/1920, header, progreso y contenido comparten respectivamente los bordes 40–984, 80–1200, 160–1280 y 400–1520.
+- `ambientes`: cámara con entrada desde Z -280 px y salida hacia Z positivo, escala, blur y capas internas con velocidades distintas.
+- `scroll`: dos pantallas coexistentes recorren aproximadamente 94% del viewport en sentidos opuestos; el movimiento por wheel/swipe conserva el botón como alternativa visible.
+- La interacción vuelve a habilitarse a los 460 ms aunque el residuo visual termine después. El movimiento es grande sin sumar pasos ni competir con el CTA.
+- Se agregó `scripts/verify-motion.mjs`: falla si las escenas no coexisten, no usan transforms distintos, no terminan limpias o rompen el grid maestro.

@@ -349,13 +349,15 @@ body{min-height:100dvh}
 .flow-score i{width:1px;height:14px;background:var(--border)}
 .flow-score.gain{color:var(--cta);transform:translateY(-2px)}
 .flow-shell[data-current="0"] .flow-score{opacity:0;transform:translateY(-8px)}
-.flow-viewport{height:100%;position:relative;overflow:hidden}
+.flow-viewport{height:100%;position:relative;overflow:hidden;perspective:1400px;transform-style:preserve-3d}
 .flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));
   opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(8%,0,0) scale(.985);
-  transition:opacity .28s cubic-bezier(.22,1,.36,1),transform .38s cubic-bezier(.22,1,.36,1),visibility .38s}
-.flow-step.active{opacity:1;visibility:visible;pointer-events:auto;transform:translate3d(0,0,0)}
-.flow-step.leaving{opacity:0;transform:translate3d(-7%,0,0) scale(.985)}
+  transform-origin:50% 50%;transform-style:preserve-3d;will-change:transform,opacity,filter;
+  transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.16,1,.3,1),filter .55s cubic-bezier(.22,1,.36,1),visibility .72s}
+.flow-step.active{opacity:1;visibility:visible;pointer-events:auto;z-index:2;transform:translate3d(0,0,0)}
+.flow-step.leaving{visibility:visible;pointer-events:none;z-index:1}
 .step-inner{width:min(100%,520px);min-height:calc(100dvh - 128px);margin:0 auto;display:flex;flex-direction:column}
+.step-content{display:flex;flex:1;flex-direction:column}
 .step-kicker{font-size:.78rem;font-weight:700;color:var(--accent-deep);margin-bottom:7px}
 .step-title{font-family:var(--font-display);font-size:clamp(1.85rem,8vw,2.65rem);line-height:1.02;
   letter-spacing:-.025em;font-weight:800}
@@ -438,32 +440,43 @@ body{min-height:100dvh}
 .confirm-step .cta-sub{text-align:center}
 
 /* Dos prototipos comparables, mismo flujo y distinto eje físico. */
-.variant-ambientes .flow-step{transform:translate3d(0,2%,0) scale(.91);filter:blur(2px);
-  transition:opacity .28s cubic-bezier(.22,1,.36,1),transform .4s cubic-bezier(.22,1,.36,1),filter .32s}
-.variant-ambientes .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0)}
-.variant-ambientes .flow-shell[data-direction="forward"] .flow-step.leaving{transform:translate3d(0,-1%,0) scale(1.075);filter:blur(2px)}
-.variant-ambientes .flow-shell[data-direction="back"] .flow-step{transform:translate3d(0,-1%,0) scale(1.06)}
-.variant-ambientes .flow-shell[data-direction="back"] .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0)}
-.variant-ambientes .flow-shell[data-direction="back"] .flow-step.leaving{transform:translate3d(0,2%,0) scale(.91);filter:blur(2px)}
-.variant-ambientes .curtain-photo>img{transform:scale(1.11)}
-.variant-ambientes .flow-step.active .curtain-photo>img{transform:scale(1)}
+.item-visual,.item-task,.step-content{will-change:transform,opacity;transition:transform .82s cubic-bezier(.16,1,.3,1),opacity .5s ease-out}
 
-.variant-scroll .flow-step{transform:translate3d(0,10%,0) scale(.985);
-  transition:opacity .25s cubic-bezier(.22,1,.36,1),transform .36s cubic-bezier(.22,1,.36,1),visibility .36s}
-.variant-scroll .flow-step.active{transform:translate3d(0,0,0) scale(1)}
-.variant-scroll .flow-shell[data-direction="forward"] .flow-step.leaving{transform:translate3d(0,-10%,0) scale(.985)}
-.variant-scroll .flow-shell[data-direction="back"] .flow-step{transform:translate3d(0,-10%,0) scale(.985)}
-.variant-scroll .flow-shell[data-direction="back"] .flow-step.active{transform:translate3d(0,0,0) scale(1)}
-.variant-scroll .flow-shell[data-direction="back"] .flow-step.leaving{transform:translate3d(0,10%,0) scale(.985)}
+/* Ambientes: la cámara atraviesa un ambiente y el siguiente llega desde el fondo. */
+.variant-ambientes .flow-step{transform:translate3d(0,0,-280px) scale(.78);filter:blur(12px) saturate(.82);
+  transition-duration:.56s,.82s,.62s,.82s}
+.variant-ambientes .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0) saturate(1)}
+.variant-ambientes .flow-step.active.entering{opacity:.18;transform:translate3d(0,2%, -280px) scale(.78);filter:blur(12px) saturate(.82)}
+.variant-ambientes .flow-shell[data-direction="forward"] .flow-step.leaving{opacity:0;transform:translate3d(0,-2%,220px) scale(1.18);filter:blur(14px) saturate(1.08)}
+.variant-ambientes .flow-shell[data-direction="back"] .flow-step.active.entering{opacity:.25;transform:translate3d(0,-2%,180px) scale(1.15);filter:blur(10px)}
+.variant-ambientes .flow-shell[data-direction="back"] .flow-step.leaving{opacity:0;transform:translate3d(0,2%,-260px) scale(.8);filter:blur(12px)}
+.variant-ambientes .flow-step.active.entering .item-visual{opacity:.35;transform:translate3d(-5%,2%,-120px) rotateY(-5deg)}
+.variant-ambientes .flow-step.active.entering .item-task{opacity:.2;transform:translate3d(14%,0,-170px) rotateY(4deg)}
+.variant-ambientes .flow-step.active.entering .step-content{opacity:.25;transform:translate3d(0,5%,-140px)}
+.variant-ambientes .flow-step.active:not(.entering) .curtain-photo>img{animation:roomDepth 7s ease-in-out infinite alternate}
+@keyframes roomDepth{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.075) translate3d(-1.2%,-.8%,0)}}
+
+/* Scroll: dos pantallas coexisten y recorren casi un viewport completo. */
+.variant-scroll .flow-step{transform:translate3d(0,94%,0) scale(.96);filter:blur(5px);
+  transition-duration:.48s,.72s,.5s,.72s}
+.variant-scroll .flow-step.active{transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.variant-scroll .flow-step.active.entering{opacity:.55;transform:translate3d(0,94%,0) scale(.96);filter:blur(5px)}
+.variant-scroll .flow-shell[data-direction="forward"] .flow-step.leaving{opacity:.2;transform:translate3d(0,-94%,0) scale(.96);filter:blur(5px)}
+.variant-scroll .flow-shell[data-direction="back"] .flow-step.active.entering{opacity:.55;transform:translate3d(0,-94%,0) scale(.96);filter:blur(5px)}
+.variant-scroll .flow-shell[data-direction="back"] .flow-step.leaving{opacity:.2;transform:translate3d(0,94%,0) scale(.96);filter:blur(5px)}
+.variant-scroll .flow-step.active.entering .item-visual{opacity:.45;transform:translate3d(0,14%,0)}
+.variant-scroll .flow-step.active.entering .item-task{opacity:.25;transform:translate3d(0,26%,0)}
+.variant-scroll .flow-step.active.entering .step-content{opacity:.3;transform:translate3d(0,18%,0)}
 .variant-scroll .item-step .next-peek::after{content:"deslizá";margin-left:auto;font-weight:700;color:var(--accent-deep)}
 
 /* La animación sigue activa, pero con menos recorrido para quien lo solicita. */
 @media (prefers-reduced-motion:reduce){
   .intro-scene img{animation-duration:18s;transform:scale(1.015)}
-  .variant-ambientes .flow-step,.variant-scroll .flow-step{transition-duration:.28s;filter:none}
-  .variant-ambientes .flow-step,.variant-ambientes .flow-shell[data-direction] .flow-step.leaving{transform:scale(.98)}
+  .variant-ambientes .flow-step,.variant-scroll .flow-step{transition-duration:.38s;filter:none}
+  .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
   .variant-ambientes .flow-step.active,.variant-scroll .flow-step.active{transform:scale(1)}
-  .variant-scroll .flow-step,.variant-scroll .flow-shell[data-direction] .flow-step.leaving{transform:translate3d(0,3%,0)}
+  .variant-scroll .flow-step,.variant-scroll .flow-step.active.entering{transform:translate3d(0,18%,0)}
+  .variant-scroll .flow-shell[data-direction="forward"] .flow-step.leaving{transform:translate3d(0,-18%,0)}
   .next-peek{animation-duration:5s}
 }
 
@@ -483,15 +496,21 @@ body.done #flowApp{display:none}
   .next-peek{margin-top:12px;padding-top:10px}
 }
 @media (min-width:800px){
-  .flow-step{padding-inline:40px}.step-inner{width:min(100%,620px)}
-  .item-step .step-inner{width:min(100%,980px);display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);
-    gap:clamp(30px,4vw,56px);align-items:center}
+  .flow-head{left:50%;right:auto;width:min(calc(100% - 80px),1120px);padding-inline:0;transform:translateX(-50%)}
+  .flow-rail{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
+  .flow-score{right:max(40px,calc((100vw - 1120px)/2))}
+  .flow-step{padding-inline:0}
+  .step-inner{width:min(calc(100% - 80px),1120px)}
+  .step-content{width:min(100%,680px);margin-inline:auto}
+  .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center}
+  .item-step .item-visual{grid-column:1 / span 7}
+  .item-step .item-task{grid-column:8 / -1}
   .item-step .item-task{min-height:440px;justify-content:center}
   .item-step .upload-zone{min-height:150px;margin-top:0}
   .item-step .step-actions{margin-top:22px;padding-top:0}
   .item-step .next-peek{margin-top:auto}
   .item-step.has-media .upload-zone{min-height:64px}
-  .intro-step .step-inner{width:min(100%,1080px);padding-inline:40px;align-items:flex-start}
+  .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding-inline:0;align-items:flex-start}
   .intro-scene::after{background:linear-gradient(90deg,rgba(250,247,242,.98) 0%,rgba(250,247,242,.9) 40%,rgba(250,247,242,.08) 72%)}
   .intro-scene img{object-position:72% 50%}.intro-step h1{font-size:3.65rem}.intro-prize{font-size:1.35rem}
 }
@@ -530,6 +549,7 @@ body.done #flowApp{display:none}
     <div id="flowItemSteps"></div>
     <section class="flow-step rating-step" data-flow-step="rating" aria-hidden="true">
       <div class="step-inner">
+       <div class="step-content">
         <span class="step-kicker">Tu experiencia suma +5</span>
         <h2 class="step-title">¿Cómo fue comprar en Rollershow?</h2>
         <p class="step-copy">Elegí una calificación.</p>
@@ -540,10 +560,12 @@ body.done #flowApp{display:none}
         <div class="step-actions">
           <button class="step-primary" id="ratingNext" type="button" disabled>Continuar</button>
         </div>
+       </div>
       </div>
     </section>
     <section class="flow-step audio-step" data-flow-step="audio" aria-hidden="true">
       <div class="step-inner">
+       <div class="step-content">
         <span class="step-kicker">Mensaje de voz +30</span>
         <h2 class="step-title">Contanos cómo quedaron.</h2>
         <p class="step-copy">Como si mandaras un audio de WhatsApp. Podés escucharlo y grabarlo de nuevo.</p>
@@ -552,25 +574,30 @@ body.done #flowApp{display:none}
           <button class="step-primary step-audio-next" id="audioNext" type="button">Continuar</button>
           <button class="step-secondary step-audio-skip" data-flow-next type="button">Seguir sin audio</button>
         </div>
+       </div>
       </div>
     </section>
     <section class="flow-step text-step" data-flow-step="text" aria-hidden="true">
       <div class="step-inner">
+       <div class="step-content">
         <span class="step-kicker">Tu opinión +5</span>
         <h2 class="step-title">¿Qué le dirías a alguien que está dudando?</h2>
         <p class="step-copy">Con una frase alcanza. Es opcional y podés seguir sin escribir.</p>
         <div class="focus-panel" id="flowTextMount"></div>
         <div class="step-actions"><button class="step-primary" data-flow-next type="button">Seguir a confirmar</button></div>
+       </div>
       </div>
     </section>
     <section class="flow-step confirm-step" data-flow-step="confirm" aria-hidden="true">
       <div class="step-inner">
+       <div class="step-content">
         <span class="step-kicker">Último paso</span>
         <h2 class="step-title">Confirmá tu participación.</h2>
         <p class="step-copy">Esto es todo lo que sumaste hasta ahora.</p>
         <div class="confirm-score"><div><strong id="confirmPts">0</strong><span>puntos</span></div><div><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">chances</span></div></div>
         <div id="flowConsentMount"></div>
         <div class="step-actions" id="flowSubmitMount"></div>
+       </div>
       </div>
     </section>
   </div>
@@ -1144,13 +1171,13 @@ function goToFlow(target) {
   if (current.dataset.flowStep === "audio" && mediaRecorder?.state === "recording") mediaRecorder.stop();
   app.dataset.direction = target > flowIndex ? "forward" : "back";
   current.classList.add("leaving");
-  setTimeout(() => {
-    current.classList.remove("active"); current.setAttribute("aria-hidden", "true");
-    flowIndex = target; updateFlowChrome();
-    next.classList.remove("leaving"); next.classList.add("active"); next.setAttribute("aria-hidden", "false"); next.scrollTop = 0;
-    next.focus({ preventScroll: true });
-    setTimeout(() => { current.classList.remove("leaving"); flowBusy = false; }, FLOW_VARIANT === "ambientes" ? 410 : 370);
-  }, 70);
+  current.classList.remove("active"); current.setAttribute("aria-hidden", "true");
+  next.classList.remove("leaving"); next.classList.add("active", "entering"); next.setAttribute("aria-hidden", "false"); next.scrollTop = 0;
+  flowIndex = target; updateFlowChrome();
+  requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("entering")));
+  next.focus({ preventScroll: true });
+  setTimeout(() => { flowBusy = false; }, 460);
+  setTimeout(() => { current.classList.remove("leaving"); }, 860);
 }
 function setupScrollGestures() {
   if (FLOW_VARIANT !== "scroll") return;

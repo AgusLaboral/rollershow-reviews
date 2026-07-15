@@ -1,0 +1,59 @@
+// Verifica que las dos variantes tengan movimiento grande, distinto y un grid común.
+import { chromium } from 'playwright';
+
+const BASE = process.argv[2] || 'http://127.0.0.1:8899/index.html';
+const browser = await chromium.launch();
+const fails = [];
+
+for (const variant of ['ambientes', 'scroll']) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await page.goto(`${BASE}?v=${variant}`, { waitUntil: 'networkidle' });
+  await page.click('#startFlow');
+  await page.waitForTimeout(60);
+  const motion = await page.evaluate(() => {
+    const incoming = document.querySelector('.flow-step.active');
+    const outgoing = document.querySelector('.flow-step.leaving');
+    const read = element => element ? {
+      step: element.dataset.flowStep,
+      transform: getComputedStyle(element).transform,
+      filter: getComputedStyle(element).filter,
+      opacity: getComputedStyle(element).opacity,
+    } : null;
+    return { incoming: read(incoming), outgoing: read(outgoing) };
+  });
+  if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
+  if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
+  if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
+  await page.waitForTimeout(850);
+  const settled = await page.evaluate(() => ({
+    active: document.querySelectorAll('.flow-step.active').length,
+    leaving: document.querySelectorAll('.flow-step.leaving').length,
+    step: document.querySelector('.flow-step.active')?.dataset.flowStep,
+  }));
+  if (settled.active !== 1 || settled.leaving !== 0 || settled.step !== 'item-1') fails.push(`${variant}: la transición no termina limpia`);
+  console.log(`${variant}: entrada ${motion.incoming?.transform}, salida ${motion.outgoing?.transform}`);
+  await page.close();
+}
+
+for (const width of [1024, 1280, 1440, 1920]) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  await page.goto(`${BASE}?v=ambientes`, { waitUntil: 'networkidle' });
+  await page.click('#startFlow');
+  await page.waitForTimeout(900);
+  const grid = await page.evaluate(() => {
+    const bounds = selector => {
+      const rect = document.querySelector(selector).getBoundingClientRect();
+      return { left: Math.round(rect.left), right: Math.round(rect.right) };
+    };
+    return { head: bounds('.flow-head'), rail: bounds('.flow-rail'), content: bounds('.flow-step.active .step-inner') };
+  });
+  const aligned = Math.abs(grid.head.left - grid.rail.left) <= 1 && Math.abs(grid.head.right - grid.rail.right) <= 1 &&
+    Math.abs(grid.head.left - grid.content.left) <= 1 && Math.abs(grid.head.right - grid.content.right) <= 1;
+  if (!aligned) fails.push(`${width}px: header, progreso y contenido no comparten el grid ${JSON.stringify(grid)}`);
+  console.log(`${width}px: grid ${grid.head.left}-${grid.head.right}`);
+  await page.close();
+}
+
+await browser.close();
+if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
+console.log('OK: profundidad, scroll físico, coexistencia de escenas y grid maestro verificados');
