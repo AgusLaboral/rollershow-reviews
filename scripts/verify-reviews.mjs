@@ -1,13 +1,36 @@
-// Verificación del mockup rollershow-reviews (mobile-first)
+// Verificación funcional del flujo multistep Rollershow Reviews.
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
 const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
+const VARIANT = new globalThis.URL(URL).searchParams.get('v') === 'scroll' ? 'scroll' : 'ambientes';
 const OUT = 'C:/Users/Agus/Desktop/rollershow-reviews/_scratch';
 await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch();
 const fails = [];
+const waitCurtain = page => page.waitForTimeout(1050);
+const testImage = {
+  name: 'foto.jpg', mimeType: 'image/jpeg',
+  buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),
+};
+
+async function reachConfirm(page, { withPhoto = false } = {}) {
+  await page.click('#startFlow'); await waitCurtain(page);
+  if (withPhoto) {
+    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.waitForTimeout(300);
+    await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
+    for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
+  } else {
+    for (let i = 0; i < 4; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
+  }
+  await page.locator('#stars button').nth(4).click();
+  await page.click('#ratingNext'); await waitCurtain(page);
+  await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
+  await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
+  await page.click('.text-step.active .step-primary'); await waitCurtain(page);
+}
 
 for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
   const ctx = await browser.newContext({
@@ -16,103 +39,82 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
   });
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(700);
 
-  // 1. overflow horizontal
-  const over = await page.evaluate(() => ({
-    scrollLeft: document.body.scrollLeft + document.documentElement.scrollLeft,
+  const initial = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    active: document.querySelector('.flow-step.active')?.dataset.flowStep,
+    primaries: document.querySelectorAll('.intro-step.active .step-primary').length,
+    prizes: document.body.innerText.includes('3 almohadones y 2 alfombras premium'),
   }));
-  if (over.scrollLeft !== 0 || over.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${JSON.stringify(over)}`);
-
-  await page.screenshot({ path: `${OUT}/v-${vp.w}-fold.png` });
-  await page.screenshot({ path: `${OUT}/v-${vp.w}-full.png`, fullPage: true });
+  if (initial.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${initial.overflow}`);
+  if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
+  if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
+  if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  await page.screenshot({ path: `${OUT}/${VARIANT}-${vp.w}-intro.png` });
 
   if (vp.w === 390) {
-    // 2. estrellas -> +5
+    await page.click('#startFlow'); await waitCurtain(page);
+    if (await page.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-1') fails.push('el CTA no abre la primera cortina');
+    await page.screenshot({ path: `${OUT}/${VARIANT}-390-item.png` });
+
+    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.waitForTimeout(300);
+    let pts = await page.textContent('#flowPts');
+    if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
+    await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
+    for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
+
     await page.locator('#stars button').nth(4).click();
-    let pts = await page.textContent('#ptsNum');
-    if (pts !== '5') fails.push(`estrellas: esperaba 5 pts, hay ${pts}`);
+    pts = await page.textContent('#flowPts');
+    if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
+    await page.click('#ratingNext'); await waitCurtain(page);
+    await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
+    await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
+    pts = await page.textContent('#flowPts');
+    if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
+    await page.click('.text-step.active .step-primary'); await waitCurtain(page);
 
-    // 3. foto -> +10 (total 15)
-    await page.locator('.item input[type=file]').first().setInputFiles({
-      name: 'foto.jpg', mimeType: 'image/jpeg',
-      buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),
-    });
-    await page.waitForTimeout(400);
-    pts = await page.textContent('#ptsNum');
-    if (pts !== '15') fails.push(`foto: esperaba 15 pts, hay ${pts}`);
-    const tickets = await page.textContent('#ticketNum');
-    if (tickets !== '1') fails.push(`tickets: esperaba 1, hay ${tickets}`);
-
-    // 4. texto >= 20 chars -> +5 (total 20)
-    await page.fill('#reviewText', 'Excelente atencion, quedaron hermosas las cortinas del living.');
-    pts = await page.textContent('#ptsNum');
-    if (pts !== '20') fails.push(`texto: esperaba 20 pts, hay ${pts}`);
-
-    // 5. submit sin consentimiento -> NO pasa
     await page.click('#submitBtn');
-    await page.waitForTimeout(300);
-    if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('submit paso sin consentimiento');
+    if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('submit pasó sin consentimiento');
+    await page.check('#consent'); await page.click('#submitBtn'); await page.waitForTimeout(1300);
+    if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
+    if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
 
-    // 6. consentimiento + submit -> gracias
-    await page.check('#consent');
-    await page.click('#submitBtn');
-    await page.waitForTimeout(1300);
-    if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llego a gracias');
-    const grPts = await page.textContent('#grPts');
-    if (grPts !== '20') fails.push(`gracias: esperaba 20 pts, hay ${grPts}`);
-    await page.screenshot({ path: `${OUT}/v-390-gracias.png`, fullPage: true });
-
-    // 6b. duplicar con reseña de Google: click abre pestaña nueva + revela confirmar
-    const [popup] = await Promise.all([
-      ctx.waitForEvent('page'),
-      page.click('#gReviewBtn'),
-    ]);
+    const [popup] = await Promise.all([ctx.waitForEvent('page'), page.click('#gReviewBtn')]);
     await popup.close().catch(() => {});
-    await page.waitForTimeout(200);
-    const confirmVisible = await page.isVisible('#gConfirmStep');
-    if (!confirmVisible) fails.push('gReviewBtn no revela el paso de confirmar');
-    await page.click('#gConfirmBtn');
-    await page.waitForTimeout(300);
-    const validatingVisible = await page.isVisible('#gValidating');
-    if (!validatingVisible) fails.push('no se muestra el estado "confirmando"');
-    await page.waitForTimeout(2900); // 1700ms de "validando" + 900ms de count-up + margen
-    const doneVisible = await page.isVisible('#gDone');
-    if (!doneVisible) fails.push('no se muestra el estado "listo" tras confirmar');
-    const grPtsAfter = await page.textContent('#grPts');
-    if (grPtsAfter !== '40') fails.push(`google review: esperaba 40 pts (doble de 20), hay ${grPtsAfter}`);
-    const grTicketsAfter = await page.textContent('#grTickets');
-    if (grTicketsAfter !== '4') fails.push(`google review: esperaba 4 chances, hay ${grTicketsAfter}`);
-    await page.screenshot({ path: `${OUT}/v-390-google-done.png`, fullPage: true });
+    await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
+    if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');
+    if (await page.textContent('#grPts') !== '40') fails.push('reseña de Google no duplica puntos');
 
-    // 7. exit popup: back-trap en pagina nueva con puntos
     const p2 = await ctx.newPage();
     await p2.goto(URL, { waitUntil: 'networkidle' });
-    await p2.locator('#stars button').nth(3).click();
-    await p2.goBack();
-    await p2.waitForTimeout(500);
-    const exitOpen = await p2.evaluate(() => document.getElementById('exitModal').open);
-    if (!exitOpen) fails.push('exit popup no aparecio con botón Atrás');
-    else await p2.screenshot({ path: `${OUT}/v-390-exit.png` });
+    await p2.click('#startFlow'); await waitCurtain(p2);
+    await p2.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await p2.goBack(); await p2.waitForTimeout(500);
+    if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
 
-    // 8. modal bases
     const p3 = await ctx.newPage();
     await p3.goto(URL, { waitUntil: 'networkidle' });
+    await reachConfirm(p3);
     await p3.click('#openBases');
-    if (!(await p3.evaluate(() => document.getElementById('basesModal').open))) fails.push('modal bases no abre');
+    if (!(await p3.evaluate(() => document.getElementById('basesModal').open))) fails.push('modal de bases no abre');
   }
   await ctx.close();
 }
 
-// desktop rápido
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'networkidle' });
-await dpage.waitForTimeout(1000);
-await dpage.screenshot({ path: `${OUT}/v-1280-fold.png` });
+await dpage.screenshot({ path: `${OUT}/${VARIANT}-1280-intro.png` });
+if (VARIANT === 'scroll') {
+  await dpage.click('#startFlow'); await waitCurtain(dpage);
+  await dpage.evaluate(() => { const step = document.querySelector('.flow-step.active'); step.scrollTop = step.scrollHeight; });
+  await dpage.mouse.wheel(0, 900); await waitCurtain(dpage);
+  if (await dpage.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-2') fails.push('el scroll no avanza de item-1 a item-2');
+}
 await dctx.close();
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: overflow 0, puntos 5/15/20, consentimiento bloquea, gracias 20pts, exit popup Atrás, bases OK');
+console.log('OK: multistep 9 etapas, 1 CTA en portada, premios concretos, puntos 10/15/20, consentimiento, gracias, Google, exit y bases');

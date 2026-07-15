@@ -1,6 +1,11 @@
 # Rollershow Reviews & Sorteo
 
-Mockup fase 1: web app para que clientes que ya compraron suban fotos/video de sus cortinas instaladas, califiquen con estrellas, dejen un mensaje de voz (estilo nota de WhatsApp) y una opinión escrita. Todo suma puntos que se traducen en chances de un sorteo mensual de 3 premios de decoración, anunciado en el Instagram de Rollershow.
+Mockup fase 1: web app multistep para que clientes que ya compraron recorran sus cortinas una por una, suban fotos/video, califiquen, dejen audio o texto y confirmen su participación. Todo suma chances para ganar 3 almohadones y 2 alfombras premium, sorteados entre 3 ganadores en Instagram.
+
+La portada tiene una sola acción primaria. Para comparar movimiento sin duplicar lógica hay dos variantes del mismo flujo:
+
+- `?v=ambientes`: recorrido con profundidad, como avanzar y retroceder por la casa.
+- `?v=scroll`: recorrido vertical, controlable con scroll o swipe entre ambientes.
 
 **Sitio vivo**: https://aguslaboral.github.io/rollershow-reviews/
 

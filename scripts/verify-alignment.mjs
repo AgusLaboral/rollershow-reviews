@@ -1,43 +1,45 @@
-// Auditoría de alineación real (getBoundingClientRect), no capturas a ojo.
+// Verificación geométrica del flujo multistep.
 import { chromium } from 'playwright';
+
 const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
 const browser = await chromium.launch();
+const fails = [];
 
-for (const w of [1280, 1440, 1920]) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: 1000 } });
+for (const viewport of [{ width: 320, height: 700 }, { width: 390, height: 844 }, { width: 768, height: 900 }, { width: 1280, height: 800 }]) {
+  const ctx = await browser.newContext({ viewport });
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(800);
-
-  const rects = await page.evaluate(() => {
-    const sel = {
-      hero_h1: '.hero h1',
-      mecanica_step: '.mecanica-step',
-      chancebar_content: '.chance-count',
-      item_card: '#items .item',
-      experiencia_panel: '.experiencia',
-      consent_row: '.consent',
-      cta_button: '.cta',
+  const intro = await page.evaluate(() => {
+    const step = document.querySelector('.flow-step.active');
+    const button = step.querySelector('.step-primary');
+    const r = button.getBoundingClientRect();
+    return {
+      activeSteps: document.querySelectorAll('.flow-step.active').length,
+      overflow: document.documentElement.scrollWidth - innerWidth,
+      ctaLeft: Math.round(r.left), ctaRight: Math.round(r.right),
+      duplicateLogo: [...document.querySelectorAll('.intro-logo,.flow-logo')].filter(el => {
+        const s = getComputedStyle(el); return s.opacity !== '0' && el.getClientRects().length;
+      }).length,
     };
-    const out = {};
-    for (const [k, s] of Object.entries(sel)) {
-      const el = document.querySelector(s);
-      if (!el) { out[k] = null; continue; }
-      const r = el.getBoundingClientRect();
-      out[k] = { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width) };
-    }
-    return out;
   });
+  if (intro.activeSteps !== 1) fails.push(`${viewport.width}px: ${intro.activeSteps} etapas activas`);
+  if (intro.overflow > 0) fails.push(`${viewport.width}px: overflow ${intro.overflow}px`);
+  if (intro.ctaLeft < 0 || intro.ctaRight > viewport.width) fails.push(`${viewport.width}px: CTA fuera de pantalla`);
+  if (intro.duplicateLogo !== 1) fails.push(`${viewport.width}px: ${intro.duplicateLogo} logos visibles en portada`);
 
-  console.log(`\n--- viewport ${w}px ---`);
-  const lefts = new Set();
-  for (const [k, r] of Object.entries(rects)) {
-    console.log(k.padEnd(12), r ? `left=${r.left} right=${r.right} width=${r.width}` : 'NOT FOUND');
-    if (r) lefts.add(r.left);
-  }
-  if (lefts.size > 1) console.log(`  ⚠ bordes izquierdos distintos: ${[...lefts].join(', ')}`);
-  else console.log(`  ✓ todos comparten el mismo borde izquierdo (${[...lefts][0]}px)`);
-
+  await page.click('#startFlow'); await page.waitForTimeout(1050);
+  const item = await page.evaluate(() => {
+    const step = document.querySelector('.flow-step.active');
+    const r = step.querySelector('.step-inner').getBoundingClientRect();
+    return { kind: step.dataset.flowStep, left: Math.round(r.left), right: Math.round(r.right), overflow: document.documentElement.scrollWidth - innerWidth };
+  });
+  if (item.kind !== 'item-1') fails.push(`${viewport.width}px: no abrió item-1`);
+  if (item.left < 0 || item.right > viewport.width) fails.push(`${viewport.width}px: contenido fuera de pantalla (${item.left}, ${item.right})`);
+  if (item.overflow > 0) fails.push(`${viewport.width}px: overflow en primera cortina`);
+  console.log(`${viewport.width}px: intro CTA ${intro.ctaLeft}-${intro.ctaRight}, contenido ${item.left}-${item.right}, overflow 0`);
   await ctx.close();
 }
+
 await browser.close();
+if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
+console.log('OK: una etapa activa, un logo, CTA y contenido contenidos, sin overflow en 320/390/768/1280');
