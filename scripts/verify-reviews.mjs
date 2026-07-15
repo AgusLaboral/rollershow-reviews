@@ -8,7 +8,7 @@ await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch();
 const fails = [];
-const waitCurtain = page => page.waitForTimeout(1280);
+const waitCurtain = page => page.waitForTimeout(1450);
 const testImage = {
   name: 'foto.jpg', mimeType: 'image/jpeg',
   buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),
@@ -31,7 +31,7 @@ async function reachConfirm(page, { withPhoto = false } = {}) {
   await page.click('.text-step.active .step-primary'); await waitCurtain(page);
 }
 
-for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
+for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   const ctx = await browser.newContext({
     viewport: { width: vp.w, height: vp.h }, isMobile: true, hasTouch: true, deviceScaleFactor: 2,
     permissions: [],
@@ -45,21 +45,48 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
     active: document.querySelector('.flow-step.active')?.dataset.flowStep,
     primaries: document.querySelectorAll('.intro-step.active .step-primary').length,
     prizes: document.body.innerText.includes('3 almohadones y 2 alfombras premium'),
+    startCopy: document.querySelector('#startFlow')?.textContent.trim(),
+    bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
+    copy: {
+      rating: document.querySelector('.rating-step .step-title')?.textContent,
+      audio: document.querySelector('.audio-step .step-title')?.textContent,
+      text: document.querySelector('.text-step .step-title')?.textContent,
+      confirm: document.querySelector('.confirm-step .step-title')?.textContent,
+      consent: document.querySelector('#consentBox label')?.textContent,
+      google: document.querySelector('#gBlock h3')?.textContent,
+    },
   }));
   if (initial.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${initial.overflow}`);
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
+  if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
+  if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
+      !initial.copy.text?.includes('frase que ayude') || initial.copy.confirm !== 'Ya casi está.' ||
+      !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('duplicar tus chances')) {
+    fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
+  }
   const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
     title: step.querySelector('.step-title').textContent,
     src: step.querySelector('.curtain-photo img').getAttribute('src'),
+    width: step.querySelector('.curtain-photo img').naturalWidth,
+    unified: !!step.querySelector('.item-stage .item-visual') && !!step.querySelector('.item-stage .item-task'),
   })));
   if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
       environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
       environments[2]?.title !== 'Escritorio' || environments[3]?.title !== 'Home office') {
     fails.push(`${vp.w}px: fotos y nombres de ambientes no corresponden ${JSON.stringify(environments)}`);
   }
+  if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.unified)) {
+    fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
+  }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
+
+  if (vp.w === 320) {
+    await page.click('#startFlow'); await waitCurtain(page);
+    await page.screenshot({ path: `${OUT}/canonical-320-item.png` });
+  }
 
   if (vp.w === 390) {
     await page.click('#startFlow'); await waitCurtain(page);
@@ -160,6 +187,7 @@ const audioReward = await dpage.evaluate(() => ({ kind:document.querySelector('.
 if (audioReward.kind !== 'audio' || !audioReward.live?.includes('30 puntos')) fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 await dpage.click('#startFlow'); await waitCurtain(dpage);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.evaluate(() => window.celebrateAction('photo', { points:10, anchor:document.querySelector('.flow-step.active .upload-zone'), detail:'Foto cargada' }));
 await dpage.waitForTimeout(120);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });

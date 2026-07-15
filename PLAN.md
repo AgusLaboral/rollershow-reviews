@@ -137,3 +137,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Sólo puede verse una recompensa global a la vez, dura menos de dos segundos, no captura eventos ni mueve el layout. Un estado `aria-live` anuncia el logro y `prefers-reduced-motion` conserva la causalidad con menos recorrido.
 - Las entradas de etapa ahora escalonan encabezado, visual y tarea. La cortina sigue siendo el gesto central; el escalonamiento sólo ordena la lectura al revelar la pantalla siguiente.
 - Las pruebas funcionales verifican recompensa, puntaje y reacción local para foto, estrellas, audio y texto. La prueba de movimiento verifica además el escalonamiento junto con la cortina y el grid completo.
+
+## 15. Superficie única de producto y auditoría de copy — 2026-07-15
+
+- La tarjeta de producto y el uploader separados competían entre sí y generaban demasiadas cajas. Se reemplazaron por una sola superficie: foto a sangre, velo con trama sunscreen, producto integrado y el CTA de carga como único elemento rojo.
+- El control se adapta sin cambiar de concepto: abajo en mobile y sobre el lado derecho de la imagen en desktop. Después de subir, cambia a “Sumar otra foto o video” y recién entonces aparece el CTA para avanzar.
+- Las miniaturas de 480×480 que se estiraban en desktop se reemplazaron por fuentes de 1024×1024 del sistema Rollershow, optimizadas a 111–141 KB. Se eliminaron los cuatro thumbs viejos.
+- Se auditó el copy del flujo completo: portada con acción concreta, consignas breves, estrellas sin culpa, audio y texto con beneficio explícito, confirmación directa y handoff de Google sin fingir validación técnica.
+- Los tests ahora fallan si vuelve una miniatura, si producto y carga dejan de ser una sola pieza, si reaparecen separadores vetados o si los mensajes centrales vuelven a copy genérico.

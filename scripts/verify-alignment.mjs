@@ -37,6 +37,7 @@ for (const viewport of viewports) {
       activate(step);
       const inner = step.querySelector('.step-inner');
       const content = step.querySelector('.step-content');
+      const stage = step.querySelector('.item-stage');
       const visual = step.querySelector('.item-visual');
       const task = step.querySelector('.item-task');
       const card = step.querySelector('.curtain-card');
@@ -47,6 +48,7 @@ for (const viewport of viewports) {
         kind: step.dataset.flowStep,
         inner: rect(inner),
         content: content ? rect(content) : null,
+        stage: stage ? rect(stage) : null,
         visual: visual ? rect(visual) : null,
         task: task ? rect(task) : null,
         card: card ? rect(card) : null,
@@ -86,10 +88,14 @@ for (const viewport of viewports) {
     }
     for (const step of report.steps.filter(step => step.kind.startsWith('item-'))) {
       if (!close(step.inner.left, report.master.left) || !close(step.inner.right, report.master.right) ||
-          !close(step.visual.left, report.master.left) || !close(step.task.right, report.master.right)) {
+          !close(step.stage.left, report.master.left) || !close(step.stage.right, report.master.right)) {
         fails.push(`${viewport.width}px ${step.kind}: columnas de producto fuera del grid maestro`);
       }
-      if (!close(step.card.top, step.upload.top)) fails.push(`${viewport.width}px ${step.kind}: foto y acción no arrancan en la misma línea`);
+      if (!close(step.visual.left, step.stage.left) || !close(step.visual.right, step.stage.right) ||
+          !close(step.task.left, step.stage.left) || !close(step.task.right, step.stage.right) ||
+          !close(step.card.top, step.stage.top) || !close(step.upload.top, step.stage.top)) {
+        fails.push(`${viewport.width}px ${step.kind}: producto y carga no forman una sola pieza`);
+      }
       const nextGap = step.next.top - step.secondary.bottom;
       if (nextGap < 8 || nextGap > 42) fails.push(`${viewport.width}px ${step.kind}: el próximo paso quedó desacoplado (${Math.round(nextGap)}px)`);
     }
@@ -126,4 +132,4 @@ for (const viewport of viewports) {
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: portada y 8 etapas comparten grid en mobile y desktop, sin overflow');
+console.log('OK: portada y 8 etapas comparten grid; producto y carga forman una sola pieza, sin overflow');

@@ -98,7 +98,7 @@ for (const width of [1024, 1280, 1440, 1920]) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   await page.goto(`${BASE}?v=ambientes`, { waitUntil: 'networkidle' });
   await page.click('#startFlow');
-  await page.waitForTimeout(900);
+  await page.waitForTimeout(1300);
   const grid = await page.evaluate(() => {
     const bounds = selector => {
       const rect = document.querySelector(selector).getBoundingClientRect();
