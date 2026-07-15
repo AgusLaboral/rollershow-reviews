@@ -121,3 +121,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - La portada suma tres capas recortadas del producto con movimientos lentos independientes, sin agregar requests ni distraer del único CTA.
 - Al confirmar, el foco y el scroll llegan al botón de Google con un pulso visible. El enlace viejo con un `placeid` inválido se reemplazó por una URL universal oficial de Google Maps al showroom de Roseti 1674.
 - Los tests ahora cubren el acople vertical del próximo paso, el timing de la cortina, las capas independientes de portada, el foco final y la estructura del enlace de Google.
+
+## 13. Replanteo real de las pantallas de producto — 2026-07-15
+
+- La corrección anterior seguía aprobando una pantalla visualmente rota: el uploader arrancaba junto al título mientras la tarjeta arrancaba mucho más abajo, y en mobile `margin-top:auto` separaba el salto de la acción.
+- Nueva estructura: encabezado del ambiente en una fila propia; debajo, foto y uploader comparten borde superior. Las acciones secundarias quedan unidas al uploader, sin altura mínima ni espacios fabricados.
+- Se corrigió el contenido absurdo del mockup: Living mostraba camas. Las cuatro fotos ahora corresponden a Living, Dormitorio, Escritorio y Home office.
+- El recorrido abandonó capas Z persistentes y usa escala/desplazamiento 2D bajo la cortina. Mantiene el efecto, pero reduce fragilidad de composición.
+- Se agregó aceptación específica a 1165×674, el tamaño de la captura que reveló la falla, además de 320–1920 px.

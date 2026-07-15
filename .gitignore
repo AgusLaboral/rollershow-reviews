@@ -1,4 +1,5 @@
 _scratch/
+.playwright-cli/
 node_modules/
 .env
 CLAUDE.local.md

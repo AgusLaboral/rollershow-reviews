@@ -9,6 +9,7 @@ const viewports = [
   { width: 390, height: 844 },
   { width: 768, height: 900 },
   { width: 1024, height: 800 },
+  { width: 1165, height: 674 },
   { width: 1280, height: 800 },
   { width: 1440, height: 900 },
   { width: 1920, height: 1080 },
@@ -38,6 +39,8 @@ for (const viewport of viewports) {
       const content = step.querySelector('.step-content');
       const visual = step.querySelector('.item-visual');
       const task = step.querySelector('.item-task');
+      const card = step.querySelector('.curtain-card');
+      const upload = step.querySelector('.upload-zone');
       const secondary = step.querySelector('.step-secondary');
       const next = step.querySelector('.next-peek');
       return {
@@ -46,6 +49,8 @@ for (const viewport of viewports) {
         content: content ? rect(content) : null,
         visual: visual ? rect(visual) : null,
         task: task ? rect(task) : null,
+        card: card ? rect(card) : null,
+        upload: upload ? rect(upload) : null,
         secondary: secondary ? rect(secondary) : null,
         next: next ? rect(next) : null,
         verticalOverflow: step.scrollHeight - step.clientHeight,
@@ -84,6 +89,7 @@ for (const viewport of viewports) {
           !close(step.visual.left, report.master.left) || !close(step.task.right, report.master.right)) {
         fails.push(`${viewport.width}px ${step.kind}: columnas de producto fuera del grid maestro`);
       }
+      if (!close(step.card.top, step.upload.top)) fails.push(`${viewport.width}px ${step.kind}: foto y acción no arrancan en la misma línea`);
       const nextGap = step.next.top - step.secondary.bottom;
       if (nextGap < 8 || nextGap > 42) fails.push(`${viewport.width}px ${step.kind}: el próximo paso quedó desacoplado (${Math.round(nextGap)}px)`);
     }

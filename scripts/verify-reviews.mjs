@@ -50,6 +50,15 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
+    title: step.querySelector('.step-title').textContent,
+    src: step.querySelector('.curtain-photo img').getAttribute('src'),
+  })));
+  if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
+      environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
+      environments[2]?.title !== 'Escritorio' || environments[3]?.title !== 'Home office') {
+    fails.push(`${vp.w}px: fotos y nombres de ambientes no corresponden ${JSON.stringify(environments)}`);
+  }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
 
   if (vp.w === 390) {
