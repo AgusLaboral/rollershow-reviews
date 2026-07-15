@@ -145,9 +145,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         stopWidth: Math.round(stop.getBoundingClientRect().width),
         contentWidth: Math.round(content.getBoundingClientRect().width),
         actionsHidden: getComputedStyle(document.querySelector('.audio-step .step-actions')).display === 'none',
+        rootBackground: getComputedStyle(document.documentElement).backgroundColor,
       };
     });
-    if (mobileRecording.stopWidth < mobileRecording.contentWidth - 2 || !mobileRecording.actionsHidden) fails.push(`audio mobile: jerarquía incorrecta ${JSON.stringify(mobileRecording)}`);
+    if (mobileRecording.stopWidth < mobileRecording.contentWidth - 2 || !mobileRecording.actionsHidden || mobileRecording.rootBackground === 'rgba(0, 0, 0, 0)') fails.push(`audio mobile: jerarquía o fondo incorrectos ${JSON.stringify(mobileRecording)}`);
     await page.screenshot({ path: `${OUT}/canonical-390-audio-recording.png` });
     await page.evaluate(() => renderAudio('idle'));
     await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
