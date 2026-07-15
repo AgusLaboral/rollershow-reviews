@@ -69,8 +69,8 @@ Después de cada push: esperar la propagación (`curl` el HTML hasta ver el camb
 - **Puntos**: estrellas +5, texto +5, foto +10 c/u, video +25, audio +30. Cada 10 puntos = 1 chance; toda participación confirmada tiene mínimo 1 chance.
 - **Participación sin foto**: permitida (solo calificar ya cuenta).
 - **Colores**: Rojo Teja `#C63A21` (glow `#D2451E`, deep `#97290F`) es el color institucional del CTA principal — confirmado por Agus, reemplaza al terracota viejo (`#B8662C`, que queda como acento secundario). Verde WhatsApp real (`#25D366`/`#1FAD53`) para todo el módulo de audio, no terracota.
-- **Sistema de contenedor único**: hero, carrusel de ganadores, barra de puntos y el resto de las secciones comparten el MISMO ancho máximo (1080px) y padding en desktop (`@media min-width:900px`). Si agregás una sección nueva, que use `.wrap` o copie ese mismo ancho — nunca un ancho angosto "por legibilidad" en un contenedor aparte (eso ya causó un bug real de alineación, dos veces).
-- **Cards solo para unidades repetidas** (las 4 cortinas, los 5 ganadores). Todo lo demás (vendedor, estrellas, audio, texto) vive en un solo panel `.experiencia` con divisores internos, no cards separadas — es a propósito, no un olvido.
+- **Sistema de contenedor único**: hero, mecánica, barra de puntos y el resto de las secciones comparten el MISMO ancho máximo (1080px) y padding en desktop (`@media min-width:900px`). Si agregás una sección nueva, que use `.wrap` o copie ese mismo ancho — nunca un ancho angosto "por legibilidad" en un contenedor aparte (eso ya causó un bug real de alineación, dos veces).
+- **Cards solo para unidades repetidas** (las 4 cortinas). Todo lo demás (mecánica, vendedor, estrellas, audio, texto) usa composición editorial o vive en un solo panel `.experiencia` con divisores internos, no cards separadas — es a propósito, no un olvido.
 - **Reseña de Google auto-reportada**: Google no notifica si alguien realmente publicó la reseña (no existe webhook de Business Profile para eso). El flujo "Confirmar" es honor-system con una animación de "confirmando" puramente cosmética — no valida nada server-side. Documentado en el código, no es un bug.
 
 ## Pendientes reales (buscar `TODO(Nico)` en `index.html`)
@@ -79,12 +79,18 @@ Después de cada push: esperar la propagación (`curl` el HTML hasta ver el camb
 2. **Foto real del vendedor**: hoy usa un placeholder (`img/perfil-01.jpg`, nombre "Marcelo"). Traerla del CRM por presupuesto.
 3. **Upload progresivo + compresión de imágenes** client-side (canvas, máx ~1600px, JPEG q0.82) antes de subir — hoy el mockup solo previsualiza localmente.
 4. **Segundo local (Villa Carlos Paz)**: el link de reseña de Google en la página de gracias usa el ftid del local de **CABA** (`0x95bcb6719099596b:0x4354517b56352268`), confirmado por Agus. Falta decidir si un solo link alcanza para los dos locales o si hay que elegir según el local de origen del presupuesto.
-5. **Los 3 premios reales del mes**: el hero (`img/hero-premios.jpg`) y las 5 fotos de "ganadores" (`img/ganador-*.jpg`) son representativos/generados (gpt-image-2), no los productos ni ganadores reales — ver nota fuerte abajo.
+5. **Los 3 premios reales del mes**: el hero (`img/hero-premios.jpg`) es representativo/generado, no muestra los productos reales. Las fotos generadas de `img/ganador-*.jpg` ya no se muestran: sólo se puede sumar un historial de ganadores cuando existan nombres, fotos, premios y autorización de uso reales.
 6. **Moderación**: alguien (¿Cami?) tiene que revisar fotos/audios antes de usarlos en marketing real. Es un proceso humano, no algo que resolver en código.
 
-### ⚠️ Los "ganadores" del carrusel son inventados
+## Compuerta legal antes de enviar a clientes
 
-Los 5 nombres/fotos en "Elegimos 3 ganadores cada mes" son placeholder generado con IA para el mockup (marcado con comentario explícito en el HTML, buscar "GANADORES REALES"). **No es sostenible mostrarlos como reales una vez que esto sea el sitio de producción** — hay que alimentar esa sección del historial real de sorteos antes de lanzar. No borrar ese comentario de advertencia sin resolver el punto.
+El mockup no está listo para operar un sorteo real. La mecánica actual nace desde la base de compradores, pero el Decreto 961/2017 exige, entre otras cosas, una vía de participación sin obligación de compra y que la comunicación informe fechas, alcance, requisitos y acceso a la información completa. También faltan premios concretos, probabilidad o estimación, gastos para el ganador y mecanismo detallado de adjudicación. Fuente oficial: https://www.argentina.gob.ar/normativa/nacional/decreto-961-2017-291621/texto
+
+No agregar “Sin obligación de compra” como copy vacío: primero Nicolás/operaciones deben definir una vía gratuita real y un profesional debe validar las bases. El consentimiento de marketing tampoco reemplaza el aviso de privacidad para fotos, video, voz y datos personales.
+
+### Regla de evidencia para prueba social
+
+No mostrar testimonios, nombres, fotos, premios ni ganadores de ejemplo como si fueran reales. La app usa una explicación verificable de la mecánica hasta que exista un historial real con autorización de uso.
 
 ## Reglas de diseño (aprendidas con feedback real, no inventar de nuevo)
 

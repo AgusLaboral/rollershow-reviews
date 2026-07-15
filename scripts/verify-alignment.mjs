@@ -12,7 +12,7 @@ for (const w of [1280, 1440, 1920]) {
   const rects = await page.evaluate(() => {
     const sel = {
       hero_h1: '.hero h1',
-      ganador_card: '.ganador-card',
+      mecanica_step: '.mecanica-step',
       chancebar_content: '.chance-count',
       item_card: '#items .item',
       experiencia_panel: '.experiencia',

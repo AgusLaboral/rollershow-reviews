@@ -7,7 +7,7 @@ Mockup fase 1: web app para que clientes que ya compraron suban fotos/video de s
 > Repo propio e independiente — no comparte historia ni assets por referencia con `rollershow` (landing) ni `rollershow-src` (frontend-lab de Nico). Ver **`CLAUDE.md`** para instrucciones completas de agente (Claude Code / Codex): stack, deploy, decisiones cerradas y pendientes reales.
 
 - **`index.html`** — single-file, vanilla HTML+CSS+JS, sin build ni dependencias. Mobile-first.
-- **`img/`** — hero + fotos de "ganadores" generadas, assets de cortinas copiados (no referenciados) del repo de la landing.
+- **`img/`** — hero, assets de cortinas copiados (no referenciados) del repo de la landing y placeholders generados que ya no se muestran como prueba social.
 - **`scripts/`** — verificación con Playwright (self-contained, ver abajo).
 - **`_scratch/`** — efímeros (screenshots de verificación), ignorado.
 - **`PLAN.md`** — plan del proyecto y decisiones.
@@ -21,7 +21,7 @@ Buscar `TODO(Nico)` en `index.html`:
 
 ## Mecánica
 
-Foto 10 pts, video 25, audio 30, estrellas 5, texto 5. Cada 10 pts = 1 chance; toda participación confirmada tiene al menos 1 chance. Sorteo el último jueves hábil del mes, en vivo por Instagram.
+Foto 10 pts, video 25, audio 30, estrellas 5, texto 5. Cada 10 pts = 1 chance; toda participación confirmada tiene al menos 1 chance. La fecha concreta del sorteo se publica en la app y la transmisión se hace en vivo por Instagram.
 
 ## Verificación
 

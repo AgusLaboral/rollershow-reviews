@@ -17,13 +17,13 @@
    ========================================================================== */
 :root{
   --bg:#FAF7F2; --bg-elev:#FFFFFF; --bg-muted:#F1EBE0; --bg-deep:#1C1816;
-  --fg:#1C1816; --fg-soft:#4A4039; --fg-mute:#87796D;
+  --fg:#1C1816; --fg-soft:#4A4039; --fg-mute:#6F6258;
   --border:#E4DCCE; --border-strong:#C8BCA8;
   --accent:#B8662C; --accent-deep:#8E4D1F; --accent-soft:#F3E3D2; --on-accent:#FFFFFF;
   /* Rojo Teja: color institucional de CTA (manual de marca, cap. 02 Color) */
   --cta:#C63A21; --cta-glow:#D2451E; --cta-deep:#97290F;
   /* Iconografía del audio en verde WhatsApp real, para que la interfaz se sienta familiar */
-  --whatsapp:#25D366; --whatsapp-deep:#1FAD53; --whatsapp-soft:#E3F5E8;
+  --whatsapp:#25D366; --whatsapp-deep:#1FAD53; --whatsapp-accessible:#147A3A; --whatsapp-soft:#E3F5E8;
   --ok:#4C7A4C; --danger:#B23B3B;
   --font-display:"Bricolage Grotesque",system-ui,sans-serif;
   --font-body:"Manrope",system-ui,sans-serif;
@@ -51,7 +51,7 @@ a{color:var(--accent-deep)}
   background:linear-gradient(100deg,rgba(250,247,242,.97) 0%,rgba(250,247,242,.93) 42%,rgba(250,247,242,.62) 66%,rgba(250,247,242,.12) 88%,rgba(250,247,242,0) 100%)}
 .hero-inner{position:relative;max-width:680px;margin:0 auto;padding:22px 20px 30px;min-height:430px;display:flex;flex-direction:column}
 .hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.hero-top img{height:26px;width:auto}
+.hero-top img{height:26px;width:auto;max-width:clamp(150px,52vw,220px);flex-shrink:1}
 .ig-link{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;color:var(--fg-soft);text-decoration:none;
   border:1px solid var(--border-strong);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.55)}
 .ig-link svg{width:15px;height:15px}
@@ -86,18 +86,16 @@ section{padding:38px 0 6px}
 .sec-head p{color:var(--fg-soft);margin-top:5px;font-size:.95rem}
 .pts-hint{font-size:inherit;font-weight:800;color:var(--accent-deep)}
 
-/* ---------- Carrusel de ganadores ---------- */
-.ganadores-sec{padding-bottom:0}
-.ganadores-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:20px;
-  margin-top:16px;padding:4px 20px 18px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.ganadores-track::-webkit-scrollbar{display:none}
-.ganador-card{flex:0 0 168px;scroll-snap-align:start;border-radius:var(--radius);overflow:hidden;
-  box-shadow:var(--shadow);position:relative;aspect-ratio:2/3;background:var(--bg-muted)}
-.ganador-card img{width:100%;height:100%;object-fit:cover;display:block}
-.ganador-info{position:absolute;left:0;right:0;bottom:0;padding:10px 12px 12px;color:#fff;
-  background:linear-gradient(0deg,rgba(28,24,22,.78) 0%,rgba(28,24,22,.32) 65%,rgba(28,24,22,0) 100%)}
-.ganador-info strong{font-family:var(--font-display);font-size:.95rem;display:block;line-height:1.2}
-.ganador-info span{font-size:.74rem;opacity:.92}
+/* ---------- Mecánica verificable, sin testimonios inventados ---------- */
+.mecanica-sec{padding:30px 0 8px;background:var(--bg-deep);color:#F5EFE6}
+.mecanica-sec .sec-head p{color:#CFC3B8}
+.mecanica-track{display:grid;margin-top:22px;border-top:1px solid rgba(255,255,255,.16)}
+.mecanica-step{display:grid;grid-template-columns:42px 1fr;align-items:center;gap:4px 12px;
+  padding:17px 0;border-bottom:1px solid rgba(255,255,255,.16)}
+.mecanica-step::before{content:attr(data-step);font-family:var(--font-display);font-size:1.65rem;
+  font-weight:800;color:#D98245;line-height:1}
+.mecanica-step strong{font-family:var(--font-display);font-size:1rem;line-height:1.25}
+.mecanica-step span{grid-column:2;font-size:.78rem;color:#CFC3B8;text-align:left}
 
 /* ---------- Tips de foto ---------- */
 .tips{display:flex;gap:8px;margin:16px 0 4px;flex-wrap:wrap}
@@ -159,7 +157,7 @@ section{padding:38px 0 6px}
 /* ---------- Audio ---------- */
 .audio-sub{font-size:.85rem;color:var(--fg-mute);margin-top:3px}
 .audio-ui{margin-top:14px;min-height:58px}
-.rec-btn{display:flex;align-items:center;gap:11px;background:var(--whatsapp);color:#fff;border-radius:999px;
+.rec-btn{display:flex;align-items:center;gap:11px;background:var(--whatsapp-accessible);color:#fff;border-radius:999px;
   padding:13px 20px;font-weight:700;font-size:.95rem;box-shadow:0 6px 18px -6px rgba(37,211,102,.55);transition:transform .15s}
 .rec-btn:active{transform:scale(.97)}
 .rec-btn svg{width:19px;height:19px;flex:none}
@@ -174,7 +172,7 @@ section{padding:38px 0 6px}
 .rec-stop svg{width:15px;height:15px}
 .voice-note{display:flex;align-items:center;gap:11px;background:var(--whatsapp-soft);border:1px solid #C3E9CE;
   border-radius:999px;padding:8px 10px;min-width:0}
-.vn-play{width:42px;height:42px;border-radius:50%;background:var(--whatsapp);color:#fff;display:grid;place-items:center;flex:none}
+.vn-play{width:42px;height:42px;border-radius:50%;background:var(--whatsapp-accessible);color:#fff;display:grid;place-items:center;flex:none}
 .vn-play svg{width:16px;height:16px}
 .vn-track{flex:1;height:5px;background:#C3E9CE;border-radius:99px;overflow:hidden;min-width:0}
 .vn-track i{display:block;height:100%;width:0%;background:var(--whatsapp-deep);border-radius:99px}
@@ -275,6 +273,13 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
 #exitModal .cta{margin-top:18px;font-size:1.02rem;padding:14px}
 #exitModal .stay{margin-top:12px;font-weight:700;font-size:.88rem;color:var(--fg-mute);width:100%}
 
+@media (max-width:379px){
+  .chancebar-in{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px}
+  .chance-count{grid-column:1}
+  .tickets{grid-column:3}
+  .chance-meter{grid-column:1/-1;grid-row:2}
+}
+
 @media (min-width:640px) and (max-width:899px){
   .hero-inner{min-height:480px;padding:28px 20px 44px}
   .hero-copy{padding-top:150px}
@@ -302,11 +307,9 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
 
   .wrap{max-width:1080px;padding:0 40px}
   .chancebar-in{max-width:1080px;padding:10px 40px}
-  /* El carrusel es hermano de .wrap, no hijo: sin este centrado queda pegado
-     al borde real del viewport en vez de alinearse con el resto (bug real
-     en pantallas anchas, aunque a 1280-1440px no se notaba tanto). */
-  .ganadores-track{max-width:1080px;margin:16px auto 0;scroll-padding-left:40px;padding:4px 40px 18px}
-  .ganador-card{flex-basis:190px}
+  .mecanica-track{grid-template-columns:repeat(3,1fr);column-gap:34px}
+  .mecanica-step{grid-template-columns:42px 1fr;align-content:start}
+  .mecanica-step span{grid-column:2;text-align:left}
   /* Tus cortinas: grid de 2 columnas real, no una sola card estirada al ancho completo */
   #items{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .item{margin-top:0}
@@ -339,50 +342,25 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
       <p>Subí fotos de tus cortinas instaladas, contanos cómo fue tu experiencia y sumá chances para ser uno de los <strong>3 ganadores de este mes</strong>. Cuanto más compartas, más chances tenés.</p>
       <span class="hero-fecha">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        Este mes sorteamos el jueves 31 de julio, en vivo por Instagram
+        Este mes sorteamos el 31 de julio, en vivo por Instagram
       </span>
     </div>
   </div>
 </header>
 
-<!-- ============================================================
-     GANADORES REALES — el hook, justo después del hero: prueba
-     concreta de que esto pasa todos los meses, antes de pedir nada.
-     OJO: nombres y fotos son de ejemplo (generadas), placeholder del
-     mockup. Antes de producción, reemplazar por ganadores reales
-     (foto real + nombre real + qué ganó) — mostrar gente inventada
-     como si fuera real no es sostenible una vez que esto sea el sitio
-     de verdad. TODO(Nico/Agus): esta sección debería alimentarse del
-     historial real de sorteos, no hardcodeada.
-============================================================ -->
-<section class="ganadores-sec">
+<!-- Mecánica honesta: hasta contar con un historial real de sorteos,
+     no mostramos nombres, fotos ni premios de personas inventadas. -->
+<section class="mecanica-sec" aria-labelledby="mecanicaTitle">
   <div class="wrap">
     <div class="sec-head">
-      <h2>Elegimos 3 ganadores cada mes</h2>
-      <p>Así se llevaron sus premios el mes pasado. El próximo podés ser vos.</p>
+      <h2 id="mecanicaTitle">Participar es así de simple</h2>
+      <p>Vos elegís cuánto compartir. La app te muestra tus puntos y chances en el momento.</p>
     </div>
-  </div>
-  <div class="ganadores-track" id="ganadoresTrack">
-    <article class="ganador-card">
-      <img src="img/ganador-1-almohadones.jpg" alt="Valentina mostrando los 3 almohadones que ganó" loading="lazy" />
-      <div class="ganador-info"><strong>Valentina</strong><span>Ganó 3 almohadones</span></div>
-    </article>
-    <article class="ganador-card">
-      <img src="img/ganador-2-termo.jpg" alt="Federico con el termo que ganó recién desempaquetado" loading="lazy" />
-      <div class="ganador-info"><strong>Federico</strong><span>Ganó un termo</span></div>
-    </article>
-    <article class="ganador-card">
-      <img src="img/ganador-3-alfombra.jpg" alt="Mariana desenrollando la alfombra que ganó" loading="lazy" />
-      <div class="ganador-info"><strong>Mariana</strong><span>Ganó una alfombra</span></div>
-    </article>
-    <article class="ganador-card">
-      <img src="img/ganador-4-vela.jpg" alt="Tomás con la vela decorativa que ganó" loading="lazy" />
-      <div class="ganador-info"><strong>Tomás</strong><span>Ganó una vela</span></div>
-    </article>
-    <article class="ganador-card">
-      <img src="img/ganador-5-jarron.jpg" alt="Julieta con el jarrón decorativo que ganó" loading="lazy" />
-      <div class="ganador-info"><strong>Julieta</strong><span>Ganó un jarrón</span></div>
-    </article>
+    <div class="mecanica-track">
+      <div class="mecanica-step" data-step="01"><strong>Compartí tu experiencia</strong><span>Calificación, texto, fotos, video o audio</span></div>
+      <div class="mecanica-step" data-step="02"><strong>Sumá chances</strong><span>Cada 10 puntos es una chance</span></div>
+      <div class="mecanica-step" data-step="03"><strong>Seguí el sorteo</strong><span>En vivo por nuestro Instagram</span></div>
+    </div>
   </div>
 </section>
 
@@ -527,7 +505,7 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
       </div>
     </div>
 
-    <p class="gr-fecha">El sorteo se hace <b>en vivo el jueves 31 de julio</b> por nuestro Instagram. Ahí anunciamos a los 3 ganadores.</p>
+    <p class="gr-fecha">El sorteo se hace <b>en vivo el 31 de julio</b> por nuestro Instagram. Ahí anunciamos a los 3 ganadores.</p>
     <a class="gr-ig" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
       Seguir a Rollershow y ver el sorteo
@@ -551,7 +529,7 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
       <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita (5). El puntaje final lo valida Rollershow al revisar el material.</p>
-      <p>Se sortean 3 premios de decoración por mes, un premio por ganador. El sorteo se realiza en vivo el último jueves hábil del mes en el Instagram de Rollershow y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
+      <p>Se sortean 3 premios de decoración por mes, un premio por ganador. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
       <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
       <p>Sin obligación de compra adicional. Premios no canjeables por dinero.</p>
     </div>
@@ -566,7 +544,7 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
   <div class="modal-in">
     <h2>Lo que cargaste ya suma</h2>
     <strong class="big" id="exitPts">0 puntos</strong>
-    <p>Te falta un solo paso: confirmá y entrás al sorteo del jueves 31 con todo lo que cargaste.</p>
+    <p>Te falta un solo paso: confirmá y entrás al sorteo del 31 de julio con todo lo que cargaste.</p>
     <button class="cta" id="exitConfirm">Confirmar mi participación</button>
     <button class="stay" data-close>Quiero seguir cargando</button>
   </div>
