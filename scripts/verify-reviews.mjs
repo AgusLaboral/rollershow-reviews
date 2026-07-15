@@ -67,18 +67,42 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
     await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(120);
+    const photoReward = await page.evaluate(() => ({
+      kind: document.querySelector('.reward-moment')?.dataset.kind,
+      points: document.querySelector('.reward-points')?.textContent,
+      live: document.querySelector('#rewardLive')?.textContent,
+      count: document.querySelectorAll('.reward-moment').length,
+      local: document.querySelector('.item-step.active')?.classList.contains('media-reward'),
+    }));
+    if (photoReward.kind !== 'photo' || photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.count !== 1 || !photoReward.local) {
+      fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
+    }
+    await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
+    await page.waitForTimeout(180);
     let pts = await page.textContent('#flowPts');
     if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
 
     await page.locator('#stars button').nth(4).click();
+    const ratingReward = await page.evaluate(() => ({
+      kind: document.querySelector('.reward-moment')?.dataset.kind,
+      points: document.querySelector('.reward-points')?.textContent,
+      local: document.querySelector('.rating-step')?.classList.contains('rating-reward'),
+    }));
+    if (ratingReward.kind !== 'rating' || ratingReward.points !== '+5' || !ratingReward.local) fails.push(`estrellas: recompensa incompleta ${JSON.stringify(ratingReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
     await page.click('#ratingNext'); await waitCurtain(page);
     await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
     await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
+    const textReward = await page.evaluate(() => ({
+      kind: document.querySelector('.reward-moment')?.dataset.kind,
+      points: document.querySelector('.reward-points')?.textContent,
+      local: document.querySelector('.text-step')?.classList.contains('text-reward'),
+    }));
+    if (textReward.kind !== 'text' || textReward.points !== '+5' || !textReward.local) fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
     await page.click('.text-step.active .step-primary'); await waitCurtain(page);
@@ -131,9 +155,16 @@ for (const vp of [{ w: 360, h: 780 }, { w: 390, h: 844 }]) {
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'networkidle' });
+await dpage.evaluate(() => window.celebrateAction('audio', { points:30, anchor:document.querySelector('#startFlow'), detail:'Audio guardado' }));
+const audioReward = await dpage.evaluate(() => ({ kind:document.querySelector('.reward-moment')?.dataset.kind, live:document.querySelector('#rewardLive')?.textContent }));
+if (audioReward.kind !== 'audio' || !audioReward.live?.includes('30 puntos')) fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
+await dpage.click('#startFlow'); await waitCurtain(dpage);
+await dpage.evaluate(() => window.celebrateAction('photo', { points:10, anchor:document.querySelector('.flow-step.active .upload-zone'), detail:'Foto cargada' }));
+await dpage.waitForTimeout(120);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 await dctx.close();
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: multistep 9 etapas, 1 CTA en portada, premios concretos, puntos 10/15/20, consentimiento, gracias, Google, exit y bases');
+console.log('OK: multistep, recompensas foto/estrellas/audio/texto, puntos, consentimiento, gracias, Google, exit y bases');

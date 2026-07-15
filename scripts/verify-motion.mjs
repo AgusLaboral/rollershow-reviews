@@ -21,9 +21,20 @@ for (const variant of ['ambientes']) {
     } : null;
     const roller = document.querySelector('.roller-wipe');
     const fabric = document.querySelector('.roller-fabric');
+    const heading = document.querySelector('.flow-step.active .item-heading');
+    const visual = document.querySelector('.flow-step.active .item-visual');
+    const task = document.querySelector('.flow-step.active .item-task');
+    incoming.classList.add('entering');
+    const stagger = [heading, visual, task].map(element => ({
+      opacity:getComputedStyle(element).opacity,
+      transform:getComputedStyle(element).transform,
+      delay:getComputedStyle(element).transitionDelay,
+    }));
+    incoming.classList.remove('entering');
     return {
       incoming: read(incoming),
       outgoing: read(outgoing),
+      stagger,
       roller: {
         visible: getComputedStyle(roller).visibility,
         transform: getComputedStyle(fabric).transform,
@@ -38,6 +49,9 @@ for (const variant of ['ambientes']) {
   if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
+  if (motion.stagger.some(part => part.transform === 'none') || motion.stagger[1]?.delay === motion.stagger[2]?.delay) {
+    fails.push(`${variant}: heading, ambiente y tarea no entran con escalonamiento sano ${JSON.stringify(motion.stagger)}`);
+  }
   if (motion.roller.visible !== 'visible' || motion.roller.transform === 'none') fails.push(`${variant}: falta la cortina roller`);
   if (!motion.roller.noise.includes('data:image/svg+xml') || !motion.roller.color.startsWith('rgba')) {
     fails.push(`${variant}: el material no combina transparencia y microtextura ${JSON.stringify(motion.roller)}`);

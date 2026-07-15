@@ -129,3 +129,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Se corrigió el contenido absurdo del mockup: Living mostraba camas. Las cuatro fotos ahora corresponden a Living, Dormitorio, Escritorio y Home office.
 - El recorrido abandonó capas Z persistentes y usa escala/desplazamiento 2D bajo la cortina. Mantiene el efecto, pero reduce fragilidad de composición.
 - Se agregó aceptación específica a 1165×674, el tamaño de la captura que reveló la falla, además de 320–1920 px.
+
+## 14. Recompensa por acción y transiciones internas — 2026-07-15
+
+- Se incorporó una recompensa breve después de cada logro real: carga de foto/video, primera calificación, audio terminado y texto que alcanza el mínimo. Hay tres copys rotativos por tipo de acción para evitar repetición mecánica.
+- El feedback pertenece al producto: barrido de luz sobre la cortina, estrellas que se asientan, onda de voz y cierre de texto. Los puntos viajan al contador; no se usa confetti repetido ni se compite con el CTA.
+- Sólo puede verse una recompensa global a la vez, dura menos de dos segundos, no captura eventos ni mueve el layout. Un estado `aria-live` anuncia el logro y `prefers-reduced-motion` conserva la causalidad con menos recorrido.
+- Las entradas de etapa ahora escalonan encabezado, visual y tarea. La cortina sigue siendo el gesto central; el escalonamiento sólo ordena la lectura al revelar la pantalla siguiente.
+- Las pruebas funcionales verifican recompensa, puntaje y reacción local para foto, estrellas, audio y texto. La prueba de movimiento verifica además el escalonamiento junto con la cortina y el grid completo.
