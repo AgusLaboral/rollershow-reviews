@@ -442,8 +442,12 @@ body{min-height:100dvh}
 .item-visual{z-index:0}.item-task{position:relative;z-index:3;display:block}
 .curtain-card{position:relative;width:100%;height:100%;overflow:hidden;background:var(--bg-deep)}
 .curtain-photo{position:absolute;inset:0;background:var(--bg-muted);overflow:hidden}
-.curtain-photo>img{width:100%;height:100%;object-fit:cover;transform:scale(1.035);transition:transform .9s cubic-bezier(.22,1,.36,1)}
-.flow-step.active .curtain-photo>img{transform:scale(1)}
+.curtain-photo>img,.curtain-photo>video{width:100%;height:100%;object-fit:cover}
+.curtain-photo>.reference-media{transform:scale(1.08);opacity:.88;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.flow-step.active .curtain-photo>.reference-media{transform:scale(1.055)}
+.item-step.has-media .reference-media{opacity:0}
+.stage-user-media{position:absolute;inset:0;z-index:0;transform:scale(1.025);opacity:0;animation:userMediaReveal .72s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes userMediaReveal{to{transform:scale(1);opacity:1}}
 .curtain-photo::before{content:"";position:absolute;z-index:1;inset:0;background:
   linear-gradient(180deg,rgba(23,20,18,.16) 0%,rgba(23,20,18,.03) 32%,rgba(23,20,18,.36) 65%,rgba(23,20,18,.82) 100%),
   linear-gradient(105deg,rgba(23,20,18,.02) 25%,rgba(23,20,18,.58) 100%);pointer-events:none}
@@ -462,7 +466,18 @@ body{min-height:100dvh}
 .upload-zone .upload-more{display:none}
 .upload-zone input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .upload-zone:focus-within{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
-.item-stage>.previews{position:absolute;z-index:5;left:16px;bottom:86px;padding:0;pointer-events:auto}
+.stage-media-status{position:absolute;z-index:5;right:16px;top:16px;display:flex;align-items:center;gap:8px;padding:5px 5px 5px 11px;
+  border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(25,22,20,.72);color:#fff;box-shadow:0 10px 28px -18px #000;backdrop-filter:blur(8px)}
+.stage-media-status span{font-size:.7rem;font-weight:750}.stage-media-status button{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;color:#fff;background:rgba(255,255,255,.12)}
+.stage-media-status button:hover{background:rgba(255,255,255,.2)}.stage-media-status svg{width:16px;height:16px}
+.stage-score-burst{position:absolute;z-index:8;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none;color:#fff;background:rgba(22,18,16,.46);overflow:hidden;animation:scoreVeil 1.75s ease both}
+.stage-score-burst strong{position:relative;z-index:2;font-family:var(--font-display);font-size:clamp(4.4rem,18vw,7.5rem);line-height:.8;letter-spacing:-.06em;text-shadow:0 8px 30px rgba(0,0,0,.28);animation:scoreLand 1.75s cubic-bezier(.16,1,.3,1) both}
+.stage-score-burst>span{position:relative;z-index:2;margin-top:12px;font-family:var(--font-display);font-size:.84rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:scoreLabel 1.75s ease both}
+.score-paper{position:absolute;z-index:1;left:50%;top:52%;width:7px;height:18px;border-radius:2px;background:var(--paper,#E8A064);transform:translate(-50%,-50%);animation:paperCast 1.35s cubic-bezier(.12,.72,.22,1) var(--delay,0ms) both}
+@keyframes scoreVeil{0%{opacity:0}12%,72%{opacity:1}100%{opacity:0}}
+@keyframes scoreLand{0%{opacity:0;transform:translateY(24px) scale(.58)}24%{opacity:1;transform:translateY(-4px) scale(1.08)}42%,76%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-10px) scale(.98)}}
+@keyframes scoreLabel{0%,8%{opacity:0;transform:translateY(8px)}20%,75%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes paperCast{0%{opacity:0;transform:translate(-50%,-20%) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--rot))}}
 .item-step .step-actions{margin-top:14px;padding-top:0}
 .item-step .step-continue{display:none}
 .item-step.has-media .upload-zone .upload-first{display:none}.item-step.has-media .upload-zone .upload-more{display:block}
@@ -567,6 +582,8 @@ body{min-height:100dvh}
   .next-peek{animation-duration:5s}
   .reward-moment{animation-duration:1.2s;backdrop-filter:none}
   .reward-mark::before,.reward-mark::after,.item-step.media-reward .curtain-photo::after{animation:none}
+  .stage-user-media{animation-duration:.2s}.stage-score-burst{animation-duration:1.15s;background:rgba(22,18,16,.16)}
+  .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}.score-paper{display:none}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
 }
 
@@ -602,7 +619,6 @@ body.done #flowApp{display:none}
   .item-step .upload-prompt{width:min(100%,390px);margin-left:auto;padding:16px 17px}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
   .item-step .next-peek{grid-column:8 / -1;grid-row:4;margin-top:0}
-  .item-stage>.previews{left:20px;bottom:20px}
   .item-step.has-media .upload-zone{min-height:64px}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
   .intro-step .intro-logo{left:0}
@@ -1054,22 +1070,42 @@ function celebrateAction(kind, { points = 0, anchor = null, detail = "Acción co
   layer.appendChild(moment);
   live.textContent = points ? `${message} Sumaste ${points} puntos. ${detail}` : `${message} ${detail}`;
 
-  const score = $("#flowScore");
-  if (points && rect && score && typeof moment.animate === "function") {
-    const target = score.getBoundingClientRect();
-    const flight = document.createElement("span");
-    flight.className = "reward-flight"; flight.textContent = `+${points}`;
-    document.body.appendChild(flight);
-    flight.animate([
-      { transform:`translate(${rect.left + rect.width * .5}px,${rect.top + rect.height * .45}px) scale(.78)`, opacity:0 },
-      { transform:`translate(${rect.left + rect.width * .5}px,${rect.top + rect.height * .32}px) scale(1.08)`, opacity:1, offset:.28 },
-      { transform:`translate(${target.left}px,${target.top}px) scale(.66)`, opacity:0 }
-    ], { duration:900, easing:"cubic-bezier(.16,1,.3,1)" }).onfinish = () => flight.remove();
-  }
+  if (points && rect) flyPoints(points, rect);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate(18);
   rewardTimer = setTimeout(() => moment.remove(), 1800);
 }
 window.celebrateAction = celebrateAction;
+
+function flyPoints(points, rect) {
+  const score = $("#flowScore");
+  if (!score || typeof score.animate !== "function") return;
+  const target = score.getBoundingClientRect();
+  const flight = document.createElement("span");
+  flight.className = "reward-flight"; flight.textContent = `+${points}`;
+  document.body.appendChild(flight);
+  flight.animate([
+    { transform:`translate(${rect.left + rect.width * .5}px,${rect.top + rect.height * .45}px) scale(.78)`, opacity:0 },
+    { transform:`translate(${rect.left + rect.width * .5}px,${rect.top + rect.height * .32}px) scale(1.08)`, opacity:1, offset:.28 },
+    { transform:`translate(${target.left}px,${target.top}px) scale(.66)`, opacity:0 }
+  ], { duration:1050, easing:"cubic-bezier(.16,1,.3,1)" }).onfinish = () => flight.remove();
+}
+
+function celebrateMedia(step, points, detail) {
+  const stage = step.querySelector(".item-stage"), live = $("#rewardLive");
+  stage.querySelector(".stage-score-burst")?.remove();
+  const burst = document.createElement("div");
+  burst.className = "stage-score-burst";
+  const papers = [
+    [-126,-82,-96,"#D23B25",0],[-92,76,128,"#F1C27D",55],[-55,-112,215,"#F8EFE4",105],[-22,96,-155,"#C78B52",35],
+    [30,-105,172,"#D23B25",75],[62,104,-118,"#F8EFE4",120],[98,-74,245,"#E8A064",20],[128,68,-225,"#D23B25",95]
+  ].map(([dx,dy,rot,color,delay]) => `<i class="score-paper" style="--dx:${dx}px;--dy:${dy}px;--rot:${rot}deg;--paper:${color};--delay:${delay}ms"></i>`).join("");
+  burst.innerHTML = `<strong>+${points}</strong><span>puntos sumados</span>${papers}`;
+  stage.appendChild(burst);
+  live.textContent = `${detail}. Sumaste ${points} puntos.`;
+  flyPoints(points, stage.getBoundingClientRect());
+  if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate([18,28,22]);
+  setTimeout(() => burst.remove(), 1800);
+}
 
 function rewardClass(step, className, duration = 1000) {
   if (!step) return;
@@ -1093,7 +1129,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     <div class="item-stage">
       <div class="item-visual">
         <article class="curtain-card">
-          <div class="curtain-photo"><img src="${item.img}" width="1024" height="1024" alt="${item.producto} en ${item.ambiente}" /></div>
+          <div class="curtain-photo"><img class="reference-media" src="${item.img.replace(".jpg", "-blurred.jpg")}" width="1024" height="1024" alt="Ejemplo desenfocado: ${item.producto} en ${item.ambiente}" /></div>
           <div class="curtain-meta"><strong>${item.producto}</strong><span>Tela ${item.tela}</span></div>
         </article>
       </div>
@@ -1104,7 +1140,6 @@ PRESUPUESTO.items.forEach((item, index) => {
           <input type="file" accept="image/*,video/*" multiple />
         </label>
       </div>
-      <div class="previews"></div>
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? `Listo, seguir con ${next.ambiente}` : "Listo, contar mi experiencia"}</button>
@@ -1114,8 +1149,7 @@ PRESUPUESTO.items.forEach((item, index) => {
   </div>`;
   flowItemSteps.appendChild(step);
   const input = step.querySelector("input");
-  const previews = step.querySelector(".previews");
-  input.addEventListener("change", () => { addFiles(item.id, input.files, previews, step); input.value = ""; });
+  input.addEventListener("change", () => { addFiles(item.id, input.files, null, step); input.value = ""; });
 });
 
 const itemsBox = $("#items");
@@ -1165,29 +1199,54 @@ function addFiles(itemId, fileList, previews, ownerStep = null) {
        antes de subir: canvas a máx 1600px de lado, JPEG q0.82 (el cliente está en
        mobile con datos). El mockup solo previsualiza. */
 
-    const pv = document.createElement("div");
-    pv.className = "pv";
-    pv.innerHTML = (esVideo
-      ? `<video src="${entry.url}" muted playsinline></video><span class="vtag">VIDEO</span>`
-      : `<img src="${entry.url}" alt="" />`)
-      + `<button type="button" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
-    pv.querySelector("button").addEventListener("click", () => {
-      state.archivos[itemId] = state.archivos[itemId].filter(e => e !== entry);
-      URL.revokeObjectURL(entry.url);
-      pv.remove();
-      if (ownerStep && !state.archivos[itemId].length) ownerStep.classList.remove("has-media");
-      renderPuntos();
-    });
-    previews.appendChild(pv);
+    if (!ownerStep) {
+      const pv = document.createElement("div");
+      pv.className = "pv";
+      pv.innerHTML = (esVideo
+        ? `<video src="${entry.url}" muted playsinline></video><span class="vtag">VIDEO</span>`
+        : `<img src="${entry.url}" alt="" />`)
+        + `<button type="button" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
+      pv.querySelector("button").addEventListener("click", () => {
+        state.archivos[itemId] = state.archivos[itemId].filter(e => e !== entry);
+        URL.revokeObjectURL(entry.url); pv.remove(); renderPuntos();
+      });
+      previews.appendChild(pv);
+    }
   });
-  if (ownerStep && state.archivos[itemId].length) ownerStep.classList.add("has-media");
+  if (ownerStep && state.archivos[itemId].length) {
+    ownerStep.classList.add("has-media");
+    renderStageMedia(ownerStep, itemId);
+  }
   renderPuntos();
   if (ownerStep && addedPoints) {
     rewardClass(ownerStep, "media-reward");
-    const kind = addedVideos && !addedPhotos ? "video" : "photo";
-    const label = addedVideos + addedPhotos === 1 ? (kind === "video" ? "Video cargado" : "Foto cargada") : `${addedVideos + addedPhotos} archivos cargados`;
-    celebrateAction(kind, { points: addedPoints, anchor: ownerStep.querySelector(".upload-zone"), detail: label });
+    const label = addedVideos + addedPhotos === 1 ? (addedVideos ? "Video cargado" : "Foto cargada") : `${addedVideos + addedPhotos} archivos cargados`;
+    celebrateMedia(ownerStep, addedPoints, label);
   }
+}
+
+function renderStageMedia(step, itemId) {
+  const photo = step.querySelector(".curtain-photo"), stage = step.querySelector(".item-stage");
+  photo.querySelector(".stage-user-media")?.remove();
+  stage.querySelector(".stage-media-status")?.remove();
+  const files = state.archivos[itemId], active = files.at(-1);
+  if (!active) { step.classList.remove("has-media"); return; }
+  const media = document.createElement(active.esVideo ? "video" : "img");
+  media.className = "stage-user-media";
+  media.src = active.url;
+  if (active.esVideo) { media.muted = true; media.loop = true; media.autoplay = true; media.playsInline = true; }
+  else media.alt = "Tu foto cargada";
+  photo.appendChild(media);
+  const status = document.createElement("div");
+  status.className = "stage-media-status";
+  status.innerHTML = `<span>${files.length === 1 ? "1 archivo" : `${files.length} archivos`}</span><button type="button" aria-label="Quitar ${active.esVideo ? "video" : "foto"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
+  status.querySelector("button").addEventListener("click", event => {
+    event.preventDefault(); event.stopPropagation();
+    state.archivos[itemId] = files.filter(entry => entry !== active);
+    URL.revokeObjectURL(active.url);
+    renderStageMedia(step, itemId); renderPuntos();
+  });
+  stage.appendChild(status);
 }
 
 /* ---------- estrellas ---------- */

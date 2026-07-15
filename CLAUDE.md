@@ -116,3 +116,11 @@ No mostrar testimonios, nombres, fotos, premios ni ganadores de ejemplo como si 
 ## Fase 2 (anotada, NO ejecutar sin que Agus lo pida)
 
 Una segunda app, con su propia URL, para correr el sorteo en sí: lista de participantes con sus tickets/chances, selección de ganador random ponderada por chances, puesta en escena para Instagram. Se construye con Innovatron cuando Agus lo confirme — no es parte de esta carpeta.
+
+## Reemplazo de referencia y recompensa de puntos — 2026-07-15
+
+- La referencia de cada ambiente parte desenfocada, pero conserva una fuente real de 1024×1024. El blur está pre-renderizado para no reintroducir los cuadros negros vistos con filtros CSS sobre planos animados. Al cargar una foto o video, el archivo del usuario la reemplaza dentro de la misma superficie; no se crea una miniatura ni una caja paralela.
+- La carga correcta dispara una sola recompensa local: `+10` o `+25` domina el ambiente con papel picado breve. El aviso global no se duplica para archivos; los puntos viajan al contador y se anuncian por `aria-live`.
+- Después de cargar, la foto pasa a ser protagonista, el uploader baja a “Sumar otra foto o video” y aparece el CTA para continuar. El contador/borrado es auxiliar y no compite con esos elementos.
+- Con varias cargas se muestra la última. Borrarla recupera la anterior; borrar la única recupera el placeholder, retira el estado completado y recalcula puntos/chances.
+- La aceptación automatizada cubre reemplazo real, ausencia de preview separado, suma acumulada, recuperación al borrar, reduced motion, grid y overflow de 320 a 1920 px.

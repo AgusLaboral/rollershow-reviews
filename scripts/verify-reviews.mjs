@@ -9,10 +9,7 @@ await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 const fails = [];
 const waitCurtain = page => page.waitForTimeout(1450);
-const testImage = {
-  name: 'foto.jpg', mimeType: 'image/jpeg',
-  buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),
-};
+const testImage = 'C:/Users/Agus/Desktop/rollershow-reviews/img/blackout-sand-bedroom.jpg';
 
 async function reachConfirm(page, { withPhoto = false } = {}) {
   await page.click('#startFlow'); await waitCurtain(page);
@@ -78,7 +75,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       environments[2]?.title !== 'Escritorio' || environments[3]?.title !== 'Home office') {
     fails.push(`${vp.w}px: fotos y nombres de ambientes no corresponden ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.unified)) {
+  if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
@@ -96,19 +93,33 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(120);
     const photoReward = await page.evaluate(() => ({
-      kind: document.querySelector('.reward-moment')?.dataset.kind,
-      points: document.querySelector('.reward-points')?.textContent,
+      points: document.querySelector('.item-step.active .stage-score-burst strong')?.textContent,
       live: document.querySelector('#rewardLive')?.textContent,
-      count: document.querySelectorAll('.reward-moment').length,
+      genericCount: document.querySelectorAll('.reward-moment').length,
       local: document.querySelector('.item-step.active')?.classList.contains('media-reward'),
+      replacement: !!document.querySelector('.item-step.active .stage-user-media'),
+      separatePreview: !!document.querySelector('.item-step.active .item-stage > .previews'),
+      placeholderHidden: getComputedStyle(document.querySelector('.item-step.active .reference-media')).opacity === '0',
+      status: document.querySelector('.item-step.active .stage-media-status span')?.textContent,
     }));
-    if (photoReward.kind !== 'photo' || photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.count !== 1 || !photoReward.local) {
+    if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || photoReward.status !== '1 archivo') {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
     await page.waitForTimeout(180);
     let pts = await page.textContent('#flowPts');
     if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
+    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.waitForTimeout(80);
+    if (await page.textContent('#flowPts') !== '20' || await page.textContent('.flow-step.active .stage-media-status span') !== '2 archivos') fails.push('segunda foto: no suma ni actualiza el estado');
+    await page.click('.flow-step.active .stage-media-status button');
+    if (await page.textContent('#flowPts') !== '10' || await page.textContent('.flow-step.active .stage-media-status span') !== '1 archivo') fails.push('quitar la foto activa no recupera la anterior');
+    await page.click('.flow-step.active .stage-media-status button');
+    const emptyStage = await page.evaluate(() => ({ points:document.querySelector('#flowPts')?.textContent, media:!!document.querySelector('.flow-step.active .stage-user-media'), hasMedia:document.querySelector('.flow-step.active')?.classList.contains('has-media') }));
+    if (emptyStage.points !== '0' || emptyStage.media || emptyStage.hasMedia) fails.push(`quitar la última foto no recupera el placeholder ${JSON.stringify(emptyStage)}`);
+    await page.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
+    await page.waitForTimeout(80);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
 
@@ -188,7 +199,7 @@ if (audioReward.kind !== 'audio' || !audioReward.live?.includes('30 puntos')) fa
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
-await dpage.evaluate(() => window.celebrateAction('photo', { points:10, anchor:document.querySelector('.flow-step.active .upload-zone'), detail:'Foto cargada' }));
+await dpage.locator('.flow-step.active input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(120);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 await dctx.close();

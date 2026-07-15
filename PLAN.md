@@ -145,3 +145,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Las miniaturas de 480×480 que se estiraban en desktop se reemplazaron por fuentes de 1024×1024 del sistema Rollershow, optimizadas a 111–141 KB. Se eliminaron los cuatro thumbs viejos.
 - Se auditó el copy del flujo completo: portada con acción concreta, consignas breves, estrellas sin culpa, audio y texto con beneficio explícito, confirmación directa y handoff de Google sin fingir validación técnica.
 - Los tests ahora fallan si vuelve una miniatura, si producto y carga dejan de ser una sola pieza, si reaparecen separadores vetados o si los mensajes centrales vuelven a copy genérico.
+
+## 16. Reemplazo de referencia y recompensa de puntos — 2026-07-15
+
+- [x] Desenfocar los placeholders de alta resolución sin sustituirlos por thumbnails de baja.
+- [x] Reemplazar el placeholder por la foto/video real dentro de la misma superficie.
+- [x] Eliminar la miniatura duplicada del flujo multistep.
+- [x] Priorizar `+10`/`+25` con una celebración contenida y sin aviso global duplicado.
+- [x] Recalcular puntos y recuperar el archivo anterior o placeholder al borrar.
+- [x] Verificar flujo, movimiento, reduced motion, grid y overflow de 320 a 1920 px.
