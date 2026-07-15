@@ -501,13 +501,16 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
          de Google Business Profile para esto), así que la confirmación es
          auto-reportada por el cliente. Rollershow asume ese margen de
          confianza, igual que ya confía en que las fotos subidas son reales.
-         TODO(Agus/Nico): reemplazar el placeid de acá abajo por el link real
-         de reseña de Rollershow (Google Business Profile → Pedir reseñas →
-         copiar enlace, o el place_id desde search.google.com/local/writereview). -->
+         Link real del local de CABA (ftid confirmado por Agus, redirige al
+         login de Google antes de dejar la reseña, como corresponde).
+         TODO(Nico): Rollershow tiene 2 locales (CABA y Villa Carlos Paz) —
+         este mockup usa siempre el de CABA. Si el presupuesto trae el local
+         de origen, elegir el link según corresponda; si no, confirmar con
+         Agus si un solo link (CABA) alcanza para los dos. -->
     <div class="g-block" id="gBlock">
       <h3>Duplicá tus chances</h3>
       <p id="gIntro">Dejanos tu opinión en Google (se abre en una pestaña nueva) y cuando vuelvas confirmás acá para sumar el doble de puntos.</p>
-      <a class="g-cta" id="gReviewBtn" href="https://search.google.com/local/writereview?placeid=TODO_PLACE_ID_ROLLERSHOW" target="_blank" rel="noopener">
+      <a class="g-cta" id="gReviewBtn" href="https://search.google.com/local/writereview?placeid=0x95bcb6719099596b:0x4354517b56352268" target="_blank" rel="noopener">
         Dejar mi reseña en Google
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
