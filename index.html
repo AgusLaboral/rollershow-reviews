@@ -349,6 +349,29 @@ body{min-height:100dvh}
 .flow-score i{width:1px;height:14px;background:var(--border)}
 .flow-score.gain{color:var(--cta);transform:translateY(-2px)}
 .flow-shell[data-current="0"] .flow-score{opacity:0;transform:translateY(-8px)}
+
+/* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
+.roller-wipe{position:absolute;z-index:24;inset:66px 0 0;overflow:hidden;pointer-events:none;visibility:hidden}
+.roller-tube{position:absolute;z-index:2;left:0;right:0;top:-13px;height:26px;background:#D9CCB9;
+  border-bottom:1px solid rgba(74,64,57,.24);box-shadow:0 8px 22px rgba(28,24,22,.18);opacity:0}
+.roller-fabric{position:absolute;inset:-2px 0 0;background:
+  linear-gradient(90deg,rgba(255,255,255,.2),transparent 18%,rgba(103,87,72,.08) 51%,transparent 82%,rgba(255,255,255,.16)),
+  repeating-linear-gradient(90deg,#E8DDCC 0,#E8DDCC 5px,#E1D3BF 6px,#E9DECD 11px);
+  box-shadow:0 24px 70px rgba(28,24,22,.28);transform:translate3d(0,-104%,0);will-change:transform}
+.roller-fabric::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(70,56,45,.025) 4px)}
+.roller-bar{position:absolute;z-index:2;left:0;right:0;bottom:0;height:12px;background:linear-gradient(180deg,#CDBEA8,#A99880);
+  border-top:1px solid rgba(255,255,255,.45);box-shadow:0 8px 18px rgba(28,24,22,.28)}
+.flow-shell.curtain-running .roller-wipe{visibility:visible}
+.flow-shell.curtain-running .roller-tube{animation:rollerTube .9s ease both}
+.flow-shell.curtain-running .roller-fabric{animation:rollerPass .9s cubic-bezier(.65,0,.18,1) both}
+@keyframes rollerPass{
+  0%{transform:translate3d(0,-104%,0)}
+  42%{transform:translate3d(0,0,0)}
+  54%{transform:translate3d(0,0,0)}
+  100%{transform:translate3d(0,-104%,0)}
+}
+@keyframes rollerTube{0%,100%{opacity:0}8%,92%{opacity:1}}
+
 .flow-viewport{height:100%;position:relative;overflow:hidden;perspective:1400px;transform-style:preserve-3d}
 .flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));
   opacity:0;visibility:hidden;pointer-events:none;transform:translate3d(8%,0,0) scale(.985);
@@ -384,6 +407,8 @@ body{min-height:100dvh}
 @keyframes heroBreath{to{transform:scale(1.075) translate3d(-1.2%,0,0)}}
 .intro-step .step-inner{position:relative;z-index:2;padding:80px 20px 28px;justify-content:flex-end;height:100%;min-height:0;width:min(100%,580px)}
 .intro-logo{position:absolute;top:22px;left:20px;width:202px;max-width:54vw}
+.intro-copy-block{display:flex;flex-direction:column;align-items:stretch}
+.intro-copy-block .step-actions{margin-top:20px;padding-top:0}
 .intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:13ch}
 .intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.25;margin-top:14px;max-width:31ch}
 .intro-prize strong{color:var(--cta-deep)}
@@ -472,6 +497,8 @@ body{min-height:100dvh}
 /* La animación sigue activa, pero con menos recorrido para quien lo solicita. */
 @media (prefers-reduced-motion:reduce){
   .intro-scene img{animation-duration:18s;transform:scale(1.015)}
+  .flow-shell.curtain-running .roller-fabric{animation-duration:.68s}
+  .flow-shell.curtain-running .roller-tube{animation-duration:.68s}
   .variant-ambientes .flow-step,.variant-scroll .flow-step{transition-duration:.38s;filter:none}
   .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
   .variant-ambientes .flow-step.active,.variant-scroll .flow-step.active{transform:scale(1)}
@@ -502,15 +529,17 @@ body.done #flowApp{display:none}
   .flow-step{padding-inline:0}
   .step-inner{width:min(calc(100% - 80px),1120px)}
   .step-content{width:min(100%,680px);margin-inline:auto}
-  .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center}
+  .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start;align-content:start}
   .item-step .item-visual{grid-column:1 / span 7}
   .item-step .item-task{grid-column:8 / -1}
-  .item-step .item-task{min-height:440px;justify-content:center}
+  .item-step .item-task{min-height:min(560px,calc(100dvh - 140px));justify-content:flex-start}
   .item-step .upload-zone{min-height:150px;margin-top:0}
   .item-step .step-actions{margin-top:22px;padding-top:0}
   .item-step .next-peek{margin-top:auto}
   .item-step.has-media .upload-zone{min-height:64px}
-  .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding-inline:0;align-items:flex-start}
+  .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
+  .intro-step .intro-copy-block{width:min(100%,500px)}
+  .intro-step .intro-copy-block .step-primary{width:max-content;min-width:270px}
   .intro-scene::after{background:linear-gradient(90deg,rgba(250,247,242,.98) 0%,rgba(250,247,242,.9) 40%,rgba(250,247,242,.08) 72%)}
   .intro-scene img{object-position:72% 50%}.intro-step h1{font-size:3.65rem}.intro-prize{font-size:1.35rem}
 }
@@ -518,7 +547,7 @@ body.done #flowApp{display:none}
 </head>
 <body>
 
-<!-- Prototipo multistep: recorrido continuo por ambientes, sin literalizar una cortina. -->
+<!-- Multistep: recorrido por ambientes con una transición inspirada en una cortina roller. -->
 <main id="flowApp" class="flow-shell" data-current="0">
   <header class="flow-head">
     <button class="flow-back" id="flowBack" type="button" aria-label="Volver al paso anterior">
@@ -531,18 +560,24 @@ body.done #flowApp{display:none}
   <div class="flow-score" id="flowScore" aria-live="polite">
     <span><strong id="flowPts">0</strong> puntos</span><i></i><span><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span>
   </div>
+  <div class="roller-wipe" aria-hidden="true">
+    <div class="roller-tube"></div>
+    <div class="roller-fabric"><span class="roller-bar"></span></div>
+  </div>
   <div class="flow-viewport" id="flowViewport">
     <section class="flow-step intro-step active" data-flow-step="intro" aria-hidden="false">
       <div class="intro-scene"><img src="img/hero-premios.webp" srcset="img/hero-premios-768.webp 768w, img/hero-premios.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Almohadones y alfombras premium para el sorteo" fetchpriority="high" /></div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
-        <h1 id="flowHeroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
-        <p class="intro-prize">Este mes sorteamos <strong>3 almohadones y 2 alfombras premium</strong> entre 3 ganadores.</p>
-        <p class="intro-date">Sorteo en vivo el 31 de julio por Instagram.</p>
-        <div class="step-actions">
-          <button class="step-primary" id="startFlow" type="button">Empezar y sumar chances
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
+        <div class="intro-copy-block">
+          <h1 id="flowHeroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
+          <p class="intro-prize">Este mes sorteamos <strong>3 almohadones y 2 alfombras premium</strong> entre 3 ganadores.</p>
+          <p class="intro-date">Sorteo en vivo el 31 de julio por Instagram.</p>
+          <div class="step-actions">
+            <button class="step-primary" id="startFlow" type="button">Empezar y sumar chances
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -1169,6 +1204,9 @@ function goToFlow(target) {
   flowBusy = true;
   const current = flowSteps[flowIndex], next = flowSteps[target], app = $("#flowApp");
   if (current.dataset.flowStep === "audio" && mediaRecorder?.state === "recording") mediaRecorder.stop();
+  app.classList.remove("curtain-running");
+  void app.offsetWidth;
+  app.classList.add("curtain-running");
   app.dataset.direction = target > flowIndex ? "forward" : "back";
   current.classList.add("leaving");
   current.classList.remove("active"); current.setAttribute("aria-hidden", "true");
@@ -1176,8 +1214,9 @@ function goToFlow(target) {
   flowIndex = target; updateFlowChrome();
   requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("entering")));
   next.focus({ preventScroll: true });
-  setTimeout(() => { flowBusy = false; }, 460);
+  setTimeout(() => { flowBusy = false; }, 620);
   setTimeout(() => { current.classList.remove("leaving"); }, 860);
+  setTimeout(() => { app.classList.remove("curtain-running"); }, 940);
 }
 function setupScrollGestures() {
   if (FLOW_VARIANT !== "scroll") return;

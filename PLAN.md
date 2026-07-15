@@ -101,5 +101,7 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - Nuevo grid maestro de 1120 px: en 1024/1280/1440/1920, header, progreso y contenido comparten respectivamente los bordes 40–984, 80–1200, 160–1280 y 400–1520.
 - `ambientes`: cámara con entrada desde Z -280 px y salida hacia Z positivo, escala, blur y capas internas con velocidades distintas.
 - `scroll`: dos pantallas coexistentes recorren aproximadamente 94% del viewport en sentidos opuestos; el movimiento por wheel/swipe conserva el botón como alternativa visible.
-- La interacción vuelve a habilitarse a los 460 ms aunque el residuo visual termine después. El movimiento es grande sin sumar pasos ni competir con el CTA.
-- Se agregó `scripts/verify-motion.mjs`: falla si las escenas no coexisten, no usan transforms distintos, no terminan limpias o rompen el grid maestro.
+- La interacción vuelve a habilitarse a los 620 ms y la secuencia visual termina a los 940 ms. Sigue siendo una transición breve, pero ahora el gesto de producto llega a leerse completo.
+- Corrección final: una cortina roller texturada baja, cubre la escena y sube para revelar el ambiente siguiente. No usa pliegues ni teatralidad; funciona sobre las dos variantes y refuerza la marca sin sumar decisiones.
+- En desktop se eliminó el centrado vertical accidental del grid de cada ambiente. Imagen, título y uploader parten del mismo borde superior útil; en portada, promesa, premio, fecha y CTA forman un solo bloque.
+- Se agregó `scripts/verify-motion.mjs`: falla si la cortina roller no participa, si las escenas no coexisten, no usan transforms distintos, no terminan limpias o rompen el grid maestro.

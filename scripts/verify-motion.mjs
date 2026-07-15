@@ -19,19 +19,30 @@ for (const variant of ['ambientes', 'scroll']) {
       filter: getComputedStyle(element).filter,
       opacity: getComputedStyle(element).opacity,
     } : null;
-    return { incoming: read(incoming), outgoing: read(outgoing) };
+    const roller = document.querySelector('.roller-wipe');
+    const fabric = document.querySelector('.roller-fabric');
+    return {
+      incoming: read(incoming),
+      outgoing: read(outgoing),
+      roller: {
+        visible: getComputedStyle(roller).visibility,
+        transform: getComputedStyle(fabric).transform,
+      },
+    };
   });
   if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
-  await page.waitForTimeout(850);
+  if (motion.roller.visible !== 'visible' || motion.roller.transform === 'none') fails.push(`${variant}: falta la cortina roller`);
+  await page.waitForTimeout(900);
   const settled = await page.evaluate(() => ({
     active: document.querySelectorAll('.flow-step.active').length,
     leaving: document.querySelectorAll('.flow-step.leaving').length,
     step: document.querySelector('.flow-step.active')?.dataset.flowStep,
+    curtainRunning: document.querySelector('#flowApp').classList.contains('curtain-running'),
   }));
-  if (settled.active !== 1 || settled.leaving !== 0 || settled.step !== 'item-1') fails.push(`${variant}: la transición no termina limpia`);
-  console.log(`${variant}: entrada ${motion.incoming?.transform}, salida ${motion.outgoing?.transform}`);
+  if (settled.active !== 1 || settled.leaving !== 0 || settled.step !== 'item-1' || settled.curtainRunning) fails.push(`${variant}: la transición no termina limpia`);
+  console.log(`${variant}: cortina ${motion.roller.transform}, entrada ${motion.incoming?.transform}, salida ${motion.outgoing?.transform}`);
   await page.close();
 }
 
@@ -56,4 +67,4 @@ for (const width of [1024, 1280, 1440, 1920]) {
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: profundidad, scroll físico, coexistencia de escenas y grid maestro verificados');
+console.log('OK: cortina roller, profundidad, scroll físico, coexistencia de escenas y grid maestro verificados');
