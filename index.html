@@ -167,8 +167,7 @@ section{padding:38px 0 6px}
 @keyframes pulse{50%{opacity:.25}}
 .rec-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:.92rem;min-width:44px}
 .eq{display:flex;align-items:center;gap:3px;flex:1;height:26px;min-width:0;overflow:hidden}
-.eq i{width:3px;border-radius:2px;background:var(--whatsapp-deep);animation:eq .9s ease-in-out infinite}
-@keyframes eq{0%,100%{height:22%}50%{height:95%}}
+.eq i{width:3px;height:100%;border-radius:2px;background:var(--whatsapp-deep);transform:scaleY(.1);transform-origin:center;opacity:.54;transition:opacity .08s linear;will-change:transform}
 .rec-stop{position:relative;width:100%;min-height:58px;margin-top:12px;border-radius:14px;background:var(--cta);color:#fff;
   display:flex;align-items:center;justify-content:center;gap:11px;font-weight:800;font-size:.98rem;
   box-shadow:0 14px 34px -16px rgba(198,58,33,.9);animation:stopBreath 1.55s ease-in-out infinite}
@@ -181,8 +180,9 @@ section{padding:38px 0 6px}
   border-radius:999px;padding:8px 10px;min-width:0}
 .vn-play{width:44px;height:44px;border-radius:50%;background:var(--whatsapp-accessible);color:#fff;display:grid;place-items:center;flex:none}
 .vn-play svg{width:16px;height:16px}
-.vn-track{flex:1;height:5px;background:#C3E9CE;border-radius:99px;overflow:hidden;min-width:0}
-.vn-track i{display:block;height:100%;width:0%;background:var(--whatsapp-deep);border-radius:99px}
+.vn-track{position:relative;flex:1;height:30px;display:flex;align-items:center;gap:2px;overflow:hidden;min-width:0}
+.vn-track b{flex:1;min-width:1px;height:100%;border-radius:2px;background:#76C98F;transform:scaleY(var(--wave,.14));transform-origin:center}
+.vn-track i{position:absolute;left:0;right:auto;bottom:0;display:block;height:2px;width:0%;background:var(--whatsapp-deep);border-radius:99px;box-shadow:0 -28px 0 rgba(31,173,83,.08)}
 .vn-time{font-size:.8rem;font-weight:700;color:var(--whatsapp-deep);font-variant-numeric:tabular-nums;flex:none}
 .audio-actions{display:flex;gap:14px;margin-top:11px}
 .audio-actions button{min-height:44px;font-size:.83rem;font-weight:700;color:var(--fg-mute);display:inline-flex;align-items:center;gap:6px}
@@ -352,19 +352,33 @@ body{min-height:max(100vh,100dvh)}
   background:var(--border);overflow:hidden;transition:opacity .2s}
 .flow-rail i{display:block;width:0;height:100%;border-radius:inherit;background:var(--cta);transition:width .35s cubic-bezier(.22,1,.36,1)}
 .flow-shell[data-current="0"] .flow-rail{opacity:0}
-.flow-score{position:absolute;z-index:28;right:20px;top:73px;display:flex;gap:8px;align-items:baseline;
+.flow-score{position:absolute;z-index:28;left:20px;right:20px;top:67px;min-height:50px;display:flex;justify-content:flex-end;gap:8px;align-items:center;
+  padding-bottom:8px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg) 72%,rgba(250,247,242,0));
   font-size:.72rem;color:var(--fg-mute);font-variant-numeric:tabular-nums;
-  transition:opacity .2s,transform .2s,color .2s}
+  transition:opacity .2s,transform .2s,color .2s;transform-style:preserve-3d}
 .flow-score strong{display:inline-block;font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep);transform-origin:center}
 .flow-score .score-chances strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
 .flow-score i{width:1px;height:14px;background:var(--border)}
-.flow-score::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--border);transform-origin:left}
+.flow-score::after{content:"";position:absolute;right:0;bottom:-1px;width:min(100%,180px);height:2px;background:var(--border);transform-origin:right}
 .flow-score.gain{color:var(--cta)}
 .flow-score.gain::after{background:var(--cta);animation:scoreCharge .72s cubic-bezier(.16,1,.3,1) both}
 .flow-score.gain .score-chances strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
+.flow-score.receive-points{animation:scoreReceive .72s cubic-bezier(.16,1,.3,1) both}
+.flow-score.new-chance .score-chances{animation:chanceGlow .9s cubic-bezier(.16,1,.3,1) both}
 @keyframes scoreCharge{0%{transform:scaleX(.08);opacity:.2}58%{transform:scaleX(1);opacity:1}100%{opacity:.45}}
 @keyframes chanceLand{0%{transform:translateY(6px) scale(.72);opacity:.4}62%{transform:translateY(-2px) scale(1.22)}100%{transform:none;opacity:1}}
+@keyframes scoreReceive{0%{transform:perspective(500px) rotateX(0) translateY(0)}42%{transform:perspective(500px) rotateX(-8deg) translateY(-3px)}100%{transform:none}}
+@keyframes chanceGlow{0%{text-shadow:none}45%{text-shadow:0 0 22px rgba(198,58,33,.48)}100%{text-shadow:none}}
 .flow-shell[data-current="0"] .flow-score{opacity:0;transform:translateY(-8px)}
+
+/* La recompensa recorre una trayectoria causal: nace en la acción y aterriza en el total estable. */
+.score-transfer{position:fixed;z-index:80;left:0;top:0;pointer-events:none;display:grid;place-items:center;
+  width:70px;height:46px;margin:-23px 0 0 -35px;color:#fff;font-family:var(--font-display);font-size:1.35rem;font-weight:800;
+  border-radius:5px;background-color:rgba(183,174,160,.94);background-image:
+  repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 4px),
+  repeating-linear-gradient(0deg,rgba(48,42,37,.12) 0 1px,transparent 1px 5px);
+  border-bottom:4px solid #8f826f;box-shadow:0 12px 30px rgba(28,24,22,.28);will-change:transform,opacity}
+.score-transfer::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:30px;transform:translateX(-50%);background:linear-gradient(rgba(198,58,33,.5),transparent)}
 
 /* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
 .roller-wipe{position:absolute;z-index:24;inset:66px 0 0;overflow:hidden;pointer-events:none;visibility:hidden}
@@ -395,18 +409,20 @@ body{min-height:max(100vh,100dvh)}
 @keyframes rollerTube{0%,100%{opacity:0}4%,94%{opacity:1}}
 
 .flow-viewport{height:100%;position:relative;overflow:hidden}
-.flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:104px 20px max(24px,env(safe-area-inset-bottom));background:var(--bg);
+.flow-step{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:132px 20px max(24px,env(safe-area-inset-bottom));background:var(--bg);
   opacity:0;visibility:hidden;pointer-events:none;transform:translateX(8%) scale(.985);
   transform-origin:50% 50%;
   transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.16,1,.3,1),visibility .72s}
 .flow-step.active{opacity:1;visibility:visible;pointer-events:auto;z-index:2;transform:none}
 .flow-step.leaving{visibility:visible;pointer-events:none;z-index:1}
-.step-inner{width:min(100%,520px);min-height:calc(100dvh - 128px);margin:0 auto;display:flex;flex-direction:column}
+.step-inner{width:min(100%,520px);min-height:calc(100dvh - 156px);margin:0 auto;display:flex;flex-direction:column}
 .step-content{display:flex;flex:1;flex-direction:column}
 .step-title{font-family:var(--font-display);font-size:clamp(1.85rem,8vw,2.65rem);line-height:1.02;
   letter-spacing:-.025em;font-weight:800}
 .item-subtitle{margin-top:5px;color:var(--fg-mute);font-size:.85rem}
-.step-copy{margin-top:10px;color:var(--fg-soft);max-width:38ch}
+.step-copy{margin-top:10px;color:var(--fg-soft);max-width:42ch;line-height:1.48}
+.step-copy strong{display:block;color:var(--fg);font-family:var(--font-display);font-size:1.02rem;line-height:1.2;margin-bottom:3px}
+.step-copy span{display:block;color:var(--fg-mute);font-size:.9rem;max-width:40ch}
 .step-actions{margin-top:auto;padding-top:20px;display:flex;flex-direction:column;align-items:stretch;gap:10px}
 .step-primary{min-height:54px;border-radius:14px;padding:14px 20px;background:var(--cta);color:#fff;
   font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;
@@ -618,7 +634,7 @@ body{min-height:max(100vh,100dvh)}
   .stage-user-media{animation-duration:.2s}.stage-score-burst,.stage-score-burst::before,.stage-score-burst::after{animation-duration:1.15s}
   .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
-  .rec-stop,.rec-stop::after,.flow-score.gain::after,.flow-score.gain .score-chances strong{animation:none}
+  .rec-stop,.rec-stop::after,.flow-score.gain::after,.flow-score.gain .score-chances strong,.flow-score.receive-points,.flow-score.new-chance .score-chances{animation:none}
   .confirm-prize-base,.confirm-prize-pillow,.confirm-prize-rug{animation-duration:28s}
   .confirm-step.celebrate-in .celebration-roller{animation-duration:1.25s}
   .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof,.confirm-step.is-authorized .cta:not(:disabled){animation:none}
@@ -628,13 +644,23 @@ body:not(.done) footer{display:none}
 body:not(.done)>.hero,body:not(.done)>.mecanica-sec,body:not(.done)>.chancebar,body:not(.done)>#app{display:none}
 body.done #flowApp{display:none}
 @media (max-height:740px){
-  .flow-step{padding-top:96px;padding-bottom:20px}
-  .step-inner{min-height:calc(100dvh - 116px)}
+  .flow-step{padding-top:126px;padding-bottom:20px}
+  .step-inner{min-height:calc(100dvh - 146px)}
   .step-title{font-size:clamp(1.72rem,7.5vw,2.25rem)}
   .step-copy{margin-top:6px;font-size:.92rem}
   .item-stage{height:230px;margin-top:8px}
   .upload-zone{padding:12px}
   .step-actions{padding-top:12px;gap:6px}
+}
+@media (max-height:740px) and (max-width:399px){
+  .confirm-step .step-copy{margin-top:6px}
+  .confirm-step .confirm-score{margin-top:9px;padding-block:9px}
+  .confirm-step .confirm-points{margin-top:9px}
+  .confirm-step .confirm-proof{margin-top:5px}
+  .confirm-step .confirm-prize-reminder{margin-top:4px}
+  .confirm-step .confirm-actions{margin-top:9px}
+  .confirm-step .consent{min-height:56px;padding:10px 12px}
+  .confirm-step .step-actions{margin-top:10px}
 }
 @media (max-width:799px){
   .roller-fabric{background-color:rgba(221,213,200,.54)}
@@ -642,7 +668,7 @@ body.done #flowApp{display:none}
 @media (min-width:800px){
   .flow-head{left:50%;right:auto;width:min(calc(100% - 80px),1120px);padding-inline:0;transform:translateX(-50%)}
   .flow-rail{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
-  .flow-score{right:max(40px,calc((100vw - 1120px)/2))}
+  .flow-score{left:max(40px,calc((100vw - 1120px)/2));right:max(40px,calc((100vw - 1120px)/2))}
   .flow-step{padding-inline:0}
   .step-inner{width:min(calc(100% - 80px),1120px)}
   .flow-step:not(.intro-step):not(.item-step) .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-content:start}
@@ -717,7 +743,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">¿Cómo fue tu experiencia con Rollershow?</h2>
-        <p class="step-copy">Marcá las estrellas que mejor la representan y sumá 5 puntos.</p>
+        <p class="step-copy"><strong>Elegí las estrellas que la representan.</strong><span>Tu calificación suma 5 puntos.</span></p>
         <div class="focus-panel">
           <div class="rating-seller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
           <div id="flowStarsMount"></div>
@@ -732,7 +758,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">Contalo con tu voz.</h2>
-        <p class="step-copy">Con un audio corto y espontáneo sumás 30 puntos. Podés escucharlo antes de seguir.</p>
+        <p class="step-copy"><strong>Tu audio suma 30 puntos.</strong><span>Contanos qué elegiste y cómo quedó. Podés escucharlo antes de seguir.</span></p>
         <div class="focus-panel" id="flowAudioMount"></div>
         <div class="step-actions">
           <button class="step-primary step-audio-next" id="audioNext" type="button">Continuar</button>
@@ -745,7 +771,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">Dejá una frase que ayude a elegir.</h2>
-        <p class="step-copy">¿Qué fue lo que más te gustó? Con una frase alcanza y sumás 5 puntos.</p>
+        <p class="step-copy"><strong>Una frase alcanza y suma 5 puntos.</strong><span>Contá qué fue lo que más te gustó.</span></p>
         <div class="focus-panel" id="flowTextMount"></div>
         <div class="step-actions"><button class="step-primary" data-flow-next type="button">Revisar mi participación</button></div>
        </div>
@@ -1078,11 +1104,7 @@ function renderPuntos() {
   $("#ctaSub").textContent = p === 0
     ? "Con calificar tu experiencia ya participás."
     : `Con lo que cargaste entrás al sorteo de julio con ${t === 1 ? "1 chance" : t + " chances"}.`;
-  const flowPts = $("#flowPts"), flowScore = $("#flowScore");
-  if (flowPts.textContent != p) {
-    flowScore.classList.remove("gain"); void flowScore.offsetWidth; flowScore.classList.add("gain");
-    setTimeout(() => flowScore.classList.remove("gain"), 900);
-  }
+  const flowPts = $("#flowPts");
   flowPts.textContent = p;
   $("#flowTickets").textContent = t;
   $("#flowTicketsLabel").textContent = t === 1 ? "chance" : "chances";
@@ -1104,6 +1126,48 @@ const REWARD_COPY = {
   text: ["Tu opinión quedó lista.", "Esa frase puede ayudar.", "Gracias por sumar este detalle."]
 };
 const rewardTurns = {};
+function landScore(chanceGained = false) {
+  const score = $("#flowScore");
+  score.classList.remove("gain", "receive-points", "new-chance");
+  void score.offsetWidth;
+  score.classList.add("gain", "receive-points");
+  if (chanceGained) score.classList.add("new-chance");
+  setTimeout(() => score.classList.remove("gain", "receive-points", "new-chance"), 950);
+}
+function transferPoints(points, origin, previousPoints, delay = 0) {
+  if (!points) return;
+  document.querySelectorAll(".score-transfer").forEach(item => item.remove());
+  const target = $("#flowPts");
+  const fallback = document.querySelector(".flow-step.active .step-content,.flow-step.active .item-stage");
+  const source = origin?.isConnected ? origin : fallback;
+  if (!target || !source) { landScore(false); return; }
+  const start = source.getBoundingClientRect(), end = target.getBoundingClientRect();
+  const startX = start.left + start.width / 2, startY = start.top + start.height / 2;
+  const endX = end.left + end.width / 2, endY = end.top + end.height / 2;
+  const dx = endX - startX, dy = endY - startY;
+  const chanceGained = chancesDe(totalPuntos()) > chancesDe(previousPoints);
+  const token = document.createElement("div");
+  token.className = "score-transfer";
+  token.textContent = `+${points}`;
+  token.setAttribute("aria-hidden", "true");
+  token.style.left = `${startX}px`;
+  token.style.top = `${startY}px`;
+  $("#flowApp").appendChild(token);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const duration = reduced ? 720 : 1080;
+  const launch = () => {
+    const animation = token.animate([
+      { transform:"translate3d(0,0,0) scale(.72) rotateX(12deg)", opacity:0, offset:0 },
+      { transform:"translate3d(0,-18px,0) scale(1.08) rotateX(0)", opacity:1, offset:.16 },
+      { transform:`translate3d(${dx * .58}px,${dy * .52 - 38}px,0) scale(.9) rotate(-2deg)`, opacity:1, offset:.62 },
+      { transform:`translate3d(${dx}px,${dy}px,0) scale(.38) rotate(0)`, opacity:.92, offset:.92 },
+      { transform:`translate3d(${dx}px,${dy}px,0) scale(.2)`, opacity:0, offset:1 },
+    ], { duration, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" });
+    setTimeout(() => landScore(chanceGained), duration * .78);
+    animation.finished.finally(() => token.remove());
+  };
+  delay ? setTimeout(launch, delay) : requestAnimationFrame(launch);
+}
 function rewardResult(beforePoints, afterPoints, updated = false) {
   const beforeChances = chancesDe(beforePoints), afterChances = chancesDe(afterPoints);
   const gained = Math.max(0, afterChances - beforeChances);
@@ -1112,7 +1176,7 @@ function rewardResult(beforePoints, afterPoints, updated = false) {
   const missing = PTS_POR_CHANCE - (afterPoints % PTS_POR_CHANCE || PTS_POR_CHANCE);
   return missing > 0 ? `Te faltan ${missing} puntos para sumar otra chance.` : `Ya tenés ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
 }
-function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Acción completada", updated = false } = {}) {
+function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Acción completada", updated = false, origin = null } = {}) {
   const live = $("#rewardLive");
   if (!live) return;
   const choices = REWARD_COPY[kind] || REWARD_COPY.photo;
@@ -1123,9 +1187,7 @@ function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Ac
   const beforePoints = previousPoints == null ? Math.max(0, afterPoints - points) : previousPoints;
   const outcome = rewardResult(beforePoints, afterPoints, updated);
   live.textContent = points ? `${message} Sumaste ${points} puntos. ${outcome}` : `${message} ${outcome}`;
-  const score = $("#flowScore");
-  score.classList.remove("gain"); void score.offsetWidth; score.classList.add("gain");
-  setTimeout(() => score.classList.remove("gain"), 900);
+  transferPoints(points, origin, beforePoints, 120);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate(18);
 }
 window.celebrateAction = celebrateAction;
@@ -1150,9 +1212,7 @@ function celebrateMedia(step, points, detail, previousPoints) {
   burst.innerHTML = `<strong>+${points}</strong><span>puntos<br>${visualOutcome}</span><em>${message}</em>`;
   stage.appendChild(burst);
   live.textContent = `${detail}. Sumaste ${points} puntos. ${outcome}`;
-  const score = $("#flowScore");
-  score.classList.remove("gain"); void score.offsetWidth; score.classList.add("gain");
-  setTimeout(() => score.classList.remove("gain"), 900);
+  transferPoints(points, burst.querySelector("strong"), previousPoints, 460);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate([18,28,22]);
   setTimeout(() => { burst.remove(); stage.classList.remove("is-rewarding"); }, 1600);
 }
@@ -1317,7 +1377,7 @@ for (let i = 1; i <= 5; i++) {
     if (firstRating) {
       [...starsBox.children].forEach((star, index) => star.style.setProperty("--star-index", index));
       const step = $(".rating-step"); rewardClass(step, "rating-reward", 850);
-      celebrateAction("rating", { points:PUNTOS.estrellas, previousPoints, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}` });
+      celebrateAction("rating", { points:PUNTOS.estrellas, previousPoints, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}`, origin:b });
     }
   });
   starsBox.appendChild(b);
@@ -1326,8 +1386,58 @@ for (let i = 1; i <= 5; i++) {
 /* ---------- audio estilo nota de voz ---------- */
 const audioUI = $("#audioUI");
 let mediaRecorder = null, chunks = [], recTimer = null, recSeconds = 0, audioEl = null, audioReplacing = false;
+let waveContext = null, waveAnalyser = null, waveFrame = null, wavePeaks = [], waveTick = 0;
 
 function fmt(s) { return Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"); }
+function stopLiveWave() {
+  if (waveFrame) cancelAnimationFrame(waveFrame);
+  waveFrame = null;
+  waveAnalyser = null;
+  if (waveContext) waveContext.close().catch(() => {});
+  waveContext = null;
+}
+function startLiveWave(stream) {
+  stopLiveWave();
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    waveContext = new AudioCtx();
+    waveAnalyser = waveContext.createAnalyser();
+    waveAnalyser.fftSize = 128;
+    waveAnalyser.smoothingTimeConstant = .72;
+    waveContext.createMediaStreamSource(stream).connect(waveAnalyser);
+    const data = new Uint8Array(waveAnalyser.frequencyBinCount);
+    const draw = () => {
+      if (!waveAnalyser) return;
+      waveAnalyser.getByteFrequencyData(data);
+      const bars = [...document.querySelectorAll("#audioUI .eq i")];
+      let peak = .08;
+      bars.forEach((bar, index) => {
+        const from = Math.floor(index / bars.length * Math.min(data.length, 42));
+        const value = data[from] / 255;
+        const shaped = Math.max(.08, Math.min(1, Math.pow(value, .72) * 1.35));
+        peak = Math.max(peak, shaped);
+        bar.style.transform = `scaleY(${shaped.toFixed(3)})`;
+        bar.style.opacity = String(.48 + shaped * .52);
+      });
+      if (++waveTick % 4 === 0) {
+        wavePeaks.push(peak);
+        if (wavePeaks.length > 240) wavePeaks.shift();
+      }
+      waveFrame = requestAnimationFrame(draw);
+    };
+    waveContext.resume().catch(() => {});
+    draw();
+  } catch (_) { stopLiveWave(); }
+}
+function recordedWaveBars(count = 32) {
+  if (!wavePeaks.length) return Array.from({ length:count }, () => .12);
+  return Array.from({ length:count }, (_, index) => {
+    const from = Math.floor(index * wavePeaks.length / count);
+    const to = Math.max(from + 1, Math.floor((index + 1) * wavePeaks.length / count));
+    return Math.max(.1, ...wavePeaks.slice(from, to));
+  });
+}
 
 function renderAudio(stateName) {
   const flowAudioStep = $(".audio-step");
@@ -1342,19 +1452,20 @@ function renderAudio(stateName) {
     $("#recStart").addEventListener("click", startRec);
   }
   if (stateName === "recording") {
-    const bars = Array.from({ length: 26 }, (_, i) => `<i style="animation-delay:${(i * 73) % 900}ms"></i>`).join("");
+    const bars = Array.from({ length: 26 }, () => `<i></i>`).join("");
     audioUI.innerHTML = `<div class="rec-live">
       <span class="rec-dot"></span><span class="rec-time" id="recTime">0:00</span>
-      <div class="eq">${bars}</div>
+      <div class="eq" role="img" aria-label="Nivel de tu voz en tiempo real">${bars}</div>
     </div>
-    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar grabación</button>
-    <p class="rec-helper">Después vas a poder escucharla, volver a grabarla o seguir.</p>`;
+    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar y guardar</button>
+    <p class="rec-helper">Cuando termines, podés escucharla o volver a grabarla.</p>`;
     $("#recStop").addEventListener("click", () => mediaRecorder && mediaRecorder.stop());
   }
   if (stateName === "recorded") {
+    const waveform = recordedWaveBars().map(value => `<b style="--wave:${value.toFixed(3)}"></b>`).join("");
     audioUI.innerHTML = `<div class="voice-note">
       <button type="button" class="vn-play" id="vnPlay" aria-label="Escuchar"><svg id="vnIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4c0 .8.9 1.3 1.6.9l11-7.2c.6-.4.6-1.4 0-1.8l-11-7.2c-.7-.4-1.6.1-1.6.9z"/></svg></button>
-      <div class="vn-track"><i id="vnFill"></i></div>
+      <div class="vn-track" aria-hidden="true">${waveform}<i id="vnFill"></i></div>
       <span class="vn-time" id="vnTime">${fmt(recSeconds)}</span>
     </div>
     <div class="audio-actions">
@@ -1379,17 +1490,19 @@ function renderAudio(stateName) {
   }
 }
 function limpiarAudio() {
+  stopLiveWave();
   if (audioEl) { audioEl.pause(); audioEl = null; }
   state.audioBlob = null;
 }
 async function startRec() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    chunks = []; recSeconds = 0;
+    chunks = []; recSeconds = 0; wavePeaks = []; waveTick = 0;
     mediaRecorder = new MediaRecorder(stream);
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
     mediaRecorder.onstop = () => {
       clearInterval(recTimer);
+      stopLiveWave();
       stream.getTracks().forEach(t => t.stop());
       const previousPoints = totalPuntos();
       state.audioBlob = new Blob(chunks, { type: mediaRecorder.mimeType });
@@ -1402,11 +1515,12 @@ async function startRec() {
       audioUI.appendChild(earned);
       renderPuntos();
       const step = $(".audio-step"); rewardClass(step, "audio-reward", 900);
-      celebrateAction("audio", { points:audioReplacing ? 0 : PUNTOS.audio, previousPoints, detail:audioReplacing ? "Audio actualizado" : "Audio guardado", updated:audioReplacing });
+      celebrateAction("audio", { points:audioReplacing ? 0 : PUNTOS.audio, previousPoints, detail:audioReplacing ? "Audio actualizado" : "Audio guardado", updated:audioReplacing, origin:earned });
       audioReplacing = false;
     };
     mediaRecorder.start();
     renderAudio("recording");
+    startLiveWave(stream);
     recTimer = setInterval(() => { recSeconds++; const t = $("#recTime"); if (t) t.textContent = fmt(recSeconds); }, 1000);
   } catch (err) {
     audioReplacing = false;
@@ -1428,7 +1542,7 @@ reviewText.addEventListener("input", () => {
   saveLocal(); renderPuntos();
   if (!wasComplete && state.textoOk) {
     const step = $(".text-step"); rewardClass(step, "text-reward", 850);
-    celebrateAction("text", { points:PUNTOS.texto, previousPoints, detail:"Opinión completada" });
+    celebrateAction("text", { points:PUNTOS.texto, previousPoints, detail:"Opinión completada", origin:reviewText });
   }
 });
 

@@ -6,7 +6,7 @@ const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
 const OUT = 'C:/Users/Agus/Desktop/rollershow-reviews/_scratch';
 await mkdir(OUT, { recursive: true });
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({ args:['--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream'] });
 const fails = [];
 const waitCurtain = page => page.waitForTimeout(1450);
 const testImage = 'C:/Users/Agus/Desktop/rollershow-reviews/img/blackout-sand-bedroom.jpg';
@@ -92,7 +92,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
     await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(620);
     const photoReward = await page.evaluate(() => ({
       points: document.querySelector('.item-step.active .stage-score-burst strong')?.textContent,
       live: document.querySelector('#rewardLive')?.textContent,
@@ -105,9 +105,11 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       addMore: getComputedStyle(document.querySelector('.item-step.active .upload-more-action')).display !== 'none',
       randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight,.score-paper').length,
       bannedSeparators: /[·—]/.test(document.querySelector('.item-step.active .stage-score-burst')?.innerText || ''),
+      transfer: document.querySelector('.score-transfer')?.textContent,
+      transferAnimated: (document.querySelector('.score-transfer')?.getAnimations().length || 0) > 0,
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
-        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators) {
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
@@ -238,17 +240,17 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   await ctx.close();
 }
 
-const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, permissions:['microphone'] });
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'networkidle' });
-await dpage.evaluate(() => window.celebrateAction('audio', { points:30, anchor:document.querySelector('#startFlow'), detail:'Audio guardado' }));
-const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent }));
-if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos')) fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
+await dpage.evaluate(() => window.celebrateAction('audio', { points:30, origin:document.querySelector('#startFlow'), detail:'Audio guardado' }));
+const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent, transfer:document.querySelector('.score-transfer')?.textContent }));
+if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos') || audioReward.transfer !== '+30') fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
-await dpage.waitForTimeout(120);
+await dpage.waitForTimeout(620);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 
 // Audio: durante la grabación, detener es la única acción dominante. Detener no avanza.
@@ -256,7 +258,8 @@ await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
 for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
 await dpage.locator('#stars button').nth(4).click();
 await dpage.click('#ratingNext'); await waitCurtain(dpage);
-await dpage.evaluate(() => renderAudio('recording'));
+await dpage.click('#recStart');
+await dpage.waitForTimeout(450);
 const recordingState = await dpage.evaluate(() => {
   const step = document.querySelector('.audio-step');
   const stop = document.querySelector('#recStop');
@@ -268,13 +271,17 @@ const recordingState = await dpage.evaluate(() => {
     contentWidth: Math.round(step.querySelector('.step-content').getBoundingClientRect().width),
     skipVisible: getComputedStyle(step.querySelector('.step-actions')).display !== 'none',
     activeStep: document.querySelector('.flow-step.active')?.dataset.flowStep,
+    liveAnalyser: !!waveAnalyser,
+    liveBars: [...document.querySelectorAll('.eq i')].every(bar => bar.style.transform.startsWith('scaleY(')),
+    simulatedCss: [...document.querySelectorAll('.eq i')].some(bar => getComputedStyle(bar).animationName !== 'none'),
   };
 });
-if (!recordingState.recording || recordingState.stopCopy !== 'Terminar grabación' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
-    recordingState.skipVisible || recordingState.activeStep !== 'audio') fails.push(`audio grabando: jerarquía incorrecta ${JSON.stringify(recordingState)}`);
+if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
+    recordingState.skipVisible || recordingState.activeStep !== 'audio' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss) fails.push(`audio grabando: jerarquía u onda real incorrecta ${JSON.stringify(recordingState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
 
-await dpage.evaluate(() => { state.audioBlob = new Blob(['audio'], { type:'audio/webm' }); renderAudio('recorded'); });
+await dpage.locator('#recStop').click({ force:true });
+await dpage.waitForTimeout(700);
 const reviewState = await dpage.evaluate(() => ({
   recorded: document.querySelector('.audio-step')?.classList.contains('has-audio'),
   recording: document.querySelector('.audio-step')?.classList.contains('is-recording'),
@@ -283,9 +290,13 @@ const reviewState = await dpage.evaluate(() => ({
   remove: !!document.querySelector('#delRec'),
   continueVisible: getComputedStyle(document.querySelector('#audioNext')).display !== 'none',
   skipVisible: getComputedStyle(document.querySelector('.step-audio-skip')).display !== 'none',
+  earned: document.querySelector('.audio-earned')?.innerText,
+  points: document.querySelector('#flowPts')?.textContent,
+  transfer: document.querySelector('.score-transfer')?.textContent,
 }));
 if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
-    !reviewState.continueVisible || reviewState.skipVisible) fails.push(`audio detenido: revisión incompleta ${JSON.stringify(reviewState)}`);
+    !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30') fails.push(`audio detenido: revisión o recompensa incompleta ${JSON.stringify(reviewState)}`);
+await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-review.png` });
 await dpage.click('#audioNext'); await waitCurtain(dpage);
 await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
 await dpage.click('.text-step.active .step-primary'); await waitCurtain(dpage);

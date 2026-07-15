@@ -151,7 +151,7 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Desenfocar los placeholders de alta resolución sin sustituirlos por thumbnails de baja.
 - [x] Reemplazar el placeholder por la foto/video real dentro de la misma superficie.
 - [x] Eliminar la miniatura duplicada del flujo multistep.
-- [x] Priorizar `+10`/`+25` con una banda roller local, sin confetti, rombos, toast ni puntos volando.
+- [x] Priorizar `+10`/`+25` con una banda roller local y transferirlos al contador por una trayectoria causal, sin confetti, rombos ni toast.
 - [x] Recalcular puntos y recuperar el archivo anterior o placeholder al borrar.
 - [x] Verificar flujo, movimiento, reduced motion, grid y overflow de 320 a 1920 px.
 
@@ -165,9 +165,9 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 
 ## 18. Audio y progreso con recompensa real — 2026-07-15
 
-- [x] Convertir `Terminar grabación` en CTA principal de ancho completo, con pulso propio y sin salida secundaria durante la captura.
+- [x] Convertir `Terminar y guardar` en CTA principal de ancho completo, con pulso propio y sin salida secundaria durante la captura.
 - [x] Separar detener de avanzar: al terminar aparecen escuchar, volver a grabar, borrar y recién entonces continuar.
-- [x] Dar jerarquía estable a chances antes que puntos y animar el cambio en el mismo contador, sin marcador flotante ni count-up genérico.
+- [x] Dar jerarquía estable a chances antes que puntos y animar el cambio en el mismo contador, sin marcador persistente ni count-up genérico.
 - [x] Expresar cada logro con consecuencias exactas: puntos ganados, chances nuevas y total resultante; variar el incentivo local sin prometer cercanía determinista a un premio sorteado.
 - [x] Verificar estados de audio grabando/revisión y geometría mobile/desktop; hacer opaco el fondo de cada etapa para evitar transparencias de composición.
 
@@ -179,3 +179,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Mantener el botón desactivado estable y accesible; el pulso activo cambia luz/sombra, no el área clickeable.
 - [x] Sustituir la comparación inventada con un promedio por una consecuencia verificable: cada chance es una oportunidad en el sorteo.
 - [x] Verificar los dos estados en mobile y desktop, sin scroll en 320×700 y sin romper el grid de 320 a 1920 px.
+
+## 20. Trayectoria causal, contador reservado y audio real — 2026-07-15
+
+- [x] Reservar una fila completa para chances y puntos debajo del progreso. Ninguna etapa puede comenzar antes de su borde inferior ni usar ese espacio.
+- [x] Hacer que `+10`, `+25`, `+5` o `+30` nazca en la acción y viaje hasta el total con una pieza de tela sunscreen; al aterrizar, el contador recibe el impacto y destaca la chance nueva.
+- [x] Sustituir la ecualización simulada por Web Audio API (`AnalyserNode`) conectada al mismo stream que graba `MediaRecorder`.
+- [x] Cambiar el CTA a `Terminar y guardar`; al detener muestra la onda registrada, `+30 puntos`, el nuevo total y la misma transferencia usada en el resto del flujo.
+- [x] Jerarquizar el copy de estrellas, audio y texto en beneficio principal más instrucción secundaria, sin sumar cajas ni acortar información necesaria.
+- [x] Probar onda real, guardado, recompensa, trayectoria, colisiones y geometría de las nueve etapas entre 320 y 1920 px.

@@ -69,6 +69,7 @@ for (const viewport of viewports) {
     return {
       master,
       rail: rect(document.querySelector('.flow-rail')),
+      score: rect(document.querySelector('.flow-score')),
       introLogo: rect(document.querySelector('.intro-logo')),
       introCopy: rect(document.querySelector('.intro-copy-block')),
       introCTA: rect(document.querySelector('#startFlow')),
@@ -87,6 +88,9 @@ for (const viewport of viewports) {
   if (viewport.width >= 800) {
     if (!close(report.master.left, report.rail.left) || !close(report.master.right, report.rail.right)) {
       fails.push(`${viewport.width}px: header y progreso no comparten bordes`);
+    }
+    if (!close(report.master.left, report.score.left) || !close(report.master.right, report.score.right)) {
+      fails.push(`${viewport.width}px: puntaje fuera del grid maestro`);
     }
     const column = (report.master.width - 11 * 24) / 12;
     const expectedContentLeft = report.master.left + 2 * (column + 24);
@@ -145,6 +149,9 @@ for (const viewport of viewports) {
 
   for (const step of report.steps) {
     if (step.verticalOverflow > 4) fails.push(`${viewport.width}px ${step.kind}: exige scroll de ${Math.round(step.verticalOverflow)}px`);
+    if (step.kind !== 'intro' && step.inner.top < report.score.bottom + 7) {
+      fails.push(`${viewport.width}px ${step.kind}: puntaje pisa el contenido (${Math.round(report.score.bottom)} >= ${Math.round(step.inner.top)})`);
+    }
   }
   console.log(`${viewport.width}px: grid ${Math.round(report.master.left)}-${Math.round(report.master.right)}, ${report.steps.length} etapas alineadas, overflow 0`);
   await ctx.close();
