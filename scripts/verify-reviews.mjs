@@ -9,7 +9,7 @@ await mkdir(OUT, { recursive: true });
 
 const browser = await chromium.launch();
 const fails = [];
-const waitCurtain = page => page.waitForTimeout(1050);
+const waitCurtain = page => page.waitForTimeout(600);
 const testImage = {
   name: 'foto.jpg', mimeType: 'image/jpeg',
   buffer: Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==', 'base64'),

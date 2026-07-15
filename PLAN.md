@@ -84,3 +84,13 @@ App del sorteo con Innovatron, URL aparte: lista de participantes con sus ticket
 4. **¿Participación sin foto?** Recomiendo sí (§5). Decí si estás de acuerdo.
 
 Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
+
+## 9. Perfeccionamiento del multistep — 2026-07-15
+
+- Se mantuvo la arquitectura cerrada por Nicolás: portada, una cortina por pantalla, experiencia por etapas y confirmación. No se agregó contenido ni navegación paralela.
+- Se eliminó carga visual: puntaje sin tarjeta flotante, progreso lineal, una sola mención del valor en puntos, copy de salto explícito y una única acción primaria por estado.
+- Mobile quedó secuencial y sin scroll para descubrir la decisión en 320×700 y 390×844. Desktop usa el ancho disponible con cortina a la izquierda y acción a la derecha, sin convertirlo en otro producto.
+- Accesibilidad: objetivos táctiles de 44 px, uploader operable por teclado, foco visible, textarea con estilo consistente, progreso semántico y parada segura de la grabación al abandonar el paso.
+- Movimiento: continuidad de `ambientes` y `scroll` preservada, con bloqueo real reducido a menos de medio segundo. La versión scroll conserva gesto y control visible alternativo.
+- Performance: hero responsive en WebP (768/1536 px). Lighthouse local: accesibilidad 100, buenas prácticas 100, performance 82; el principal costo restante es la tipografía remota y no se vuelve asíncrona para evitar salto visual.
+- Pruebas: flujo completo y geometría aprobados en `ambientes` y `scroll`, 320/360/390/768/1280 px, incluida la compuerta que falla si el CTA de portada queda debajo del pliegue o si la primera decisión exige scroll.

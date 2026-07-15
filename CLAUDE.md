@@ -98,6 +98,9 @@ No mostrar testimonios, nombres, fotos, premios ni ganadores de ejemplo como si 
 
 ## Reglas de diseño (aprendidas con feedback real, no inventar de nuevo)
 
+- **Invariantes del multistep**: el CTA de portada debe quedar visible sin scroll en 320×700; cada etapa muestra una sola decisión primaria; los controles táctiles visibles tienen un área mínima de 44×44 px; la primera decisión de cada cortina entra completa sin scroll en 320/390/768/1280; y las transiciones no pueden bloquear la interacción durante más de ~480 ms.
+- **Composición responsive del paso de cortina**: en mobile la lectura es secuencial (ambiente, producto, carga, avance). Desde 800 px se recompone en dos zonas: cortina a la izquierda y decisión a la derecha. Es el mismo contenido y producto, no una versión desktop distinta.
+- **Progreso sin ventanas extra**: usar la línea de avance, el contador discreto y el puntaje sin tarjeta flotante. No volver a chips o paneles superpuestos para esos tres datos.
 - **Nada de tells de IA**: sin middots `·` ni em-dashes en copy visible, sin estrellas ASCII (usar SVG propio), sin "eyebrow" (etiqueta chica arriba de un título — es EL patrón que más se nota como IA), sin badges/chips repetidos de más, sin degradados/orbes decorativos genéricos.
 - **Animaciones siempre activas** (no gatear en `prefers-reduced-motion`) — son livianas y descriptivas, no decorativas.
 - **El atributo `hidden` pierde contra cualquier `display` propio de una clase en CSS de autor.** Si un elemento usa `hidden` para mostrarse/ocultarse por JS, agregar explícitamente `.clase[hidden]{display:none}` en el CSS — si no, se ven todos los estados superpuestos (bug real que ya pasó acá).
