@@ -218,6 +218,13 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Rediseñar la confirmación de Google con un check vectorial de 48 px, contraste accesible y estado semántico.
 - [x] Agregar capturas y regresiones específicas del estado final en desktop y mobile.
 
+## 28. Reequilibrio de portada mobile — 2026-07-15
+
+- [x] Reemplazar `max(100vh,100dvh)` por fallback `100vh` seguido de altura efectiva `100dvh`.
+- [x] Evitar que la portada herede los 126 px de padding reservado para el header del flujo en teléfonos bajos.
+- [x] Distribuir logo, propuesta, premios y CTA desde el tercio superior en lugar de comprimirlos al fondo.
+- [x] Verificar portada sin scroll interno y CTA completo a 320×700, 360×780 y 390×844.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.

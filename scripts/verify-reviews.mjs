@@ -53,8 +53,13 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       google: document.querySelector('#gBlock h3')?.textContent,
       ratingAction: document.querySelector('#starsWord')?.textContent,
       textAction: document.querySelector('.text-reward-label')?.textContent,
-      googleAction: document.querySelector('#gReviewBtn')?.textContent,
+    googleAction: document.querySelector('#gReviewBtn')?.textContent,
     },
+    introGeometry: (() => {
+      const step=document.querySelector('.intro-step'), logo=document.querySelector('.intro-logo').getBoundingClientRect();
+      const copy=document.querySelector('.intro-copy-block').getBoundingClientRect(), cta=document.querySelector('#startFlow').getBoundingClientRect();
+      return {copyTop:copy.top,logoBottom:logo.bottom,ctaBottom:cta.bottom,viewport:innerHeight,scroll:step.scrollHeight-step.clientHeight};
+    })(),
   }));
   if (initial.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${initial.overflow}`);
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
@@ -69,6 +74,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   }
   if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
       !initial.copy.googleAction?.includes('duplicá tus puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
+  if (initial.introGeometry.copyTop > initial.introGeometry.viewport * .46 || initial.introGeometry.ctaBottom > initial.introGeometry.viewport - 12 ||
+      initial.introGeometry.scroll > 2 || initial.introGeometry.copyTop - initial.introGeometry.logoBottom > initial.introGeometry.viewport * .3) {
+    fails.push(`${vp.w}px: portada mobile desbalanceada o CTA cortado ${JSON.stringify(initial.introGeometry)}`);
+  }
   const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
     title: step.querySelector('.step-title').textContent,
     src: step.querySelector('.curtain-photo img').getAttribute('src'),
