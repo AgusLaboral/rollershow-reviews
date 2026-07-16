@@ -222,6 +222,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
       rollers: document.querySelectorAll('.confirm-step .celebration-roller').length,
       prizes: document.querySelectorAll('.confirm-step .confirm-world img').length,
+      videos: document.querySelectorAll('.confirm-step .confirm-world video').length,
       proof: document.querySelector('#confirmProof').textContent,
       consentBg: getComputedStyle(document.querySelector('#consentBox')).backgroundColor,
       fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
@@ -231,14 +232,14 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       rollerVisible: getComputedStyle(document.querySelector('.score-roller')).opacity !== '0',
       hero: {
         src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
-        srcset: document.querySelector('.confirm-prize-base')?.getAttribute('srcset'),
         current: document.querySelector('.confirm-prize-base')?.currentSrc,
+        video: document.querySelector('.confirm-world video')?.currentSrc,
       },
     }));
-    if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 3 ||
+    if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
-        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('768') ||
-        !confirmBefore.hero.srcset?.includes('1024w') || !confirmBefore.hero.srcset?.includes('1536w') || !confirmBefore.hero.current?.includes('1024') ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
+        !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
     }

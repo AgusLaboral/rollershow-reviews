@@ -268,6 +268,8 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
   radial-gradient(ellipse at 78% 16%,rgba(210,69,30,.26),transparent 38%),
   radial-gradient(ellipse at 12% 72%,rgba(232,163,61,.14),transparent 42%),
   linear-gradient(145deg,#211713 0%,#130F0D 52%,#26150F 100%);isolation:isolate}
+#gracias>.thanks-ambient-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center 68%;opacity:0;filter:saturate(.72) brightness(.5);mix-blend-mode:luminosity}
+#gracias>.thanks-ambient-video.is-ready{opacity:.32}
 #gracias::before{content:"";position:absolute;inset:-50%;z-index:0;pointer-events:none;opacity:.13;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E")}
 #celebrationCanvas{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
@@ -524,14 +526,17 @@ body{min-height:100vh;min-height:100dvh}
 /* Portada: premio primero, una sola salida. */
 .intro-step{padding:0;background:#EDE1D2}
 .intro-scene{position:absolute;inset:0;overflow:hidden}
-.intro-scene img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% 50%}
+.intro-scene picture,.intro-scene img,.intro-scene .scene-video{position:absolute;inset:0;width:100%;height:100%}
+.intro-scene img,.intro-scene .scene-video{object-fit:cover;object-position:66% 50%}
+.scene-video{opacity:0;transition:opacity .7s ease;pointer-events:none}
+.scene-video.is-ready{opacity:1}
 .intro-base{transform:scale(1.035);animation:heroBreath 13s ease-in-out infinite alternate}
 .intro-float{pointer-events:none;will-change:transform}
 .intro-float-pillow{clip-path:polygon(0 16%,96% 16%,96% 69%,0 69%);animation:heroPillow 10s cubic-bezier(.45,0,.55,1) infinite alternate}
 .intro-float-rug{clip-path:polygon(12% 57%,100% 53%,100% 94%,12% 98%);animation:heroRug 12s cubic-bezier(.45,0,.55,1) -3s infinite alternate}
 .intro-float-vase{display:none}
 .intro-step:not(.active) .intro-scene img{animation-play-state:paused}
-.intro-scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(250,247,242,.15) 0%,rgba(250,247,242,.45) 35%,rgba(250,247,242,.98) 72%,var(--bg) 100%)}
+.intro-scene::after{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(250,247,242,.15) 0%,rgba(250,247,242,.45) 35%,rgba(250,247,242,.98) 72%,var(--bg) 100%)}
 @keyframes heroBreath{to{transform:scale(1.075) translate3d(-1.2%,0,0)}}
 @keyframes heroPillow{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.048) translate3d(5px,-6px,0)}}
 @keyframes heroRug{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.045) translate3d(-5px,5px,0)}}
@@ -547,6 +552,7 @@ body{min-height:100vh;min-height:100dvh}
 
 @media (max-width:799px){
   .intro-logo{top:max(20px,env(safe-area-inset-top))}
+  .intro-step .step-inner{padding-top:clamp(170px,24dvh,215px)}
   .intro-copy-block .step-actions{margin-top:16px}
 }
 
@@ -643,13 +649,15 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes textSet{0%{box-shadow:inset 0 -2px 0 var(--cta);transform:translateY(2px)}100%{box-shadow:inset 0 -2px 0 transparent;transform:none}}
 .confirm-step{background:#EDE1D2;overflow:hidden}
 .confirm-world{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.confirm-world img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 58%;transform:scale(1.025)}
+.confirm-world picture,.confirm-world img,.confirm-world .scene-video{position:absolute;inset:0;width:100%;height:100%}
+.confirm-world img,.confirm-world .scene-video{object-fit:cover;object-position:62% 58%;transform:scale(1.025)}
+.confirm-world .scene-video{z-index:0}
 .confirm-world .confirm-prize-base{opacity:.56}
 .confirm-world .confirm-prize-pillow,.confirm-world .confirm-prize-rug{opacity:.22}
 .confirm-prize-base{animation:finalSceneBreath 14s ease-in-out infinite alternate}
 .confirm-prize-pillow{clip-path:polygon(27% 18%,100% 18%,100% 76%,27% 76%);animation:finalPillow 9s ease-in-out infinite alternate}
 .confirm-prize-rug{clip-path:polygon(0 52%,100% 50%,100% 100%,0 100%);animation:finalRug 11s ease-in-out -2s infinite alternate}
-.confirm-world::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(250,247,242,.97) 0 38%,rgba(250,247,242,.78) 55%,rgba(250,247,242,.28) 100%)}
+.confirm-world::after{content:"";position:absolute;z-index:1;inset:0;background:linear-gradient(90deg,rgba(250,247,242,.97) 0 38%,rgba(250,247,242,.78) 55%,rgba(250,247,242,.28) 100%)}
 .celebration-roller{position:absolute;z-index:2;top:-105%;bottom:0;width:18%;background-color:rgba(222,214,199,.62);background-image:
   repeating-linear-gradient(90deg,rgba(255,255,255,.36) 0 1px,rgba(96,79,61,.14) 1px 2px,transparent 2px 5px),
   repeating-linear-gradient(0deg,rgba(255,255,255,.2) 0 1px,rgba(91,74,57,.09) 1px 2px,transparent 2px 6px);
@@ -751,7 +759,7 @@ body.done #flowApp{display:none}
   .upload-zone{padding:12px 12px 54px}
   .step-actions{padding-top:12px;gap:6px}
   .intro-step{padding:0}
-  .intro-step .step-inner{padding:clamp(210px,32dvh,235px) 20px max(16px,env(safe-area-inset-bottom))}
+  .intro-step .step-inner{padding:clamp(150px,22dvh,178px) 20px max(16px,env(safe-area-inset-bottom))}
   .intro-step h1{font-size:clamp(1.9rem,8.5vw,2.2rem)}
   .intro-prize{font-size:.98rem;margin-top:11px}
   .intro-date{font-size:.75rem;margin-top:7px}
@@ -834,10 +842,11 @@ body.done #flowApp{display:none}
   <div class="flow-viewport" id="flowViewport">
     <section class="flow-step intro-step active" data-flow-step="intro" aria-hidden="false">
       <div class="intro-scene">
-        <img class="intro-base" src="img/hero-premios-v2.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Tres almohadones y dos alfombras premium para el sorteo" fetchpriority="high" />
-        <img class="intro-float intro-float-pillow" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
-        <img class="intro-float intro-float-rug" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
-        <img class="intro-float intro-float-vase" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
+        <picture aria-hidden="true">
+          <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-01-living-wide-mobile.webp" />
+          <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1280" height="720" alt="" fetchpriority="high" />
+        </picture>
+        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="none" aria-hidden="true"></video>
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
@@ -894,9 +903,11 @@ body.done #flowApp{display:none}
     </section>
     <section class="flow-step confirm-step" data-flow-step="confirm" aria-hidden="true">
       <div class="confirm-world" aria-hidden="true">
-        <img class="confirm-prize-base" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
-        <img class="confirm-prize-pillow" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
-        <img class="confirm-prize-rug" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
+        <picture>
+          <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-02-textile-editorial-mobile.webp" />
+          <img class="confirm-prize-base" src="img/video/rs-reviews-scene-02-textile-editorial-desktop.webp" width="1280" height="720" alt="" />
+        </picture>
+        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-02-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-02-mobile-kling-v001.mp4" muted playsinline preload="none"></video>
         <i class="celebration-roller"></i><i class="celebration-roller"></i><i class="celebration-roller"></i>
       </div>
       <div class="step-inner">
@@ -1063,6 +1074,7 @@ body.done #flowApp{display:none}
      GRACIAS
 ============================================================ -->
 <section id="gracias">
+  <video class="scene-video thanks-ambient-video" id="thanksAmbientVideo" data-src-desktop="img/video/rs-reviews-scene-03-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-03-mobile-kling-v001.mp4" muted playsinline preload="none" aria-hidden="true"></video>
   <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
   <div class="gr-radiance" aria-hidden="true"></div>
   <div class="gr-curtain-reveal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -1714,6 +1726,22 @@ try {
 
 /* ---------- navegación multistep ---------- */
 let flowIndex = 0, flowBusy = false, flowSteps = [];
+function activateSceneVideo(video, restart = false) {
+  if (!video) return;
+  if (!video.src) {
+    video.src = matchMedia("(max-width:799px)").matches ? video.dataset.srcMobile : video.dataset.srcDesktop;
+    video.addEventListener("canplay", () => video.classList.add("is-ready"), { once:true });
+    video.load();
+  }
+  if (restart) {
+    try { video.currentTime = 0; } catch (_) {}
+  }
+  video.play().catch(() => {});
+}
+function activateStepScene(step, restart = false) {
+  activateSceneVideo(step?.querySelector("[data-scene-video]"), restart);
+}
+window.addEventListener("load", () => setTimeout(() => activateStepScene(document.querySelector(".intro-step.active")), 1400), { once:true });
 function setupFlow() {
   $("#flowStarsMount").append($("#stars"), $("#starsWord"));
   $("#flowAudioMount").append($("#audioUI"));
@@ -1769,8 +1797,10 @@ function goToFlow(target) {
   app.classList.add("curtain-running");
   app.dataset.direction = target > flowIndex ? "forward" : "back";
   current.classList.add("leaving");
+  current.querySelector("[data-scene-video]")?.pause();
   current.classList.remove("active"); current.setAttribute("aria-hidden", "true");
   next.classList.remove("leaving"); next.classList.add("active", "entering"); next.setAttribute("aria-hidden", "false"); next.scrollTop = 0;
+  activateStepScene(next, true);
   if (next.dataset.flowStep === "confirm") {
     next.classList.remove("celebrate-in"); void next.offsetWidth; next.classList.add("celebrate-in");
   }
@@ -1837,6 +1867,7 @@ function enviar() {
     ? "Todo lo que compartiste quedó registrado. Ahora podés duplicar tus chances en Google."
     : "Tu experiencia quedó registrada. Ahora podés duplicar tus chances en Google.";
   document.body.classList.add("done");
+  activateSceneVideo($("#thanksAmbientVideo"), true);
   window.scrollTo({ top: 0 });
   $("#grTicketsWord").textContent = t === 1 ? "chance" : "chances";
   $("#grTicketsLabel").textContent = t === 1 ? "activa en el sorteo" : "activas en el sorteo";

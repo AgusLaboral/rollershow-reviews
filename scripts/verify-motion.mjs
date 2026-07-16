@@ -95,12 +95,20 @@ for (const variant of ['ambientes']) {
 
 const heroPage = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 await heroPage.goto(BASE, { waitUntil: 'networkidle' });
+await heroPage.waitForTimeout(2200);
 const heroMotion = await heroPage.evaluate(() => {
-  const layers = [...document.querySelectorAll('.intro-float')];
-  return { count: layers.length, names: layers.map(layer => getComputedStyle(layer).animationName) };
+  const video = document.querySelector('.intro-step [data-scene-video]');
+  return {
+    count: document.querySelectorAll('.intro-step [data-scene-video]').length,
+    src: video?.currentSrc,
+    currentTime: video?.currentTime || 0,
+    readyState: video?.readyState || 0,
+    loop: video?.loop,
+    visible: getComputedStyle(video).opacity,
+  };
 });
-if (heroMotion.count !== 3 || new Set(heroMotion.names).size !== 3 || heroMotion.names.includes('none')) {
-  fails.push(`portada: los objetos no tienen movimientos independientes ${JSON.stringify(heroMotion)}`);
+if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.visible !== '1') {
+  fails.push(`portada: el fondo cinematográfico no reproduce o no se asienta correctamente ${JSON.stringify(heroMotion)}`);
 }
 await heroPage.close();
 
