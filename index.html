@@ -21,7 +21,7 @@
   --border:#E4DCCE; --border-strong:#C8BCA8;
   --accent:#B8662C; --accent-deep:#8E4D1F; --accent-soft:#F3E3D2; --on-accent:#FFFFFF;
   /* Rojo Teja: color institucional de CTA (manual de marca, cap. 02 Color) */
-  --cta:#C63A21; --cta-glow:#D2451E; --cta-deep:#97290F;
+  --cta:#C63A21; --cta-hover:#B9331C; --cta-glow:#D2451E; --cta-deep:#97290F;
   /* Iconografía del audio en verde WhatsApp real, para que la interfaz se sienta familiar */
   --whatsapp:#25D366; --whatsapp-deep:#1FAD53; --whatsapp-accessible:#147A3A; --whatsapp-soft:#E3F5E8;
   --ok:#4C7A4C; --danger:#B23B3B;
@@ -447,8 +447,8 @@ body{min-height:100vh;min-height:100dvh}
 
 /* Gesto de marca: una cortina roller baja, cubre la escena y revela el ambiente siguiente. */
 .roller-wipe{position:absolute;z-index:24;inset:117px 20px 0;overflow:hidden;pointer-events:none;visibility:hidden}
-.roller-tube{display:none}
-.roller-fabric{position:absolute;inset:0;overflow:hidden;background-color:rgba(221,213,200,.46);background-image:
+.roller-mechanism{position:absolute;z-index:6;left:0;right:0;top:0;width:100%;height:auto;opacity:0;filter:drop-shadow(0 8px 12px rgba(28,24,22,.2));will-change:opacity,transform}
+.roller-fabric{position:absolute;inset:clamp(24px,3.8vw,44px) 0 0;overflow:hidden;background-color:rgba(221,213,200,.46);background-image:
   linear-gradient(102deg,rgba(255,255,255,.3),transparent 24%,rgba(116,98,78,.08) 52%,transparent 78%,rgba(255,255,255,.22)),
   repeating-linear-gradient(90deg,rgba(255,255,255,.25) 0 1px,rgba(92,76,60,.16) 1px 2px,transparent 2px 4px),
   repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,rgba(91,74,57,.11) 1px 2px,transparent 2px 5px);
@@ -462,6 +462,8 @@ body{min-height:100vh;min-height:100dvh}
   border-top:1px solid rgba(255,255,255,.52);box-shadow:0 9px 21px rgba(28,24,22,.3)}
 .flow-shell.curtain-running .roller-wipe{visibility:visible}
 .flow-shell.curtain-running .roller-fabric{animation:rollerPass 1.2s linear both}
+.flow-shell.curtain-running .roller-mechanism{animation:rollerMechanism 1.2s ease both}
+@keyframes rollerMechanism{0%,100%{opacity:0;transform:translateY(-8px)}8%,86%{opacity:1;transform:none}}
 @keyframes rollerPass{
   0%{transform:translate3d(0,-100%,0);animation-timing-function:cubic-bezier(.72,0,1,1)}
   18%{transform:translate3d(0,-94%,0);animation-timing-function:cubic-bezier(.5,0,.18,1)}
@@ -554,8 +556,8 @@ body{min-height:100vh;min-height:100dvh}
   linear-gradient(180deg,rgba(23,20,18,.02) 35%,rgba(23,20,18,.7) 100%);pointer-events:none}
 .upload-zone{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 12px 58px;cursor:pointer;text-align:left;color:#fff;touch-action:manipulation}
 .upload-prompt{width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:11px;padding:13px 14px;
-  background:var(--cta);border-radius:14px;box-shadow:0 16px 32px -18px rgba(116,27,12,.92);transition:transform .2s,background .2s,box-shadow .2s}
-.upload-zone:hover .upload-prompt{background:var(--cta-deep);box-shadow:0 18px 36px -17px rgba(116,27,12,.95)}
+  background:var(--cta);border:1px solid rgba(255,255,255,.18);border-radius:14px;box-shadow:0 16px 34px -20px rgba(198,58,33,.78),inset 0 1px rgba(255,255,255,.16);transition:transform .2s,background .2s,box-shadow .2s}
+.upload-zone:hover .upload-prompt{background:var(--cta-hover);box-shadow:0 18px 38px -20px rgba(198,58,33,.86),inset 0 1px rgba(255,255,255,.18)}
 .upload-zone:active .upload-prompt{transform:scale(.985)}
 .upload-zone svg{width:27px;height:27px;margin:0;color:#fff}
 .upload-zone strong{display:block;font-family:var(--font-display);font-size:1rem;line-height:1.05}
@@ -774,11 +776,11 @@ body.done #flowApp{display:none}
   .item-step.has-media .step-inner{row-gap:0}
   .item-step.has-media .item-heading{margin-bottom:12px}
   .item-step .item-heading{grid-column:1 / -1;grid-row:1}
-  .item-step .item-stage{grid-column:1 / -1;grid-row:2;height:clamp(248px,39dvh,330px);margin-top:0}
+  .item-step .item-stage{grid-column:1 / -1;grid-row:2;height:clamp(280px,46dvh,420px);margin-top:0}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}
-  .item-step .upload-zone{padding:20px 20px 66px;align-items:flex-end;justify-content:flex-end}
-  .item-step .upload-prompt{width:min(100%,390px);margin-left:auto;padding:16px 17px}
-  .item-step .stage-skip{left:auto;right:20px;bottom:14px;width:min(100%,390px)}
+  .item-step .upload-zone{padding:24px;align-items:center;justify-content:flex-end}
+  .item-step .upload-prompt{width:min(42%,430px);margin-left:auto;padding:17px 18px}
+  .item-step .stage-skip{left:auto;right:24px;top:calc(50% + 58px);bottom:auto;width:min(42%,430px)}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
   .item-step.has-media .step-actions{grid-column:1 / -1;display:grid;grid-template-columns:minmax(260px,1fr) minmax(420px,1.55fr);align-items:center;gap:18px;margin-top:0;padding:12px 14px}
   .item-step.has-media .upload-more-action{grid-column:1;justify-content:flex-start;padding-inline:10px;text-align:left}
@@ -812,7 +814,7 @@ body.done #flowApp{display:none}
     <span class="score-chances"><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span><i></i><span><strong id="flowPts">0</strong> puntos</span>
   </div>
   <div class="roller-wipe" aria-hidden="true">
-    <div class="roller-tube"></div>
+    <img class="roller-mechanism" data-src="img/roller-mechanism-real.png" width="1600" height="100" alt="" decoding="async" />
     <div class="roller-fabric"><span class="roller-bar"></span></div>
   </div>
   <p class="reward-live" id="rewardLive" role="status" aria-live="polite"></p>
@@ -1768,6 +1770,8 @@ function goToFlow(target) {
   if (flowBusy || target < 0 || target >= flowSteps.length || target === flowIndex) return;
   flowBusy = true;
   const current = flowSteps[flowIndex], next = flowSteps[target], app = $("#flowApp");
+  const mechanism = app.querySelector(".roller-mechanism");
+  if (!mechanism.getAttribute("src")) mechanism.src = mechanism.dataset.src;
   if (current.dataset.flowStep === "audio" && mediaRecorder?.state === "recording") mediaRecorder.stop();
   app.classList.remove("curtain-running");
   void app.offsetWidth;

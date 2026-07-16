@@ -298,3 +298,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Conservar el gesto de producto únicamente en la transición: la tela sunscreen baja desde el borde superior, cubre y revela la etapa siguiente.
 - [x] Prohibir futuras reconstrucciones CSS del mecanismo en reposo. Sólo puede volver con un asset real, aprobado y correctamente integrado.
 - [x] Actualizar las pruebas para rechazar cualquier `.score-roller` o `.roller-chain` persistente.
+
+## 35. Calibración óptica y mecanismo real — 2026-07-16
+
+- [x] Validar el color del CTA: el Rojo Teja `#C63A21` era correcto; la sombra marrón y el hover profundo eran lo que ensuciaba su lectura.
+- [x] Recalibrar el escenario desktop hasta 420 px y agrupar CTA + salida secundaria en las cinco columnas derechas con centro vertical.
+- [x] Comparar ambos modelos convertidos. Elegir la cortina completa de 1,04 MB sobre los tres paños genéricos de 2,97 MB.
+- [x] Reconstruir material y luz del modelo, renderizar el mecanismo real a 1600×100 con transparencia y usarlo sólo durante la transición.
+- [x] Mantener el asset final por debajo de 16 KB y agregar una regresión que exija sus 1600 px naturales.

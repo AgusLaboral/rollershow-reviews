@@ -21,6 +21,7 @@ for (const variant of ['ambientes']) {
     } : null;
     const roller = document.querySelector('.roller-wipe');
     const fabric = document.querySelector('.roller-fabric');
+    const mechanism = document.querySelector('.roller-mechanism');
     const heading = document.querySelector('.flow-step.active .item-heading');
     const visual = document.querySelector('.flow-step.active .item-visual');
     const task = document.querySelector('.flow-step.active .item-task');
@@ -43,6 +44,7 @@ for (const variant of ['ambientes']) {
         background: getComputedStyle(fabric).backgroundImage,
         color: getComputedStyle(fabric).backgroundColor,
         noise: getComputedStyle(fabric, '::after').backgroundImage,
+        mechanism: { src: mechanism?.getAttribute('src'), width: mechanism?.naturalWidth || 0 },
       },
       persistentRollers: document.querySelectorAll('.score-roller,.roller-chain').length,
     };
@@ -51,6 +53,7 @@ for (const variant of ['ambientes']) {
   if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
+  if (!motion.roller.mechanism.src?.includes('roller-mechanism-real.png') || motion.roller.mechanism.width < 1600) fails.push(`${variant}: mecanismo real ausente o en baja resolución`);
   const scaleOf = transform => Number(transform?.match(/^matrix\(([^,]+)/)?.[1] || 1);
   if (scaleOf(motion.incoming?.transform) < .88 || scaleOf(motion.outgoing?.transform) > 1.09) {
     fails.push(`${variant}: la profundidad vuelve a usar escalas bruscas ${JSON.stringify({ incoming:motion.incoming?.transform, outgoing:motion.outgoing?.transform })}`);
