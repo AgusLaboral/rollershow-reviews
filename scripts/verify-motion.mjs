@@ -100,8 +100,21 @@ const heroMotion = await heroPage.evaluate(() => {
     rollerVisibility: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
   };
 });
-if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || !heroMotion.loop || heroMotion.duration < 9.8 || heroMotion.width < 1440 || heroMotion.height < 810 || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
+if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.duration < 14.8 || heroMotion.width < 1440 || heroMotion.height < 810 || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
   fails.push(`portada: el fondo cinematográfico no reproduce o no se asienta correctamente ${JSON.stringify(heroMotion)}`);
+}
+await heroPage.waitForFunction(() => document.querySelector('.intro-step [data-scene-video]')?.ended, null, { timeout: 18000 });
+const heroEnding = await heroPage.evaluate(() => {
+  const video = document.querySelector('.intro-step [data-scene-video]');
+  return {
+    ended: video?.ended,
+    paused: video?.paused,
+    currentTime: video?.currentTime || 0,
+    duration: video?.duration || 0,
+  };
+});
+if (!heroEnding.ended || !heroEnding.paused || heroEnding.duration - heroEnding.currentTime > .08) {
+  fails.push(`portada: la toma no termina quieta en su encuadre final ${JSON.stringify(heroEnding)}`);
 }
 await heroPage.close();
 

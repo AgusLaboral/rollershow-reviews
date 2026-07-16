@@ -346,3 +346,13 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Reescribir la secundaria como `Agregar más contenido` y separar el impacto: `Foto +10 puntos. Video +25 puntos.`
 - [x] Agregar regresiones que exigen eje compartido, orden vertical, unión con la foto y centro respecto de la bandeja.
 - [x] Verificar el estado post-carga en 390 y 1280 px, además de 320–1920 y pantallas bajas.
+
+## 41. Tomas cinematográficas reales, sin loop fingido — 2026-07-16
+
+- [x] Regenerar las seis variantes con Kling 3 como tomas continuas de 15 s y movimiento físico de cámara alrededor del ambiente y los premios.
+- [x] Rechazar y regenerar dos salidas mobile: una rotaba el horizonte y otra se comportaba como un simple avance de cámara.
+- [x] Integrar tres recorridos distintos: apertura del living, arco alrededor de almohadones y alfombras, y pasada baja sobre la textura.
+- [x] Eliminar `loop`, ping-pong e interpolación temporal; cada toma conserva los 24 fps nativos y termina quieta en el último encuadre.
+- [x] Publicar H.264 `faststart` a 1440×810 en desktop y 720×1280 en mobile, con posters estáticos y carga diferida de escenas posteriores.
+- [x] Verificar en Chromium 15,04 s de duración, encuadre final detenido, cero cuadros corruptos y 2 cuadros perdidos sobre 348 presentados entre desktop y mobile.
+- [x] Recorrer el flujo completo de 320 a 1920 px, pantallas bajas, accesibilidad y arranque mobile sin regresiones.
