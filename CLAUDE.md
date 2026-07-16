@@ -46,6 +46,7 @@ node scripts/verify-reviews.mjs      # funcional: puntos, consentimiento, gracia
 node scripts/verify-alignment.mjs    # alineación real (getBoundingClientRect) en 1280/1440/1920px — NO comparar screenshots a ojo
 node scripts/verify-desktop.mjs      # capturas desktop (1280/1440) en _scratch/
 node scripts/verify-tablet.mjs       # captura tablet (768) en _scratch/
+node scripts/verify-edge-layout.mjs  # mobile horizontal y pantallas bajas; CTA alcanzable y cero overflow
 ```
 
 Los scripts aceptan una URL como argumento (`node scripts/verify-reviews.mjs https://aguslaboral.github.io/rollershow-reviews/index.html`) para correr contra el sitio deployado en vez de local.

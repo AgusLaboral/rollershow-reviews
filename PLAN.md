@@ -253,6 +253,14 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [ ] Reemplazar el roller CSS por un asset real cuando esté disponible en GLB, glTF, FBX u OBJ; los archivos recibidos son escenas `.max` no convertibles sin 3ds Max.
 - [x] Agregar regresiones para la bandeja post-carga y la jerarquía sin puntaje duplicado.
 
+## 32. Roller reconocible y extremos de viewport — 2026-07-16
+
+- [x] Rehacer el roller persistente como una pieza mate a ancho completo, con tela enrollada, soportes laterales y cadena; sin cápsula brillante ni escala horizontal variable.
+- [x] Contrastar la anatomía contra los instructivos oficiales de instalación de RollerShow antes de dibujarla.
+- [x] Agregar una compuerta durable para 568×320, 844×390, 1024×600 y 1280×640: CTA alcanzable y cero overflow horizontal.
+- [x] Mantener la carga a la derecha dentro de la superficie en desktop; no recentrar por uniformidad cuando eso tape el producto.
+- [ ] Cambiar la pieza vectorial por un modelo real sólo si llega un export web con licencia clara. Los dos RAR recibidos siguen bloqueados en `.max`; las miniaturas no son publicables.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
