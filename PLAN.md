@@ -353,6 +353,6 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Rechazar y regenerar dos salidas mobile: una rotaba el horizonte y otra se comportaba como un simple avance de cámara.
 - [x] Integrar tres recorridos distintos: apertura del living, arco alrededor de almohadones y alfombras, y pasada baja sobre la textura.
 - [x] Eliminar `loop`, ping-pong e interpolación temporal; cada toma conserva los 24 fps nativos y termina quieta en el último encuadre.
-- [x] Publicar H.264 `faststart` a 1440×810 en desktop y 720×1280 en mobile, con posters estáticos y carga diferida de escenas posteriores.
-- [x] Verificar en Chromium 15,04 s de duración, encuadre final detenido, cero cuadros corruptos y 2 cuadros perdidos sobre 348 presentados entre desktop y mobile.
+- [x] Publicar H.264 `faststart` a resolución nativa útil —1280×720 desktop y 720×1280 mobile—, con posters estáticos y carga diferida de escenas posteriores.
+- [x] Verificar en Chromium 15,04 s de duración, encuadre final detenido, cero cuadros corruptos y 2 cuadros perdidos sobre 404 presentados entre desktop y mobile.
 - [x] Recorrer el flujo completo de 320 a 1920 px, pantallas bajas, accesibilidad y arranque mobile sin regresiones.
