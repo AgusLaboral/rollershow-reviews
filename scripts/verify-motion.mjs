@@ -44,7 +44,13 @@ for (const variant of ['ambientes']) {
         background: getComputedStyle(fabric).backgroundImage,
         color: getComputedStyle(fabric).backgroundColor,
         noise: getComputedStyle(fabric, '::after').backgroundImage,
-        mechanism: { src: mechanism?.getAttribute('src'), width: mechanism?.naturalWidth || 0 },
+        mechanism: {
+          src: mechanism?.getAttribute('src'),
+          width: mechanism?.naturalWidth || 0,
+          opacity: getComputedStyle(mechanism).opacity,
+          animations: mechanism?.getAnimations().length || 0,
+          seam: fabric.offsetTop - mechanism.offsetHeight,
+        },
       },
       persistentRollers: document.querySelectorAll('.score-roller,.roller-chain').length,
     };
@@ -54,6 +60,9 @@ for (const variant of ['ambientes']) {
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
   if (!motion.roller.mechanism.src?.includes('roller-mechanism-real.png') || motion.roller.mechanism.width < 1600) fails.push(`${variant}: mecanismo real ausente o en baja resolución`);
+  if (motion.roller.mechanism.opacity !== '1' || motion.roller.mechanism.animations !== 0 || motion.roller.mechanism.seam < -4 || motion.roller.mechanism.seam > -2) {
+    fails.push(`${variant}: el mecanismo no queda fijo o la tela no nace dentro del rollo ${JSON.stringify(motion.roller.mechanism)}`);
+  }
   const scaleOf = transform => Number(transform?.match(/^matrix\(([^,]+)/)?.[1] || 1);
   if (scaleOf(motion.incoming?.transform) < .88 || scaleOf(motion.outgoing?.transform) > 1.09) {
     fails.push(`${variant}: la profundidad vuelve a usar escalas bruscas ${JSON.stringify({ incoming:motion.incoming?.transform, outgoing:motion.outgoing?.transform })}`);
@@ -75,8 +84,11 @@ for (const variant of ['ambientes']) {
     leaving: document.querySelectorAll('.flow-step.leaving').length,
     step: document.querySelector('.flow-step.active')?.dataset.flowStep,
     curtainRunning: document.querySelector('#flowApp').classList.contains('curtain-running'),
+    rollerVisible: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
+    mechanismBottom: Math.round(document.querySelector('.roller-mechanism').getBoundingClientRect().bottom),
+    headingTop: Math.round(document.querySelector('.flow-step.active .item-heading').getBoundingClientRect().top),
   }));
-  if (settled.active !== 1 || settled.leaving !== 0 || settled.step !== 'item-1' || settled.curtainRunning) fails.push(`${variant}: la transición no termina limpia`);
+  if (settled.active !== 1 || settled.leaving !== 0 || settled.step !== 'item-1' || settled.curtainRunning || settled.rollerVisible !== 'visible' || settled.headingTop - settled.mechanismBottom < 4) fails.push(`${variant}: la transición no termina limpia o el mecanismo pisa el contenido ${JSON.stringify(settled)}`);
   console.log(`${variant}: cortina ${motion.roller.transform}, entrada ${motion.incoming?.transform}, salida ${motion.outgoing?.transform}`);
   await page.close();
 }
@@ -93,9 +105,10 @@ const heroMotion = await heroPage.evaluate(() => {
     readyState: video?.readyState || 0,
     loop: video?.loop,
     visible: getComputedStyle(video).opacity,
+    rollerVisibility: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
   };
 });
-if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.visible !== '1') {
+if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
   fails.push(`portada: el fondo cinematográfico no reproduce o no se asienta correctamente ${JSON.stringify(heroMotion)}`);
 }
 await heroPage.close();

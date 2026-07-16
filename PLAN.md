@@ -313,3 +313,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Revisar visualmente portada, ambientes, recompensa, audio, autorización, fiesta final y estado posterior a Google.
 - [x] Corregir `Terminar y guardar`: usaba Rojo Teja aunque el módulo de audio está gobernado por verde WhatsApp.
 - [x] Unificar botón, pulso y sombra con `--whatsapp-accessible` y agregar una regresión sobre el color computado.
+
+## 37. Mecanismo real ensamblado con la tela — 2026-07-16
+
+- [x] Mantener el mecanismo real fijo y full width durante los pasos 1–7; ocultarlo en portada y cierre para no contaminar esas composiciones.
+- [x] Ubicarlo en el aire real entre puntaje y contenido, sin tocar el título en desktop, mobile ni pantallas bajas.
+- [x] Hacer que la tela nazca 3 px detrás del tubo y unificar temperatura, trama, transparencia, sombra y barra inferior para que se lea como una sola cortina armada.
+- [x] Eliminar la aparición/desaparición del tubo durante el cambio: sólo se despliega la tela.
+- [x] Agregar regresiones para persistencia, costura física, separación del contenido y ausencia en portada.
