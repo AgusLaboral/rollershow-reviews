@@ -109,20 +109,16 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (vp.w === 390) {
     await page.click('#startFlow'); await waitCurtain(page);
     if (await page.getAttribute('.flow-step.active', 'data-flow-step') !== 'item-1') fails.push('el CTA no abre la primera cortina');
-    const scoreRoller = await page.evaluate(() => {
+    const scoreChrome = await page.evaluate(() => {
       const score = document.querySelector('.flow-score');
-      const roller = document.querySelector('.score-roller');
-      const rect = roller.getBoundingClientRect();
       return {
-        width:Math.round(rect.width), height:Math.round(rect.height),
-        scoreWidth:Math.round(score.getBoundingClientRect().width),
-        visible:getComputedStyle(roller).display !== 'none' && getComputedStyle(roller).opacity !== '0',
-        material:getComputedStyle(roller).backgroundImage,
+        persistentRollers:document.querySelectorAll('.score-roller,.roller-chain').length,
         fullRule:getComputedStyle(score).borderBottomWidth,
+        scoreHeight:Math.round(score.getBoundingClientRect().height),
       };
     });
-    if (!scoreRoller.visible || Math.abs(scoreRoller.width-scoreRoller.scoreWidth) > 2 || scoreRoller.height < 8 || !scoreRoller.material.includes('linear-gradient') || scoreRoller.fullRule !== '0px') {
-      fails.push(`puntaje: el roller persistente o la eliminación de la línea falló ${JSON.stringify(scoreRoller)}`);
+    if (scoreChrome.persistentRollers !== 0 || scoreChrome.fullRule !== '0px' || scoreChrome.scoreHeight > 40) {
+      fails.push(`puntaje: reapareció chrome decorativo junto al contador ${JSON.stringify(scoreChrome)}`);
     }
     const skipPlacement = await page.evaluate(() => {
       const step=document.querySelector('.item-step.active'), stage=step.querySelector('.item-stage').getBoundingClientRect();
@@ -228,8 +224,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
       concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
       scoreBackground: getComputedStyle(document.querySelector('#flowScore')).backgroundColor,
-      compactHeader: [...document.querySelectorAll('#flowScore>span:not(.score-roller),#flowScore>i')].every(element => getComputedStyle(element).opacity === '0'),
-      rollerVisible: getComputedStyle(document.querySelector('.score-roller')).opacity !== '0',
+      compactHeader: [...document.querySelectorAll('#flowScore>span,#flowScore>i')].every(element => getComputedStyle(element).opacity === '0'),
+      persistentRollers: document.querySelectorAll('.score-roller,.roller-chain').length,
       hero: {
         src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
         current: document.querySelector('.confirm-prize-base')?.currentSrc,
@@ -238,7 +234,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     }));
     if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
-        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);

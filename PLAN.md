@@ -291,3 +291,10 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Conservar una coreografía alternativa en reduced motion, DPR limitado y cantidad de partículas escalada para mobile.
 - [x] Dar volumen persistente a las cifras con capas tipográficas en Z, no sólo una entrada escalada.
 - [x] Recalcular el scroll del handoff para que Google quede completo sin cortar la parte superior del logro.
+
+## 34. Eliminación del roller persistente — 2026-07-16
+
+- [x] Eliminar del contador el tubo full width, los soportes y la cadena: seguían pareciendo un objeto 3D de videojuego y no aportaban información ni acción.
+- [x] Conservar el gesto de producto únicamente en la transición: la tela sunscreen baja desde el borde superior, cubre y revela la etapa siguiente.
+- [x] Prohibir futuras reconstrucciones CSS del mecanismo en reposo. Sólo puede volver con un asset real, aprobado y correctamente integrado.
+- [x] Actualizar las pruebas para rechazar cualquier `.score-roller` o `.roller-chain` persistente.
