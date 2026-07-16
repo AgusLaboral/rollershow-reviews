@@ -104,11 +104,14 @@ const heroMotion = await heroPage.evaluate(() => {
     currentTime: video?.currentTime || 0,
     readyState: video?.readyState || 0,
     loop: video?.loop,
+    duration: video?.duration || 0,
+    width: video?.videoWidth || 0,
+    height: video?.videoHeight || 0,
     visible: getComputedStyle(video).opacity,
     rollerVisibility: getComputedStyle(document.querySelector('.roller-wipe')).visibility,
   };
 });
-if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
+if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || !heroMotion.loop || heroMotion.duration < 9.8 || heroMotion.width < 1440 || heroMotion.height < 810 || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
   fails.push(`portada: el fondo cinematográfico no reproduce o no se asienta correctamente ${JSON.stringify(heroMotion)}`);
 }
 await heroPage.close();

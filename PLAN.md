@@ -321,3 +321,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Hacer que la tela nazca 3 px detrás del tubo y unificar temperatura, trama, transparencia, sombra y barra inferior para que se lea como una sola cortina armada.
 - [x] Eliminar la aparición/desaparición del tubo durante el cambio: sólo se despliega la tela.
 - [x] Agregar regresiones para persistencia, costura física, separación del contenido y ausencia en portada.
+
+## 38. Fondos de video fluidos y continuos — 2026-07-16
+
+- [x] Detectar que la web había recibido los MP4 crudos de Kling: 5,04 s, 24 fps, 720p/1280p y sin loop, aunque el manifiesto pedía postproceso.
+- [x] Convertir las seis variantes en ciclos ping-pong de 10,1 s a 48 fps, sin salto entre último y primer cuadro.
+- [x] Llevar desktop a 1440×810 y mobile a 810×1440, con interpolación temporal, limpieza leve de ruido, H.264 y `faststart`.
+- [x] Regenerar los seis posters desde los PNG maestros y cargar la escena de confirmación recién al entrar.
+- [x] Verificar en Chrome todas las variantes: reproducción activa, `loop`, metadata correcta y cero cuadros perdidos o corruptos.
+- [x] Mantener el arranque mobile debajo del gate: 335 KB de imágenes iniciales.

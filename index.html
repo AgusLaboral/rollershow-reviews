@@ -821,9 +821,9 @@ body.done #flowApp{display:none}
       <div class="intro-scene">
         <picture aria-hidden="true">
           <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-01-living-wide-mobile.webp" />
-          <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1280" height="720" alt="" fetchpriority="high" />
+          <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1440" height="810" alt="" fetchpriority="high" />
         </picture>
-        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="none" aria-hidden="true"></video>
+        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
@@ -881,10 +881,10 @@ body.done #flowApp{display:none}
     <section class="flow-step confirm-step" data-flow-step="confirm" aria-hidden="true">
       <div class="confirm-world" aria-hidden="true">
         <picture>
-          <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-02-textile-editorial-mobile.webp" />
-          <img class="confirm-prize-base" src="img/video/rs-reviews-scene-02-textile-editorial-desktop.webp" width="1280" height="720" alt="" />
+          <source media="(max-width:799px)" data-srcset="img/video/rs-reviews-scene-02-textile-editorial-mobile.webp" />
+          <img class="confirm-prize-base" data-src="img/video/rs-reviews-scene-02-textile-editorial-desktop.webp" width="1440" height="810" alt="" />
         </picture>
-        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-02-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-02-mobile-kling-v001.mp4" muted playsinline preload="none"></video>
+        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-02-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-02-mobile-kling-v001.mp4" muted loop playsinline preload="none"></video>
         <i class="celebration-roller"></i><i class="celebration-roller"></i><i class="celebration-roller"></i>
       </div>
       <div class="step-inner">
@@ -1051,7 +1051,7 @@ body.done #flowApp{display:none}
      GRACIAS
 ============================================================ -->
 <section id="gracias">
-  <video class="scene-video thanks-ambient-video" id="thanksAmbientVideo" data-src-desktop="img/video/rs-reviews-scene-03-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-03-mobile-kling-v001.mp4" muted playsinline preload="none" aria-hidden="true"></video>
+  <video class="scene-video thanks-ambient-video" id="thanksAmbientVideo" data-src-desktop="img/video/rs-reviews-scene-03-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-03-mobile-kling-v001.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
   <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
   <div class="gr-radiance" aria-hidden="true"></div>
   <div class="gr-curtain-reveal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -1716,6 +1716,14 @@ function activateSceneVideo(video, restart = false) {
   video.play().catch(() => {});
 }
 function activateStepScene(step, restart = false) {
+  step?.querySelectorAll("source[data-srcset]").forEach(source => {
+    source.srcset = source.dataset.srcset;
+    source.removeAttribute("data-srcset");
+  });
+  step?.querySelectorAll("img[data-src]").forEach(image => {
+    image.src = image.dataset.src;
+    image.removeAttribute("data-src");
+  });
   activateSceneVideo(step?.querySelector("[data-scene-video]"), restart);
 }
 window.addEventListener("load", () => setTimeout(() => activateStepScene(document.querySelector(".intro-step.active")), 1400), { once:true });
