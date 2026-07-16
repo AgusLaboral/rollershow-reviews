@@ -62,6 +62,10 @@ for (const variant of ['ambientes']) {
   if (!motion.incoming || !motion.outgoing) fails.push(`${variant}: las dos escenas no coexisten durante la transición`);
   if (motion.incoming?.transform === 'none' || motion.outgoing?.transform === 'none') fails.push(`${variant}: transición sin desplazamiento físico`);
   if (motion.incoming?.transform === motion.outgoing?.transform) fails.push(`${variant}: entrada y salida usan el mismo plano`);
+  const scaleOf = transform => Number(transform?.match(/^matrix\(([^,]+)/)?.[1] || 1);
+  if (scaleOf(motion.incoming?.transform) < .88 || scaleOf(motion.outgoing?.transform) > 1.09) {
+    fails.push(`${variant}: la profundidad vuelve a usar escalas bruscas ${JSON.stringify({ incoming:motion.incoming?.transform, outgoing:motion.outgoing?.transform })}`);
+  }
   if (motion.stagger.some(part => part.transform === 'none') || motion.stagger[1]?.delay === motion.stagger[2]?.delay) {
     fails.push(`${variant}: heading, ambiente y tarea no entran con escalonamiento sano ${JSON.stringify(motion.stagger)}`);
   }

@@ -234,6 +234,16 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Actualizar bases con requisito, verificación manual del ganador y descargo oficial de Instagram.
 - [x] Verificar foco, ancho, copy, enlace y estado en mobile y desktop.
 
+## 30. Auditoría de carga visual, ejes y suavidad — 2026-07-16
+
+- [x] Mantener centradas las etapas de lectura y conservar la carga a la derecha sólo donde permite ver la cortina completa.
+- [x] Recentrar ópticamente confirmación y estado final de Instagram sin romper la fila semántica entre logro y autorización.
+- [x] Simplificar el CTA de foto a dos columnas y una sola secuencia: acción, guía y recompensa exacta.
+- [x] Bajar escalas extremas y distancias del stagger; el roller sigue siendo el gesto dominante de los cambios de etapa.
+- [x] Quitar movimiento continuo de números y grano, suavizar el foco de Google y reducir el presupuesto de partículas sin convertir la fiesta en una confirmación plana.
+- [x] Separar los estados de copy: primero Google para duplicar chances; después Instagram como último requisito.
+- [x] Agregar regresiones para escala de transición, presupuesto de partículas, quietud de las cifras y composición centrada de la confirmación.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.

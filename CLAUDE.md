@@ -124,6 +124,8 @@ No mostrar testimonios, nombres, fotos, premios ni ganadores de ejemplo como si 
 - **Animaciones siempre activas** (no gatear en `prefers-reduced-motion`) — son livianas y descriptivas, no decorativas.
 - **El atributo `hidden` pierde contra cualquier `display` propio de una clase en CSS de autor.** Si un elemento usa `hidden` para mostrarse/ocultarse por JS, agregar explícitamente `.clase[hidden]{display:none}` en el CSS — si no, se ven todos los estados superpuestos (bug real que ya pasó acá).
 - **Verificar alineación con medición real** (`getBoundingClientRect`, ver `scripts/verify-alignment.mjs`), nunca comparando screenshots a ojo — dos elementos pueden lucir "distintos" en una captura y estar perfectamente alineados una vez que se descuenta el padding de cada contenedor.
+- **El eje desktop responde a la tarea, no a una regla de centrado**: las etapas de lectura ocupan las columnas centrales; en ambientes, la carga queda a la derecha para conservar visible el producto; en confirmación, puntaje y autorización usan un bloque ópticamente centrado de diez columnas. No llevar todo a la derecha ni centrar CTAs sobre la cortina por uniformidad.
+- **Movimiento intenso no significa movimiento permanente**: el roller concentra la transición. Escala, stagger y profundidad sólo sostienen su lectura con recorridos cortos; al asentarse la pantalla, números, grano y fondos dejan de moverse. El cierre conserva partículas y física, pero con presupuesto acotado y zonas legibles estables.
 
 ## Fase 2 (anotada, NO ejecutar sin que Agus lo pida)
 

@@ -70,7 +70,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
-      !initial.copy.text?.includes('frase que ayude') || !initial.copy.confirm?.startsWith('Mostraste ') ||
+      !initial.copy.text?.includes('Ayudá a otra persona') || !initial.copy.confirm?.startsWith('Mostraste ') ||
       !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('Duplicá tus chances')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
@@ -264,12 +264,13 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         canvasWidth: canvas.width,
         particles: window.__celebrationState?.particles || 0,
         running: window.__celebrationState?.running || false,
+        numberMotion: getComputedStyle(chance).animationName,
         oldConfetti: document.querySelectorAll('.confetti').length,
       };
     });
-    if (!celebration.title?.startsWith('¡Lo hiciste') || !celebration.sub?.includes('Instagram es el último requisito') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
+    if (!celebration.title?.startsWith('¡Lo hiciste') || !celebration.sub?.includes('duplicar tus chances en Google') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
-        celebration.particles < 35 || !celebration.running || celebration.oldConfetti !== 0) {
+        celebration.particles < 35 || celebration.particles > 180 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0) {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
     }
     const googleHandoff = await page.evaluate(() => {
@@ -319,6 +320,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       instagramWidth: Math.round(document.querySelector('#igFinalBtn').getBoundingClientRect().width),
       blockWidth: Math.round(document.querySelector('#gBlock').getBoundingClientRect().width),
       requirement: document.querySelector('.ig-final p')?.textContent,
+      sub: document.querySelector('#grSub')?.textContent,
       oldInstagramHidden: getComputedStyle(document.querySelector('.gr-meta')).display === 'none',
       completeState: document.body.classList.contains('google-complete'),
       orbitA: getComputedStyle(document.querySelector('#gBlock'),'::before').display,
@@ -328,6 +330,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.title !== 'Te queda un último paso' ||
         !googleDone.instagramCopy?.includes('ver si gané') || !googleDone.instagramHref?.includes('instagram.com/cortinas.rollershow') ||
         !googleDone.instagramFocused || googleDone.instagramWidth < googleDone.blockWidth - 2 || !googleDone.requirement?.includes('31 de julio') ||
+        !googleDone.sub?.includes('Instagram es el último requisito') ||
         !googleDone.requirement?.includes('requisito') || !googleDone.oldInstagramHidden || !googleDone.completeState ||
         googleDone.orbitA !== 'none' || googleDone.orbitB !== 'none' || googleDone.divider !== 'none') {
       fails.push(`cierre Google: estado o geometría decorativa incorrectos ${JSON.stringify(googleDone)}`);

@@ -131,9 +131,13 @@ for (const viewport of viewports) {
         !close(confirm.content.left, report.master.left) || !close(confirm.content.right, report.master.right)) {
       fails.push(`${viewport.width}px confirm: celebración final fuera del grid maestro`);
     }
+    const expectedConfirmLeft = report.master.left + column + 24;
+    const expectedConfirmActionLeft = report.master.left + 6 * (column + 24);
+    const expectedConfirmRight = report.master.right - (column + 24);
     const scoreCenter = (confirm.confirmScore.top + confirm.confirmScore.bottom) / 2;
     const actionsCenter = (confirm.confirmActions.top + confirm.confirmActions.bottom) / 2;
-    if (!close(confirm.title.left, report.master.left) || !close(confirm.confirmScore.left, report.master.left) ||
+    if (!close(confirm.title.left, expectedConfirmLeft) || !close(confirm.confirmScore.left, expectedConfirmLeft) ||
+        !close(confirm.confirmActions.left, expectedConfirmActionLeft) || !close(confirm.confirmActions.right, expectedConfirmRight) ||
         Math.abs(scoreCenter - actionsCenter) > 16) {
       fails.push(`${viewport.width}px confirm: puntaje y autorización no forman una misma fila semántica`);
     }
