@@ -330,3 +330,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Regenerar los seis posters desde los PNG maestros y cargar la escena de confirmación recién al entrar.
 - [x] Verificar en Chrome todas las variantes: reproducción activa, `loop`, metadata correcta y cero cuadros perdidos o corruptos.
 - [x] Mantener el arranque mobile debajo del gate: 335 KB de imágenes iniciales.
+
+## 39. Retiro del mecanismo y decodificación mobile — 2026-07-16
+
+- [x] Retirar el render completo, incluidos asset, tubo, soportes, brillo y sombra. No queda ningún mecanismo visible en reposo ni durante el cambio.
+- [x] Extender el paño a todo el viewport y elevarlo por encima del encabezado: la transición empieza en `top:0`, sobre logo, progreso y puntaje.
+- [x] Ocultar `.roller-wipe` al terminar cada cambio; sólo existe visualmente mientras corre `curtain-running`.
+- [x] Corregir la exigencia de 48 fps mobile después de medir drops en Pages: mobile queda a 720×1280 y 30 fps sostenidos; desktop conserva 1440×810 y 48 fps.
+- [x] Verificar mobile local durante 12 s: 397 cuadros presentados, 0 perdidos y 0 corruptos.
