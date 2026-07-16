@@ -42,6 +42,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     active: document.querySelector('.flow-step.active')?.dataset.flowStep,
     primaries: document.querySelectorAll('.intro-step.active .step-primary').length,
     prizes: document.body.innerText.includes('3 almohadones y 2 alfombras premium'),
+    bases: document.querySelector('.bases-txt')?.textContent,
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
     bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
     copy: {
@@ -65,6 +66,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
   if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
@@ -254,6 +256,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       const canvas = document.querySelector('#celebrationCanvas');
       return {
         title: document.querySelector('#thanksTitle')?.textContent,
+        sub: document.querySelector('#grSub')?.textContent,
         chanceSize: parseFloat(getComputedStyle(chance).fontSize),
         pointsSize: parseFloat(getComputedStyle(points).fontSize),
         surface: chanceSurface.backgroundColor,
@@ -264,7 +267,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         oldConfetti: document.querySelectorAll('.confetti').length,
       };
     });
-    if (!celebration.title?.startsWith('¡Lo hiciste') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
+    if (!celebration.title?.startsWith('¡Lo hiciste') || !celebration.sub?.includes('Instagram es el último requisito') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
         celebration.particles < 35 || !celebration.running || celebration.oldConfetti !== 0) {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
@@ -301,17 +304,32 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await popup.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
     if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
+    if ((await page.textContent('#gConfirmBtn'))?.trim() !== 'Listo, ya la publiqué') fails.push('la vuelta de Google no pide confirmación clara');
+    if (!((await page.textContent('#gValidating')) || '').includes('Registrando tu confirmación')) fails.push('Google finge una verificación que la app no puede hacer');
     await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
     if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');
     if (await page.textContent('#grPts') !== '40') fails.push('reseña de Google no duplica puntos');
     const googleDone = await page.evaluate(() => ({
-      icon: Math.round(document.querySelector('#gDone>svg').getBoundingClientRect().width),
+      icon: Math.round(document.querySelector('.g-status>svg').getBoundingClientRect().width),
       status: document.querySelector('#gDone strong')?.textContent,
+      title: document.querySelector('#gTitle')?.textContent,
+      instagramCopy: document.querySelector('#igFinalBtn')?.textContent,
+      instagramHref: document.querySelector('#igFinalBtn')?.href,
+      instagramFocused: document.activeElement === document.querySelector('#igFinalBtn'),
+      instagramWidth: Math.round(document.querySelector('#igFinalBtn').getBoundingClientRect().width),
+      blockWidth: Math.round(document.querySelector('#gBlock').getBoundingClientRect().width),
+      requirement: document.querySelector('.ig-final p')?.textContent,
+      oldInstagramHidden: getComputedStyle(document.querySelector('.gr-meta')).display === 'none',
+      completeState: document.body.classList.contains('google-complete'),
       orbitA: getComputedStyle(document.querySelector('#gBlock'),'::before').display,
       orbitB: getComputedStyle(document.querySelector('#gBlock'),'::after').display,
       divider: getComputedStyle(document.querySelector('.gr-score'),'::after').display,
     }));
-    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.orbitA !== 'none' || googleDone.orbitB !== 'none' || googleDone.divider !== 'none') {
+    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.title !== 'Te queda un último paso' ||
+        !googleDone.instagramCopy?.includes('ver si gané') || !googleDone.instagramHref?.includes('instagram.com/cortinas.rollershow') ||
+        !googleDone.instagramFocused || googleDone.instagramWidth < googleDone.blockWidth - 2 || !googleDone.requirement?.includes('31 de julio') ||
+        !googleDone.requirement?.includes('requisito') || !googleDone.oldInstagramHidden || !googleDone.completeState ||
+        googleDone.orbitA !== 'none' || googleDone.orbitB !== 'none' || googleDone.divider !== 'none') {
       fails.push(`cierre Google: estado o geometría decorativa incorrectos ${JSON.stringify(googleDone)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-google-done.png`, fullPage:true });
@@ -405,6 +423,8 @@ await dpage.evaluate(() => {
   document.querySelector('#gReviewBtn').hidden=true;
   document.querySelector('#gConfirmStep').hidden=true;
   document.querySelector('#gDone').hidden=false;
+  document.body.classList.add('google-complete');
+  document.querySelector('#gTitle').textContent='Te queda un último paso';
   document.querySelector('#grTickets').textContent='17'; document.querySelector('#grTickets').dataset.value='17';
   document.querySelector('#grPts').textContent='170'; document.querySelector('#grPts').dataset.value='170';
 });

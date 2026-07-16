@@ -225,6 +225,15 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Distribuir logo, propuesta, premios y CTA desde el tercio superior en lugar de comprimirlos al fondo.
 - [x] Verificar portada sin scroll interno y CTA completo a 320×700, 360×780 y 390×844.
 
+## 29. Handoff Google → Instagram obligatorio — 2026-07-15
+
+- [x] Cambiar la vuelta de Google a `Listo, ya la publiqué`, sin fingir una verificación automática inexistente.
+- [x] Registrar la confirmación, duplicar puntos y reemplazar el foco de Google por un CTA grande a Instagram.
+- [x] Comunicar fecha, cuenta, tres ganadores y requisito de seguimiento dentro del mismo bloque.
+- [x] Mantener un enlace secundario de Instagram antes de Google y ocultarlo cuando aparece el CTA final para evitar duplicación.
+- [x] Actualizar bases con requisito, verificación manual del ganador y descargo oficial de Instagram.
+- [x] Verificar foco, ancho, copy, enlace y estado en mobile y desktop.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
