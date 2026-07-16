@@ -34,7 +34,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     permissions: [],
   });
   const page = await ctx.newPage();
-  await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.goto(URL, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(700);
 
   const initial = await page.evaluate(() => ({
@@ -165,7 +165,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
     if (!addMoreCopy.includes('+10 puntos') || !addMoreCopy.includes('+25 puntos')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
     await page.locator('.flow-step.active .upload-more-action input[type=file]').setInputFiles(testImage);
-    await page.waitForTimeout(80);
+    await page.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '20');
     if (await page.textContent('#flowPts') !== '20') fails.push('segunda foto: no suma puntos');
     await page.click('.flow-step.active .stage-remove');
     if (await page.textContent('#flowPts') !== '10' || !(await page.isVisible('.flow-step.active .stage-user-media'))) fails.push('quitar la foto activa no recupera la anterior');
@@ -345,7 +345,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.screenshot({ path: `${OUT}/canonical-390-google-done.png`, fullPage:true });
 
     const p2 = await ctx.newPage();
-    await p2.goto(URL, { waitUntil: 'networkidle' });
+    await p2.goto(URL, { waitUntil: 'domcontentloaded' });
     await p2.click('#startFlow'); await waitCurtain(p2);
     await p2.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
     await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
@@ -353,7 +353,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
 
     const p3 = await ctx.newPage();
-    await p3.goto(URL, { waitUntil: 'networkidle' });
+    await p3.goto(URL, { waitUntil: 'domcontentloaded' });
     await reachConfirm(p3);
     await p3.click('#openBases');
     if (!(await p3.evaluate(() => document.getElementById('basesModal').open))) fails.push('modal de bases no abre');
@@ -364,7 +364,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
 // Una foto real de teléfono no debe quedar en memoria con resolución y peso originales.
 const cctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const cpage = await cctx.newPage();
-await cpage.goto(URL, { waitUntil:'networkidle' });
+await cpage.goto(URL, { waitUntil:'domcontentloaded' });
 await cpage.click('#startFlow'); await waitCurtain(cpage);
 const compression = await cpage.evaluate(async () => {
   const canvas = document.createElement('canvas');
@@ -398,7 +398,7 @@ await cctx.close();
 
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, permissions:['microphone'] });
 const dpage = await dctx.newPage();
-await dpage.goto(URL, { waitUntil: 'networkidle' });
+await dpage.goto(URL, { waitUntil: 'domcontentloaded' });
 await dpage.evaluate(() => window.celebrateAction('audio', { points:30, origin:document.querySelector('#startFlow'), detail:'Audio guardado' }));
 const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent, transfer:document.querySelector('.score-transfer')?.textContent }));
 if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos') || audioReward.transfer !== '+30') fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
