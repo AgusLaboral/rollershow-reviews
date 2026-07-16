@@ -151,9 +151,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       bannedSeparators: /[·—]/.test(document.querySelector('.item-step.active .stage-score-burst')?.innerText || ''),
       transfer: document.querySelector('.score-transfer')?.textContent,
       transferAnimated: (document.querySelector('.score-transfer')?.getAnimations().length || 0) > 0,
+      actionTray: (() => {
+        const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
+        const actions = document.querySelector('.item-step.active .step-actions').getBoundingClientRect();
+        return { attached: Math.abs(stage.bottom - actions.top) < 2, sameLeft: Math.abs(stage.left - actions.left) < 2, sameRight: Math.abs(stage.right - actions.right) < 2 };
+      })(),
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
-        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated) {
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated ||
+        !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
@@ -221,6 +227,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
       concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
       scoreBackground: getComputedStyle(document.querySelector('#flowScore')).backgroundColor,
+      compactHeader: [...document.querySelectorAll('#flowScore>span:not(.score-roller),#flowScore>i')].every(element => getComputedStyle(element).opacity === '0'),
+      rollerVisible: getComputedStyle(document.querySelector('.score-roller')).opacity !== '0',
       hero: {
         src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
         width: document.querySelector('.confirm-prize-base')?.naturalWidth,
@@ -228,7 +236,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     }));
     if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 3 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
-        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.hero.src?.includes('hero-premios-v2') || confirmBefore.hero.width < 1500 ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('hero-premios-v2') || confirmBefore.hero.width < 1500 ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
     }
@@ -364,6 +372,18 @@ await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(620);
+const desktopTray = await dpage.evaluate(() => {
+  const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
+  const actions = document.querySelector('.item-step.active .step-actions').getBoundingClientRect();
+  const primary = document.querySelector('.item-step.active .step-continue').getBoundingClientRect();
+  return {
+    attached: Math.abs(stage.bottom - actions.top) < 2,
+    sameLeft: Math.abs(stage.left - actions.left) < 2,
+    sameRight: Math.abs(stage.right - actions.right) < 2,
+    primaryInside: primary.left >= actions.left && primary.right <= actions.right,
+  };
+});
+if (!desktopTray.attached || !desktopTray.sameLeft || !desktopTray.sameRight || !desktopTray.primaryInside) fails.push(`foto desktop: acciones desligadas de la pieza ${JSON.stringify(desktopTray)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 
 // Audio: durante la grabación, detener es la única acción dominante. Detener no avanza.

@@ -439,6 +439,7 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes chanceGlow{0%{text-shadow:none}45%{text-shadow:0 0 22px rgba(198,58,33,.48)}100%{text-shadow:none}}
 .flow-shell[data-current="0"] .flow-score{opacity:0;transform:translateY(-8px)}
 .flow-shell[data-current="8"] .flow-score{background:transparent}
+.flow-shell[data-current="8"] .flow-score>span:not(.score-roller),.flow-shell[data-current="8"] .flow-score>i{opacity:0;pointer-events:none}
 
 /* La recompensa recorre una trayectoria causal: nace en la acción y aterriza en el total estable. */
 .score-transfer{position:fixed;z-index:80;left:0;top:0;pointer-events:none;display:grid;place-items:center;
@@ -591,6 +592,8 @@ body{min-height:100vh;min-height:100dvh}
 .item-step.has-media .item-task{display:none}
 .item-step.has-media .step-continue{display:flex}
 .item-step.has-media .step-skip{display:none}
+.item-step.has-media .item-stage{border-radius:20px 20px 0 0;box-shadow:none}
+.item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68)}
 .upload-more-action{display:none;position:relative;align-items:center;justify-content:center;cursor:pointer}
 .item-step.has-media .upload-more-action{display:flex}
 .upload-more-action input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -769,6 +772,8 @@ body.done #flowApp{display:none}
   .confirm-step .confirm-score{grid-column:2 / span 5;grid-row:3;margin-top:16px}
   .confirm-step .confirm-actions{grid-column:7 / span 5;grid-row:3;margin-top:16px;align-self:center}
   .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:12px;align-items:start;align-content:start}
+  .item-step.has-media .step-inner{row-gap:0}
+  .item-step.has-media .item-heading{margin-bottom:12px}
   .item-step .item-heading{grid-column:1 / -1;grid-row:1}
   .item-step .item-stage{grid-column:1 / -1;grid-row:2;height:clamp(248px,39dvh,330px);margin-top:0}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}
@@ -776,6 +781,9 @@ body.done #flowApp{display:none}
   .item-step .upload-prompt{width:min(100%,390px);margin-left:auto;padding:16px 17px}
   .item-step .stage-skip{left:auto;right:20px;bottom:14px;width:min(100%,390px)}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
+  .item-step.has-media .step-actions{grid-column:1 / -1;display:grid;grid-template-columns:minmax(260px,1fr) minmax(420px,1.55fr);align-items:center;gap:18px;margin-top:0;padding:12px 14px}
+  .item-step.has-media .upload-more-action{grid-column:1;justify-content:flex-start;padding-inline:10px;text-align:left}
+  .item-step.has-media .step-continue{grid-column:2;width:100%}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
   .intro-step .intro-logo{left:0}
   .intro-step .intro-copy-block{width:min(100%,500px)}
@@ -851,7 +859,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">Contalo con tu voz.</h2>
-        <p class="step-copy"><strong>Tu audio suma 30 puntos.</strong><span>Contanos qué elegiste y cómo quedó. Podés escucharlo antes de seguir.</span></p>
+        <p class="step-copy"><strong>Un mensaje corto alcanza.</strong><span>Contanos qué elegiste y cómo quedó. Podés escucharlo antes de seguir.</span></p>
         <div class="focus-panel" id="flowAudioMount"></div>
         <div class="step-actions">
           <button class="step-primary step-audio-next" id="audioNext" type="button">Continuar</button>

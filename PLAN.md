@@ -244,6 +244,15 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Separar los estados de copy: primero Google para duplicar chances; después Instagram como último requisito.
 - [x] Agregar regresiones para escala de transición, presupuesto de partículas, quietud de las cifras y composición centrada de la confirmación.
 
+## 31. Segunda pasada de cohesión y assets — 2026-07-16
+
+- [x] Unir la fotografía cargada y sus acciones en una sola pieza responsive; el CTA conserva jerarquía derecha en desktop sin quedar flotando.
+- [x] Retirar el contador duplicado del encabezado en confirmación y conservar únicamente el roller a ancho completo.
+- [x] Quitar la repetición del valor del audio en el copy; `+30 puntos` permanece en los controles que ejecutan la acción.
+- [x] Inspeccionar los dos `.rar` aportados y recuperar sus miniaturas internas.
+- [ ] Reemplazar el roller CSS por un asset real cuando esté disponible en GLB, glTF, FBX u OBJ; los archivos recibidos son escenas `.max` no convertibles sin 3ds Max.
+- [x] Agregar regresiones para la bandeja post-carga y la jerarquía sin puntaje duplicado.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
