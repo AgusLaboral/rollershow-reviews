@@ -150,12 +150,16 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       actionTray: (() => {
         const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
         const actions = document.querySelector('.item-step.active .step-actions').getBoundingClientRect();
-        return { attached: Math.abs(stage.bottom - actions.top) < 2, sameLeft: Math.abs(stage.left - actions.left) < 2, sameRight: Math.abs(stage.right - actions.right) < 2 };
+        const primary = document.querySelector('.item-step.active .step-continue').getBoundingClientRect();
+        const secondary = document.querySelector('.item-step.active .upload-more-action').getBoundingClientRect();
+        const center = rect => (rect.left + rect.right) / 2;
+        return { attached: Math.abs(stage.bottom - actions.top) < 2, sameLeft: Math.abs(stage.left - actions.left) < 2, sameRight: Math.abs(stage.right - actions.right) < 2,
+          sharedAxis: Math.abs(center(primary) - center(secondary)) < 2, stacked: secondary.top >= primary.bottom - 1 };
       })(),
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
         !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated ||
-        !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight) {
+        !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight || !photoReward.actionTray.sharedAxis || !photoReward.actionTray.stacked) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
@@ -411,14 +415,19 @@ const desktopTray = await dpage.evaluate(() => {
   const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
   const actions = document.querySelector('.item-step.active .step-actions').getBoundingClientRect();
   const primary = document.querySelector('.item-step.active .step-continue').getBoundingClientRect();
+  const secondary = document.querySelector('.item-step.active .upload-more-action').getBoundingClientRect();
+  const center = rect => (rect.left + rect.right) / 2;
   return {
     attached: Math.abs(stage.bottom - actions.top) < 2,
     sameLeft: Math.abs(stage.left - actions.left) < 2,
     sameRight: Math.abs(stage.right - actions.right) < 2,
     primaryInside: primary.left >= actions.left && primary.right <= actions.right,
+    sharedAxis: Math.abs(center(primary) - center(secondary)) < 2,
+    centered: Math.abs(center(primary) - center(actions)) < 2,
+    stacked: secondary.top >= primary.bottom - 1,
   };
 });
-if (!desktopTray.attached || !desktopTray.sameLeft || !desktopTray.sameRight || !desktopTray.primaryInside) fails.push(`foto desktop: acciones desligadas de la pieza ${JSON.stringify(desktopTray)}`);
+if (!desktopTray.attached || !desktopTray.sameLeft || !desktopTray.sameRight || !desktopTray.primaryInside || !desktopTray.sharedAxis || !desktopTray.centered || !desktopTray.stacked) fails.push(`foto desktop: acciones desligadas o sin eje común ${JSON.stringify(desktopTray)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 
 // Audio: durante la grabación, detener es la única acción dominante. Detener no avanza.

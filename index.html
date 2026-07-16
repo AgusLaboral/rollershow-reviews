@@ -587,12 +587,14 @@ body{min-height:100vh;min-height:100dvh}
 .item-step .step-actions{margin-top:14px;padding-top:0}
 .item-step .step-continue{display:none}
 .item-step.has-media .item-task{display:none}
-.item-step.has-media .step-continue{display:flex}
+.item-step.has-media .step-continue{display:flex;width:min(100%,640px)}
 .item-step.has-media .step-skip{display:none}
 .item-step.has-media .item-stage{border-radius:20px 20px 0 0;box-shadow:none}
-.item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68)}
-.upload-more-action{display:none;position:relative;align-items:center;justify-content:center;cursor:pointer}
-.item-step.has-media .upload-more-action{display:flex}
+.item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68);align-items:center;gap:6px}
+.upload-more-action{display:none;position:relative;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;line-height:1.25}
+.item-step.has-media .upload-more-action{display:flex;width:min(100%,640px);flex-direction:column;gap:3px;justify-content:center;text-align:center}
+.upload-more-label{text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:4px}
+.upload-more-points{font-size:.72rem;font-weight:600;color:var(--fg-mute);text-decoration:none}
 .upload-more-action input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* Experiencia y cierre. */
@@ -778,9 +780,7 @@ body.done #flowApp{display:none}
   .item-step .upload-prompt{width:min(42%,430px);margin-left:auto;padding:17px 18px}
   .item-step .stage-skip{left:auto;right:24px;top:calc(50% + 58px);bottom:auto;width:min(42%,430px)}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
-  .item-step.has-media .step-actions{grid-column:1 / -1;display:grid;grid-template-columns:minmax(260px,1fr) minmax(420px,1.55fr);align-items:center;gap:18px;margin-top:0;padding:12px 14px}
-  .item-step.has-media .upload-more-action{grid-column:1;justify-content:flex-start;padding-inline:10px;text-align:left}
-  .item-step.has-media .step-continue{grid-column:2;width:100%}
+  .item-step.has-media .step-actions{grid-column:1 / -1;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:0;padding:12px 14px}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:76px 0 36px;align-items:flex-start;justify-content:flex-start}
   .intro-step .intro-logo{left:0}
   .intro-step .intro-copy-block{width:min(100%,500px)}
@@ -1378,7 +1378,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? `Listo, seguir con ${next.ambiente}` : "Listo, contar mi experiencia"}</button>
-      <label class="step-secondary upload-more-action">Sumar otra foto (+10 puntos) o video (+25 puntos)<input type="file" accept="image/*,video/*" multiple /></label>
+      <label class="step-secondary upload-more-action"><span class="upload-more-label">Agregar más contenido</span><span class="upload-more-points">Foto +10 puntos. Video +25 puntos.</span><input type="file" accept="image/*,video/*" multiple /></label>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);

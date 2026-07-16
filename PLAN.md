@@ -338,3 +338,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Ocultar `.roller-wipe` al terminar cada cambio; sólo existe visualmente mientras corre `curtain-running`.
 - [x] Corregir la exigencia de 48 fps mobile después de medir drops en Pages: mobile queda a 720×1280 y 30 fps sostenidos; desktop conserva 1440×810 y 48 fps.
 - [x] Verificar mobile local durante 12 s: 397 cuadros presentados, 0 perdidos y 0 corruptos.
+
+## 40. Eje único para acciones post-carga — 2026-07-16
+
+- [x] Eliminar la grilla desktop asimétrica `1fr / 1.55fr` que dejaba “Agregar otra” a la izquierda y avanzar a la derecha.
+- [x] Centrar ambos controles en una sola columna de hasta 640 px, con CTA primario arriba y acción secundaria debajo.
+- [x] Reescribir la secundaria como `Agregar más contenido` y separar el impacto: `Foto +10 puntos. Video +25 puntos.`
+- [x] Agregar regresiones que exigen eje compartido, orden vertical, unión con la foto y centro respecto de la bandeja.
+- [x] Verificar el estado post-carga en 390 y 1280 px, además de 320–1920 y pantallas bajas.
