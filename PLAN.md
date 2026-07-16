@@ -306,3 +306,10 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Comparar ambos modelos convertidos. Elegir la cortina completa de 1,04 MB sobre los tres paños genéricos de 2,97 MB.
 - [x] Reconstruir material y luz del modelo, renderizar el mecanismo real a 1600×100 con transparencia y usarlo sólo durante la transición.
 - [x] Mantener el asset final por debajo de 16 KB y agregar una regresión que exija sus 1600 px naturales.
+
+## 36. Validación integral y consistencia de audio — 2026-07-16
+
+- [x] Ejecutar el recorrido completo publicado, grilla de 320 a 1920 px, pantallas bajas, movimiento, accesibilidad, performance, desktop y tablet.
+- [x] Revisar visualmente portada, ambientes, recompensa, audio, autorización, fiesta final y estado posterior a Google.
+- [x] Corregir `Terminar y guardar`: usaba Rojo Teja aunque el módulo de audio está gobernado por verde WhatsApp.
+- [x] Unificar botón, pulso y sombra con `--whatsapp-accessible` y agregar una regresión sobre el color computado.

@@ -443,10 +443,12 @@ const recordingState = await dpage.evaluate(() => {
     liveAnalyser: !!waveAnalyser,
     liveBars: [...document.querySelectorAll('.eq i')].every(bar => bar.style.transform.startsWith('scaleY(')),
     simulatedCss: [...document.querySelectorAll('.eq i')].some(bar => getComputedStyle(bar).animationName !== 'none'),
+    stopColor: getComputedStyle(stop).backgroundColor,
   };
 });
 if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+30 puntos)' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
-    recordingState.skipVisible || recordingState.activeStep !== 'audio' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss) fails.push(`audio grabando: jerarquía u onda real incorrecta ${JSON.stringify(recordingState)}`);
+    recordingState.skipVisible || recordingState.activeStep !== 'audio' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss ||
+    recordingState.stopColor !== 'rgb(20, 122, 58)') fails.push(`audio grabando: jerarquía, color u onda real incorrecta ${JSON.stringify(recordingState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
 
 await dpage.locator('#recStop').click({ force:true });
