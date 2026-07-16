@@ -5,7 +5,7 @@
   "description": "Mockup: reviews + fotos de clientes con sorteo mensual (Rollershow)",
   "scripts": {
     "serve": "python -m http.server 8899",
-    "verify": "node scripts/verify-reviews.mjs && node scripts/verify-alignment.mjs && node scripts/verify-motion.mjs && node scripts/verify-edge-layout.mjs",
+    "verify": "node scripts/verify-reviews.mjs && node scripts/verify-alignment.mjs && node scripts/verify-motion.mjs && node scripts/verify-edge-layout.mjs && node scripts/verify-accessibility.mjs && node scripts/verify-performance.mjs",
     "verify:motion": "node scripts/verify-motion.mjs"
   },
   "devDependencies": {

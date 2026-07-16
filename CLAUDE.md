@@ -47,6 +47,8 @@ node scripts/verify-alignment.mjs    # alineación real (getBoundingClientRect) 
 node scripts/verify-desktop.mjs      # capturas desktop (1280/1440) en _scratch/
 node scripts/verify-tablet.mjs       # captura tablet (768) en _scratch/
 node scripts/verify-edge-layout.mjs  # mobile horizontal y pantallas bajas; CTA alcanzable y cero overflow
+node scripts/verify-accessibility.mjs # teclado, foco, diálogos, nombres y enlaces externos
+node scripts/verify-performance.mjs   # presupuesto mobile y ausencia de assets de rutas descartadas
 ```
 
 Los scripts aceptan una URL como argumento (`node scripts/verify-reviews.mjs https://aguslaboral.github.io/rollershow-reviews/index.html`) para correr contra el sitio deployado en vez de local.
@@ -87,7 +89,7 @@ Después de cada push: esperar la propagación (`curl` el HTML hasta ver el camb
 
 1. **Integración con la API real**: reemplazar el bloque `PRESUPUESTO` hardcodeado por `GET /api/v2/presupuesto/:token` (cliente, vendedor con foto real, ítems comprados) y el `enviar()` simulado por `POST /api/v2/reviews` (multipart: fotos/video/audio/estrellas/texto/consentimiento). **Los puntos deben recalcularse server-side siempre** — nunca confiar en el valor que manda el cliente.
 2. **Foto real del vendedor**: hoy usa un placeholder (`img/perfil-01.jpg`, nombre "Marcelo"). Traerla del CRM por presupuesto.
-3. **Upload progresivo + compresión de imágenes** client-side (canvas, máx ~1600px, JPEG q0.82) antes de subir — hoy el mockup solo previsualiza localmente.
+3. **Upload progresivo**: la compresión client-side ya limita fotos a 1600 px y JPEG q0.82 sólo cuando reduce peso. Falta subir el archivo preparado apenas se elige, porque el mockup todavía previsualiza localmente.
 4. **Segundo local (Villa Carlos Paz)**: la página de gracias usa el enlace directo al compositor de reseñas de CABA, confirmado por Agus (`!9m1!1b1`). Falta conseguir el equivalente del local de Villa Carlos Paz y decidir si el presupuesto debe elegir el destino.
 5. **Imagen y asignación final de premios**: la comunicación aprobada dice `3 almohadones y 2 alfombras premium entre 3 ganadores`. El hero v2 (`img/hero-premios-v2.webp`) muestra exactamente esas cinco categorías y cantidades en alta resolución, pero sigue siendo representativo/generado. Falta definir qué recibe cada ganador y reemplazarlo por fotos de los productos reales si se lanza.
 6. **Moderación**: alguien (¿Cami?) tiene que revisar fotos/audios antes de usarlos en marketing real. Es un proceso humano, no algo que resolver en código.
@@ -129,6 +131,8 @@ No mostrar testimonios, nombres, fotos, premios ni ganadores de ejemplo como si 
 - **El eje desktop responde a la tarea, no a una regla de centrado**: las etapas de lectura ocupan las columnas centrales; en ambientes, la carga queda a la derecha para conservar visible el producto; en confirmación, puntaje y autorización usan un bloque ópticamente centrado de diez columnas. No llevar todo a la derecha ni centrar CTAs sobre la cortina por uniformidad.
 - **Un total no se lee dos veces**: en confirmación, el logro grande reemplaza al contador compacto del encabezado. El roller sigue visible a todo el ancho, pero los números de arriba se retiran para no competir con chances y puntos protagonistas.
 - **Movimiento intenso no significa movimiento permanente**: el roller concentra la transición. Escala, stagger y profundidad sólo sostienen su lectura con recorridos cortos; al asentarse la pantalla, números, grano y fondos dejan de moverse. El cierre conserva partículas y física, pero con presupuesto acotado y zonas legibles estables.
+- **Carga mobile sobria**: no construir rutas ocultas descartadas ni descargar sus fotografías. Hero y capas animadas deben respetar `srcset`; la aceptación falla si el arranque mobile supera 850 KB o sus imágenes 400 KB. Las fotos del usuario se preparan a 1600 px, JPEG q0.82, conservando el original cuando recomprimirlo aumentaría el peso.
+- **Teclado acompaña la escena**: el botón volver no entra al tab order en portada; después de cada cortina el foco llega a la etapa revelada, no al control de la pantalla anterior. Google, Instagram, modales y acciones secundarias siempre muestran foco visible.
 
 ## Fase 2 (anotada, NO ejecutar sin que Agus lo pida)
 

@@ -231,12 +231,14 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       rollerVisible: getComputedStyle(document.querySelector('.score-roller')).opacity !== '0',
       hero: {
         src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
-        width: document.querySelector('.confirm-prize-base')?.naturalWidth,
+        srcset: document.querySelector('.confirm-prize-base')?.getAttribute('srcset'),
+        current: document.querySelector('.confirm-prize-base')?.currentSrc,
       },
     }));
     if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 3 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
-        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('hero-premios-v2') || confirmBefore.hero.width < 1500 ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || !confirmBefore.rollerVisible || !confirmBefore.hero.src?.includes('768') ||
+        !confirmBefore.hero.srcset?.includes('1024w') || !confirmBefore.hero.srcset?.includes('1536w') || !confirmBefore.hero.current?.includes('1024') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
     }
@@ -349,6 +351,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await p2.goto(URL, { waitUntil: 'networkidle' });
     await p2.click('#startFlow'); await waitCurtain(p2);
     await p2.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+    await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
     await p2.goBack(); await p2.waitForTimeout(500);
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
 
@@ -360,6 +363,41 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   }
   await ctx.close();
 }
+
+// Una foto real de teléfono no debe quedar en memoria con resolución y peso originales.
+const cctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+const cpage = await cctx.newPage();
+await cpage.goto(URL, { waitUntil:'networkidle' });
+await cpage.click('#startFlow'); await waitCurtain(cpage);
+const compression = await cpage.evaluate(async () => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2400; canvas.height = 1800;
+  const context = canvas.getContext('2d');
+  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#826751'); gradient.addColorStop(.5, '#e7ded2'); gradient.addColorStop(1, '#42382f');
+  context.fillStyle = gradient; context.fillRect(0, 0, canvas.width, canvas.height);
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .98));
+  const original = new File([blob], 'foto-celular.jpg', { type:'image/jpeg' });
+  const step = document.querySelector('.item-step.active');
+  await window.addFiles(1, [original], step);
+  const entry = state.archivos[1][0];
+  return {
+    originalBytes:original.size,
+    resultBytes:entry.file.size,
+    width:entry.width,
+    height:entry.height,
+    type:entry.file.type,
+    compressed:entry.compressed,
+    busy:step.hasAttribute('aria-busy'),
+    points:document.querySelector('#flowPts').textContent,
+    preview:!!step.querySelector('.stage-user-media'),
+  };
+});
+if (!compression.compressed || compression.width !== 1600 || compression.height !== 1200 || compression.type !== 'image/jpeg' ||
+    compression.resultBytes >= compression.originalBytes || compression.busy || compression.points !== '10' || !compression.preview) {
+  fails.push(`compresión: foto mobile no se prepara antes de usar ${JSON.stringify(compression)}`);
+}
+await cctx.close();
 
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, permissions:['microphone'] });
 const dpage = await dctx.newPage();

@@ -518,6 +518,8 @@ body{min-height:100vh;min-height:100dvh}
 .step-primary:focus-visible,.step-secondary:focus-visible,.flow-back:focus-visible,.stars button:focus-visible,
 .rec-btn:focus-visible,.rec-stop:focus-visible,.vn-play:focus-visible,.audio-actions button:focus-visible,.cta:focus-visible{
   outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
+.g-cta:focus-visible,.gr-ig:focus-visible,.ig-final-cta:focus-visible,.g-confirm button:focus-visible,
+.modal-close:focus-visible,.stay:focus-visible{outline:3px solid #F3A13D;outline-offset:4px}
 
 /* Portada: premio primero, una sola salida. */
 .intro-step{padding:0;background:#EDE1D2}
@@ -574,6 +576,10 @@ body{min-height:100vh;min-height:100dvh}
 .upload-zone svg{width:27px;height:27px;margin:0;color:#fff}
 .upload-zone strong{display:block;font-family:var(--font-display);font-size:1rem;line-height:1.05}
 .upload-zone small{display:block;color:rgba(255,255,255,.78);font-size:.71rem;margin-top:4px;line-height:1.25}
+.upload-zone .upload-error{color:#fff;font-weight:700}
+.item-step.is-processing .upload-prompt{cursor:wait}
+.item-step.is-processing .upload-prompt svg{animation:uploadBreathe .8s ease-in-out infinite alternate}
+@keyframes uploadBreathe{to{transform:translateY(-3px);opacity:.58}}
 .upload-value{display:block;margin-top:6px;font-family:var(--font-display);font-size:.72rem;line-height:1.25;font-weight:800;color:#fff}
 .upload-zone input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .upload-zone:focus-within{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
@@ -810,7 +816,7 @@ body.done #flowApp{display:none}
 <!-- Multistep: recorrido por ambientes con una transición inspirada en una cortina roller. -->
 <main id="flowApp" class="flow-shell" data-current="0">
   <header class="flow-head">
-    <button class="flow-back" id="flowBack" type="button" aria-label="Volver al paso anterior">
+    <button class="flow-back" id="flowBack" type="button" aria-label="Volver al paso anterior" aria-hidden="true" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
     </button>
     <img class="flow-logo" src="img/logo.svg" alt="Rollershow" />
@@ -828,10 +834,10 @@ body.done #flowApp{display:none}
   <div class="flow-viewport" id="flowViewport">
     <section class="flow-step intro-step active" data-flow-step="intro" aria-hidden="false">
       <div class="intro-scene">
-        <img class="intro-base" src="img/hero-premios-v2.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Tres almohadones y dos alfombras premium para el sorteo" fetchpriority="high" />
-        <img class="intro-float intro-float-pillow" src="img/hero-premios-v2.webp" alt="" aria-hidden="true" decoding="async" />
-        <img class="intro-float intro-float-rug" src="img/hero-premios-v2.webp" alt="" aria-hidden="true" decoding="async" />
-        <img class="intro-float intro-float-vase" src="img/hero-premios-v2.webp" alt="" aria-hidden="true" decoding="async" />
+        <img class="intro-base" src="img/hero-premios-v2.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" width="1536" height="1024" alt="Tres almohadones y dos alfombras premium para el sorteo" fetchpriority="high" />
+        <img class="intro-float intro-float-pillow" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
+        <img class="intro-float intro-float-rug" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
+        <img class="intro-float intro-float-vase" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" aria-hidden="true" decoding="async" />
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
@@ -888,9 +894,9 @@ body.done #flowApp{display:none}
     </section>
     <section class="flow-step confirm-step" data-flow-step="confirm" aria-hidden="true">
       <div class="confirm-world" aria-hidden="true">
-        <img class="confirm-prize-base" src="img/hero-premios-v2.webp" alt="" />
-        <img class="confirm-prize-pillow" src="img/hero-premios-v2.webp" alt="" />
-        <img class="confirm-prize-rug" src="img/hero-premios-v2.webp" alt="" />
+        <img class="confirm-prize-base" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
+        <img class="confirm-prize-pillow" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
+        <img class="confirm-prize-rug" src="img/hero-premios-v2-768.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2-1024.webp 1024w, img/hero-premios-v2.webp 1536w" sizes="100vw" alt="" />
         <i class="celebration-roller"></i><i class="celebration-roller"></i><i class="celebration-roller"></i>
       </div>
       <div class="step-inner">
@@ -1128,9 +1134,9 @@ body.done #flowApp{display:none}
 <!-- ============================================================
      MODAL: BASES Y CONDICIONES
 ============================================================ -->
-<dialog id="basesModal">
+<dialog id="basesModal" aria-labelledby="basesTitle">
   <div class="modal-in">
-    <h2>Bases del sorteo</h2>
+    <h2 id="basesTitle">Bases del sorteo</h2>
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
       <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita (5). El puntaje final lo valida Rollershow al revisar el material.</p>
@@ -1146,9 +1152,9 @@ body.done #flowApp{display:none}
 <!-- ============================================================
      EXIT POPUP (solo si hay puntos sin confirmar)
 ============================================================ -->
-<dialog id="exitModal">
+<dialog id="exitModal" aria-labelledby="exitTitle">
   <div class="modal-in">
-    <h2>Lo que cargaste ya suma</h2>
+    <h2 id="exitTitle">Lo que cargaste ya suma</h2>
     <strong class="big" id="exitPts">0 puntos</strong>
     <p>Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
     <button class="cta" id="exitConfirm">Confirmar y continuar</button>
@@ -1390,71 +1396,82 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
-  step.querySelectorAll("input[type=file]").forEach(input => input.addEventListener("change", () => { addFiles(item.id, input.files, null, step); input.value = ""; }));
+  step.querySelectorAll("input[type=file]").forEach(input => input.addEventListener("change", async () => { await addFiles(item.id, input.files, step); input.value = ""; }));
 });
 
-const itemsBox = $("#items");
-PRESUPUESTO.items.forEach(item => {
-  const card = document.createElement("article");
-  card.className = "item";
-  card.innerHTML = `
-    <div class="item-head">
-      <img src="${item.img}" alt="" />
-      <div class="item-title">
-        <h3>${item.ambiente}</h3>
-        <span>${item.producto} en tela ${item.tela}</span>
-      </div>
-      <div class="item-pts"><b>+10</b> foto<br /><b>+25</b> video</div>
-    </div>
-    <label class="drop">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-      <span class="drop-cta">Arrastrá tu foto o <u>tocá para elegir</u></span>
-      <small>Desde el teléfono podés sacarla en el momento</small>
-      <input type="file" accept="image/*,video/*" multiple />
-    </label>
-    <div class="previews"></div>`;
-  itemsBox.appendChild(card);
+const MAX_IMAGE_SIDE = 1600;
+const IMAGE_QUALITY = .82;
+const MAX_VIDEO_BYTES = 250 * 1024 * 1024;
 
-  const drop = card.querySelector(".drop");
-  const input = card.querySelector("input");
-  const previews = card.querySelector(".previews");
+async function prepareImage(file) {
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file, { imageOrientation:"from-image" });
+  } catch (_) {
+    return { file, compressed:false, width:0, height:0 };
+  }
+  const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(bitmap.width, bitmap.height));
+  const width = Math.max(1, Math.round(bitmap.width * scale));
+  const height = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width; canvas.height = height;
+  const context = canvas.getContext("2d", { alpha:false });
+  context.fillStyle = "#fff"; context.fillRect(0, 0, width, height);
+  context.drawImage(bitmap, 0, 0, width, height);
+  bitmap.close?.();
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", IMAGE_QUALITY));
+  if (!blob || blob.size >= file.size) return { file, compressed:false, width, height };
+  const name = file.name.replace(/\.[^.]+$/, "") || "foto";
+  return {
+    file:new File([blob], `${name}.jpg`, { type:"image/jpeg", lastModified:file.lastModified }),
+    compressed:true,
+    width,
+    height,
+  };
+}
 
-  input.addEventListener("change", () => { addFiles(item.id, input.files, previews); input.value = ""; });
-  drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
-  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
-  drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); addFiles(item.id, e.dataTransfer.files, previews); });
-});
+function uploadError(step, message) {
+  const prompt = step?.querySelector(".upload-prompt span");
+  if (!prompt) return;
+  prompt.querySelector(".upload-error")?.remove();
+  const error = document.createElement("small");
+  error.className = "upload-error"; error.setAttribute("role", "alert"); error.textContent = message;
+  prompt.appendChild(error);
+}
 
-function addFiles(itemId, fileList, previews, ownerStep = null) {
+async function addFiles(itemId, fileList, ownerStep = null) {
   const previousPoints = totalPuntos();
   let addedPoints = 0, addedVideos = 0, addedPhotos = 0;
-  [...fileList].forEach(file => {
+  ownerStep?.classList.add("is-processing");
+  ownerStep?.setAttribute("aria-busy", "true");
+  ownerStep?.querySelector(".upload-error")?.remove();
+  for (const originalFile of [...fileList]) {
+    let file = originalFile;
     const esVideo = file.type.startsWith("video/");
-    if (!esVideo && !file.type.startsWith("image/")) return;
-    const entry = { file, esVideo, url: URL.createObjectURL(file) };
+    if (!esVideo && !file.type.startsWith("image/")) { uploadError(ownerStep, "Elegí una foto o un video."); continue; }
+    if (esVideo && file.size > MAX_VIDEO_BYTES) { uploadError(ownerStep, "Ese video es demasiado pesado. Elegí uno de menos de 250 MB."); continue; }
+    const prepared = esVideo ? { file, compressed:false, width:0, height:0 } : await prepareImage(file);
+    file = prepared.file;
+    const entry = {
+      file,
+      esVideo,
+      url:URL.createObjectURL(file),
+      compressed:prepared.compressed,
+      width:prepared.width,
+      height:prepared.height,
+      originalBytes:originalFile.size,
+    };
     state.archivos[itemId].push(entry);
     addedPoints += esVideo ? PUNTOS.video : PUNTOS.foto;
     esVideo ? addedVideos++ : addedPhotos++;
 
-    /* TODO(Nico): acá conviene subir el archivo apenas se elige (upload progresivo),
-       así el cliente no pierde nada si cierra la página. Para imágenes, comprimir
-       antes de subir: canvas a máx 1600px de lado, JPEG q0.82 (el cliente está en
-       mobile con datos). El mockup solo previsualiza. */
+    /* TODO(Nico): subir el archivo preparado apenas se elige (upload progresivo),
+       así el cliente no pierde nada si cierra la página. La compresión local ya
+       limita fotos a 1600 px y JPEG q0.82; falta el endpoint real. */
 
-    if (!ownerStep) {
-      const pv = document.createElement("div");
-      pv.className = "pv";
-      pv.innerHTML = (esVideo
-        ? `<video src="${entry.url}" muted playsinline></video><span class="vtag">VIDEO</span>`
-        : `<img src="${entry.url}" alt="" />`)
-        + `<button type="button" aria-label="Quitar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6 6 18"/></svg></button>`;
-      pv.querySelector("button").addEventListener("click", () => {
-        state.archivos[itemId] = state.archivos[itemId].filter(e => e !== entry);
-        URL.revokeObjectURL(entry.url); pv.remove(); renderPuntos();
-      });
-      previews.appendChild(pv);
-    }
-  });
+  }
+  ownerStep?.classList.remove("is-processing");
+  ownerStep?.removeAttribute("aria-busy");
   if (ownerStep && state.archivos[itemId].length) {
     ownerStep.classList.add("has-media");
     renderStageMedia(ownerStep, itemId);
@@ -1466,6 +1483,7 @@ function addFiles(itemId, fileList, previews, ownerStep = null) {
     celebrateMedia(ownerStep, addedPoints, label, previousPoints);
   }
 }
+window.addFiles = addFiles;
 
 function renderStageMedia(step, itemId) {
   const photo = step.querySelector(".curtain-photo"), stage = step.querySelector(".item-stage");
@@ -1732,6 +1750,9 @@ function syncConsentState() {
 }
 function updateFlowChrome() {
   $("#flowApp").dataset.current = flowIndex;
+  const back = $("#flowBack"), atStart = flowIndex === 0;
+  back.disabled = atStart;
+  back.setAttribute("aria-hidden", String(atStart));
   const total = flowSteps.length - 1;
   $("#flowProgress").textContent = flowIndex ? `${flowIndex} de ${total}` : "";
   $("#flowRail").setAttribute("aria-valuemax", total);
@@ -1755,7 +1776,9 @@ function goToFlow(target) {
   }
   flowIndex = target; updateFlowChrome();
   requestAnimationFrame(() => requestAnimationFrame(() => next.classList.remove("entering")));
-  next.focus({ preventScroll: true });
+  /* La visibilidad también transiciona: mover el foco cuando el nuevo plano ya
+     existe para teclado/lector, no mientras sigue marcado como oculto. */
+  setTimeout(() => next.focus({ preventScroll: true }), 760);
   setTimeout(() => { flowBusy = false; }, 1040);
   setTimeout(() => { current.classList.remove("leaving"); if (current.dataset.flowStep === "confirm") current.classList.remove("celebrate-in"); }, 1160);
   setTimeout(() => { app.classList.remove("curtain-running"); }, 1240);

@@ -261,6 +261,17 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Mantener la carga a la derecha dentro de la superficie en desktop; no recentrar por uniformidad cuando eso tape el producto.
 - [ ] Cambiar la pieza vectorial por un modelo real sólo si llega un export web con licencia clara. Los dos RAR recibidos siguen bloqueados en `.max`; las miniaturas no son publicables.
 
+## 33. Robustez mobile, teclado y peso real — 2026-07-16
+
+- [x] Comprimir fotos antes de previsualizarlas: máximo 1600 px, JPEG q0.82 y reemplazo sólo si el archivo resultante pesa menos.
+- [x] Mantener orientación, registrar dimensiones y conservar video sin recomprimir; rechazar videos mayores a 250 MB con error dentro de la carga.
+- [x] Probar la compresión con una imagen real de canvas de 2400×1800 y exigir 1600×1200, menor peso, preview y +10 puntos.
+- [x] Sacar del arranque las cuatro tarjetas y fotos originales del formulario largo descartado.
+- [x] Hacer responsive también las capas animadas y la escena de confirmación; mobile dejó de descargar el hero de 1536 px.
+- [x] Bajar la transferencia inicial medida de imágenes de 631 KB a 264 KB.
+- [x] Sacar el volver invisible del tab order, transferir foco después de cada cortina y nombrar ambos diálogos.
+- [x] Agregar foco visible a Google, Instagram y acciones de modal, con una prueba durable de teclado y semántica.
+
 ## 22. Cierre anti-plantilla y premios en alta resolución — 2026-07-15
 
 - [x] Reemplazar el título genérico del cierre por una frase factual que refleja cuántos ambientes mostró la persona.
