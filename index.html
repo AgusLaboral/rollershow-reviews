@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tu experiencia Rollershow, mostrala y ganá</title>
+<title>Mostrá cómo quedó tu casa | Rollershow</title>
 <meta name="description" content="Subí fotos de tus cortinas instaladas, contanos tu experiencia y participá del sorteo mensual de premios de decoración." />
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -332,7 +332,7 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes gCheckIn{0%{transform:scale(.55) rotate(-12deg);opacity:0;stroke-dashoffset:30}100%{transform:none;opacity:1;stroke-dashoffset:0}}
 .gr-fecha{font-size:.95rem;color:inherit}.gr-fecha b{color:inherit}.gr-ig{display:inline-flex;align-items:center;gap:10px;color:#F5EFE6;background:none;border-radius:0;border-bottom:1px solid rgba(245,239,230,.38);text-decoration:none;font-weight:700;padding:10px 0;box-shadow:none}
 body.done footer{background:#130F0D;border-color:rgba(255,249,242,.12);color:rgba(255,249,242,.48)}body.done footer a{color:rgba(255,249,242,.58)}
-@media(max-width:699px){#gracias>.wrap{padding:48px 20px 42px}#gracias h1{font-size:clamp(3rem,15vw,5rem)}.gr-score{grid-template-columns:1fr .72fr;gap:14px;margin-top:42px}.gr-chances strong{font-size:clamp(8.2rem,47vw,12rem)}.gr-points strong{font-size:clamp(4.4rem,24vw,7rem)}.gr-score span{display:block;margin-top:17px}.gr-score span b{display:block;margin-bottom:4px}.gr-lower{grid-template-columns:1fr;margin-top:34px;gap:34px}.g-block{grid-row:1}.gr-meta{grid-row:2}.g-cta{width:100%}}
+@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%;filter:saturate(.82) brightness(.68)}#gracias>.thanks-ambient-video.is-ready{opacity:.42}#gracias>.wrap{padding:48px 20px 42px}#gracias h1{font-size:clamp(3rem,15vw,5rem)}.gr-score{grid-template-columns:1fr .72fr;gap:14px;margin-top:42px}.gr-chances strong{font-size:clamp(8.2rem,47vw,12rem)}.gr-points strong{font-size:clamp(4.4rem,24vw,7rem)}.gr-score span{display:block;margin-top:17px}.gr-score span b{display:block;margin-bottom:4px}.gr-lower{grid-template-columns:1fr;margin-top:34px;gap:34px}.g-block{grid-row:1}.gr-meta{grid-row:2}.g-cta{width:100%}}
 @media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
 
 /* ---------- Footer ---------- */
@@ -521,6 +521,7 @@ body{min-height:100vh;min-height:100dvh}
 .intro-float-vase{display:none}
 .intro-step:not(.active) .intro-scene img{animation-play-state:paused}
 .intro-scene::after{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(250,247,242,.15) 0%,rgba(250,247,242,.45) 35%,rgba(250,247,242,.98) 72%,var(--bg) 100%)}
+@media(max-width:699px){.intro-scene::after{background:linear-gradient(180deg,rgba(250,247,242,.06) 0%,rgba(250,247,242,.24) 31%,rgba(250,247,242,.72) 62%,rgba(250,247,242,.9) 78%,var(--bg) 100%)}.confirm-world::after{background:linear-gradient(180deg,rgba(250,247,242,.91) 0%,rgba(250,247,242,.72) 52%,rgba(250,247,242,.25) 100%)}}
 @keyframes heroBreath{to{transform:scale(1.075) translate3d(-1.2%,0,0)}}
 @keyframes heroPillow{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.048) translate3d(5px,-6px,0)}}
 @keyframes heroRug{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.045) translate3d(-5px,5px,0)}}
@@ -826,11 +827,11 @@ body.done #flowApp{display:none}
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
         <div class="intro-copy-block">
-          <h1 id="flowHeroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
-          <p class="intro-prize">Este mes sorteamos <strong>3 almohadones y 2 alfombras premium</strong> entre 3 ganadores.</p>
+          <h1 id="flowHeroTitle">Mostrá cómo quedó tu casa.</h1>
+          <p class="intro-prize">Compartí tu experiencia y sumá chances. En julio sorteamos <strong>3 almohadones y 2 alfombras premium</strong> entre 3 personas.</p>
           <p class="intro-date">Sorteo en vivo el 31 de julio por Instagram.</p>
           <div class="step-actions">
-            <button class="step-primary" id="startFlow" type="button">Mostrar mi casa y participar
+            <button class="step-primary" id="startFlow" type="button">Empezar y sumar chances
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </div>
@@ -841,8 +842,8 @@ body.done #flowApp{display:none}
     <section class="flow-step rating-step" data-flow-step="rating" aria-hidden="true">
       <div class="step-inner">
        <div class="step-content">
-        <h2 class="step-title">¿Cómo fue tu experiencia con Rollershow?</h2>
-        <p class="step-copy"><strong>Elegí las estrellas que la representan.</strong><span>Tu calificación suma 5 puntos.</span></p>
+        <h2 class="step-title">¿Cómo fue tu experiencia?</h2>
+        <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma 5 puntos.</span></p>
         <div class="focus-panel">
           <div class="rating-seller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
           <div id="flowStarsMount"></div>
@@ -857,7 +858,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">Contalo con tu voz.</h2>
-        <p class="step-copy"><strong>Un mensaje corto alcanza.</strong><span>Contanos qué elegiste y cómo quedó. Podés escucharlo antes de seguir.</span></p>
+        <p class="step-copy"><strong>Un audio corto alcanza.</strong><span>Contanos qué elegiste y cómo quedó. Antes de seguir, podés escucharlo.</span></p>
         <div class="focus-panel" id="flowAudioMount"></div>
         <div class="step-actions">
           <button class="step-primary step-audio-next" id="audioNext" type="button">Continuar</button>
@@ -870,7 +871,7 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">Ayudá a otra persona a elegir.</h2>
-        <p class="step-copy"><strong>Contá qué fue lo que más te gustó.</strong><span>Una frase alcanza y suma 5 puntos.</span></p>
+        <p class="step-copy"><strong>Contá qué fue lo que más te gustó.</strong><span>Una frase alcanza. Sumás 5 puntos.</span></p>
         <div class="focus-panel" id="flowTextMount"><label class="text-reward-label" for="reviewText">Escribir mi opinión (+5 puntos)</label></div>
         <div class="step-actions"><button class="step-primary" data-flow-next type="button">Revisar mi participación</button></div>
        </div>
@@ -889,7 +890,7 @@ body.done #flowApp{display:none}
        <div class="step-content">
         <div class="confirm-summary">
           <h2 class="step-title" id="confirmTitle">Mostraste tu casa.</h2>
-          <p class="step-copy" id="confirmIntro">Ahora autorizá el uso del material para entrar al sorteo.</p>
+          <p class="step-copy" id="confirmIntro">Para participar, autorizá el uso de lo que compartiste.</p>
           <div class="confirm-score" aria-live="polite">
             <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">chances para ganar</span></div>
             <div class="confirm-points"><strong id="confirmPts">0</strong><span>puntos logrados</span></div>
@@ -920,8 +921,8 @@ body.done #flowApp{display:none}
       </a>
     </div>
     <div class="hero-copy">
-      <h1 id="heroTitle">Tu casa ya luce Rollershow. Mostrala y ganá.</h1>
-      <p>Subí fotos de tus cortinas instaladas, contanos cómo fue tu experiencia y sumá chances para ser uno de los <strong>3 ganadores de este mes</strong>. Cuanto más compartas, más chances tenés.</p>
+      <h1 id="heroTitle">Mostrá cómo quedó tu casa.</h1>
+      <p>Compartí fotos, un video o tu experiencia y sumá chances para el sorteo de julio.</p>
       <span class="hero-fecha">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
         Este mes sorteamos el 31 de julio, en vivo por Instagram
@@ -1032,7 +1033,7 @@ body.done #flowApp{display:none}
     <div class="wrap">
       <div class="consent" id="consentBox">
         <input type="checkbox" id="consent" />
-        <label for="consent">Autorizo a Rollershow a compartir mis fotos, videos, audio y opinión en sus redes y su web, y confirmo mi participación. <a href="#" id="openBases">Bases del sorteo</a></label>
+        <label for="consent">Autorizo a Rollershow a publicar mis fotos, videos, audios y opinión en sus redes y web. Al marcar, confirmo mi participación. <a href="#" id="openBases">Bases del sorteo</a></label>
       </div>
       <p class="cta-sub" id="ctaSub">Con lo que cargaste hasta ahora entrás al sorteo de julio.</p>
     </div>
@@ -1050,8 +1051,8 @@ body.done #flowApp{display:none}
   <div class="gr-curtain-reveal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="wrap">
     <div class="gr-copy">
-      <h1 id="thanksTitle">¡Lo hiciste! Tu participación quedó registrada.</h1>
-      <p class="gr-sub" id="grSub">Tu experiencia quedó registrada. Ahora podés duplicar tus chances en Google.</p>
+      <h1 id="thanksTitle">Ya estás en el sorteo.</h1>
+      <p class="gr-sub" id="grSub">Dejá una reseña en Google y duplicá tus puntos.</p>
     </div>
     <div class="gr-score" aria-live="polite">
       <div class="gr-chances"><strong id="grTickets">0</strong><span><b id="grTicketsWord">chances</b><em id="grTicketsLabel">activas en el sorteo</em></span></div>
@@ -1078,14 +1079,14 @@ body.done #flowApp{display:none}
         </a>
       </div>
       <div class="g-block" id="gBlock">
-        <h3 id="gTitle">Duplicá tus chances en Google</h3>
-        <p id="gIntro">Dejá tu reseña y, cuando vuelvas, confirmala acá. Tus puntos se duplican.</p>
+        <h3 id="gTitle">Duplicá tus puntos en Google</h3>
+        <p id="gIntro">Publicá tu reseña y, cuando vuelvas, confirmá que ya está.</p>
         <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/place/Cortinas+RollerShow/@-34.5819602,-58.4652317,20z/data=!4m8!3m7!1s0x95bcb6719099596b:0x4354517b56352268!8m2!3d-34.5817708!4d-58.4657373!9m1!1b1!16s%2Fg%2F11ddzr18df?entry=ttu&amp;g_ep=EgoyMDI2MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
-          Dejar mi reseña en Google (duplicá tus puntos)
+          Ir a Google y duplicar mis puntos
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="g-confirm" id="gConfirmStep" hidden><p>¿Ya la publicaste?</p><button type="button" id="gConfirmBtn">Listo, ya la publiqué</button></div>
-        <div class="g-validating" id="gValidating" hidden><span class="g-spinner"></span> Registrando tu confirmación y actualizando tus puntos...</div>
+        <div class="g-validating" id="gValidating" hidden><span class="g-spinner"></span> Actualizando tus puntos...</div>
         <div class="g-done" id="gDone" hidden>
           <div class="g-status" role="status" aria-live="polite">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
@@ -1139,7 +1140,7 @@ body.done #flowApp{display:none}
     <h2 id="exitTitle">Lo que cargaste ya suma</h2>
     <strong class="big" id="exitPts">0 puntos</strong>
     <p>Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
-    <button class="cta" id="exitConfirm">Confirmar y continuar</button>
+    <button class="cta" id="exitConfirm">Ir a confirmar mi participación</button>
     <button class="stay" data-close>Quiero seguir cargando</button>
   </div>
 </dialog>
@@ -1179,16 +1180,16 @@ const FLOW_VARIANT = "ambientes";
 document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
-$("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, tu casa ya luce Rollershow. Mostrala y ganá.`;
-$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, tu casa ya luce Rollershow. Mostrala y ganá.`;
+$("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
+$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
 $("#vendFoto").src = PRESUPUESTO.vendedor.foto;
 $("#vendFoto").alt = PRESUPUESTO.vendedor.nombre;
 $("#vendNombre").textContent = `${PRESUPUESTO.vendedor.nombre} te acompañó en tu compra`;
-$("#vendCopy").textContent = `¿Cómo fue la atención? Se lo podés contar acá abajo, él también lo va a leer.`;
+$("#vendCopy").textContent = `¿Cómo fue la atención? Contalo acá; ${PRESUPUESTO.vendedor.nombre} también lo va a leer.`;
 $("#flowVendFoto").src = PRESUPUESTO.vendedor.foto;
 $("#flowVendFoto").alt = PRESUPUESTO.vendedor.nombre;
 $("#flowVendNombre").textContent = PRESUPUESTO.vendedor.nombre;
-$("#thanksTitle").textContent = `¡Lo hiciste, ${PRESUPUESTO.cliente.nombre}!`;
+$("#thanksTitle").textContent = `${PRESUPUESTO.cliente.nombre}, ya estás en el sorteo.`;
 
 /* ---------- puntos ---------- */
 /* Toda participación con algo cargado entra con al menos 1 chance. */
@@ -1209,7 +1210,7 @@ function renderPuntos() {
   const resto = p % PTS_POR_CHANCE;
   $("#meterFill").style.width = (p === 0 ? 0 : (resto === 0 ? 100 : resto * 10)) + "%";
   $("#meterLabel").textContent =
-    p === 0 ? "Con 10 puntos entrás al sorteo" :
+    p === 0 ? "Con 10 puntos sumás una chance" :
     resto === 0 ? "¡Sumaste otra chance! Seguí si querés sumar más" :
     `Te faltan ${PTS_POR_CHANCE - resto} puntos para otra chance`;
   $("#ctaSub").textContent = p === 0
@@ -1235,16 +1236,16 @@ function syncConfirmCopy(checked = $("#consent").checked) {
   $("#confirmTitle").textContent = checked ? "Ya autorizaste el material." : `Mostraste ${shown}.`;
   $("#confirmIntro").textContent = checked
     ? "Confirmá y tu participación queda registrada."
-    : "Ahora autorizá el uso del material para entrar al sorteo.";
+    : "Para participar, autorizá el uso de lo que compartiste.";
 }
 
 /* ---------- micro-recompensas ---------- */
 const REWARD_COPY = {
-  photo: ["¡Qué bien quedó!", "Esta foto ya suma.", "Una más para mostrar tu casa."],
-  video: ["¡Gran recorrido!", "Así se ve todo el ambiente.", "Este video suma mucho."],
-  rating: ["Gracias por contarlo.", "Tu experiencia ya cuenta.", "Perfecto, seguimos."],
-  audio: ["Tu audio quedó listo.", "Gracias por contarlo con tu voz.", "Se entendió perfecto."],
-  text: ["Tu opinión quedó lista.", "Esa frase puede ayudar.", "Gracias por sumar este detalle."]
+  photo: ["Foto guardada.", "Esta foto ya suma.", "Sumaste otra foto."],
+  video: ["Video guardado.", "Este recorrido ya suma.", "Sumaste otro video."],
+  rating: ["Calificación guardada.", "Tu calificación ya suma.", "Ya calificaste."],
+  audio: ["Audio guardado.", "Tu audio ya suma.", "Guardamos tu audio."],
+  text: ["Opinión guardada.", "Tu opinión ya suma.", "Guardamos tu opinión."]
 };
 const rewardTurns = {};
 function landScore(chanceGained = false) {
@@ -1366,15 +1367,15 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <label class="upload-zone">
           <span class="upload-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-          <span><strong>Mostranos cómo quedó</strong><small>Subí la cortina completa y con luz de día</small><b class="upload-value">Foto +10 puntos. Video +25 puntos.</b></span></span>
+          <span><strong>Subí una foto o un video</strong><small>Que se vea la cortina completa, con luz de día</small><b class="upload-value">Foto +10 puntos. Video +25 puntos.</b></span></span>
           <input type="file" accept="image/*,video/*" multiple />
         </label>
-        <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto</button>
+        <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
       </div>
     </div>
     <div class="step-actions">
-      <button class="step-primary step-continue" data-flow-next type="button">${next ? `Listo, seguir con ${next.ambiente}` : "Listo, contar mi experiencia"}</button>
-      <label class="step-secondary upload-more-action"><span class="upload-more-label">Agregar más contenido</span><span class="upload-more-points">Foto +10 puntos. Video +25 puntos.</span><input type="file" accept="image/*,video/*" multiple /></label>
+      <button class="step-primary step-continue" data-flow-next type="button">${next ? `Seguir con ${next.ambiente}` : "Contar mi experiencia"}</button>
+      <label class="step-secondary upload-more-action"><span class="upload-more-label">Agregar otra foto o video</span><span class="upload-more-points">Foto +10 puntos. Video +25 puntos.</span><input type="file" accept="image/*,video/*" multiple /></label>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
@@ -1581,7 +1582,7 @@ function renderAudio(stateName) {
   if (stateName === "idle") {
     audioUI.innerHTML = `<button type="button" class="rec-btn" id="recStart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
-      Grabar mi mensaje (+30 puntos)</button>`;
+      Grabar un audio (+30 puntos)</button>`;
     $("#recStart").addEventListener("click", startRec);
   }
   if (stateName === "recording") {
@@ -1847,9 +1848,7 @@ function enviar() {
   state.enviado = true;
   try { localStorage.removeItem(LS_KEY); } catch (_) {}
   const p = totalPuntos(), t = chancesDe(p);
-  $("#grSub").textContent = state.archivos && Object.values(state.archivos).flat().length
-    ? "Todo lo que compartiste quedó registrado. Ahora podés duplicar tus chances en Google."
-    : "Tu experiencia quedó registrada. Ahora podés duplicar tus chances en Google.";
+  $("#grSub").textContent = `Entraste con ${t} ${t === 1 ? "chance" : "chances"}. Dejá una reseña en Google y duplicá tus puntos.`;
   document.body.classList.add("done");
   activateSceneVideo($("#thanksAmbientVideo"), true);
   window.scrollTo({ top: 0 });
@@ -1995,7 +1994,7 @@ $("#gConfirmBtn").addEventListener("click", () => {
     $("#gValidating").hidden = true;
     $("#gDone").hidden = false;
     document.body.classList.add("google-complete");
-    $("#gTitle").textContent = "Te queda un último paso";
+    $("#gTitle").textContent = "Tus puntos ya se duplicaron";
     const before = parseInt($("#grPts").textContent, 10) || 0;
     const after = before * 2;
     $("#grTicketsWord").textContent = chancesDe(after) === 1 ? "chance" : "chances";
@@ -2004,7 +2003,7 @@ $("#gConfirmBtn").addEventListener("click", () => {
     $("#grTickets").textContent = chancesDe(after);
     $("#grPts").dataset.value = after;
     $("#grTickets").dataset.value = chancesDe(after);
-    $("#grSub").textContent = "Tus puntos ya se duplicaron. Seguirnos en Instagram es el último requisito.";
+    $("#grSub").textContent = "Tus puntos se duplicaron. Ahora seguinos en Instagram para completar tu participación.";
     const score = $(".gr-score");
     score.style.animation = "none"; void score.offsetWidth; score.style.animation = "";
     const instagram = $("#igFinalBtn");

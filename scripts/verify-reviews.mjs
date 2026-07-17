@@ -67,15 +67,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
-  if (!initial.startCopy?.includes('Mostrar mi casa')) fails.push(`${vp.w}px: el CTA inicial no expresa la acción concreta`);
+  if (!initial.startCopy?.includes('Empezar y sumar chances')) fails.push(`${vp.w}px: el CTA inicial no expresa acción y beneficio`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
-  if (!initial.copy.rating?.includes('experiencia con Rollershow') || initial.copy.audio !== 'Contalo con tu voz.' ||
+  if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || initial.copy.audio !== 'Contalo con tu voz.' ||
       !initial.copy.text?.includes('Ayudá a otra persona') || !initial.copy.confirm?.startsWith('Mostraste ') ||
-      !initial.copy.consent?.includes('audio') || !initial.copy.google?.includes('Duplicá tus chances')) {
+      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmo mi participación') || !initial.copy.google?.includes('Duplicá tus puntos')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
   if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
-      !initial.copy.googleAction?.includes('duplicá tus puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
+      !initial.copy.googleAction?.includes('duplicar mis puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
   if (initial.introGeometry.copyTop > initial.introGeometry.viewport * .46 || initial.introGeometry.ctaBottom > initial.introGeometry.viewport - 12 ||
       initial.introGeometry.scroll > 2 || initial.introGeometry.copyTop - initial.introGeometry.logoBottom > initial.introGeometry.viewport * .3) {
     fails.push(`${vp.w}px: portada mobile desbalanceada o CTA cortado ${JSON.stringify(initial.introGeometry)}`);
@@ -127,7 +127,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     });
     if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top < skipPlacement.prompt.bottom - 1 ||
         Math.abs(skipPlacement.skip.left-skipPlacement.prompt.left) > 2 || Math.abs(skipPlacement.skip.right-skipPlacement.prompt.right) > 2) {
-      fails.push(`seguir sin foto: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
+      fails.push(`seguir sin subir: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
@@ -274,7 +274,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       };
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
-    if (!celebration.title?.startsWith('¡Lo hiciste') || !celebration.sub?.includes('duplicar tus chances en Google') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
+    if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
         celebration.particles < 35 || celebration.particles > 180 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
         !celebration.curtainColor.startsWith('rgba') || curtainAlpha > .35 || !celebration.curtainTexture.includes('repeating-linear-gradient') || !celebration.curtainFiber.includes('data:image/svg+xml')) {
@@ -313,7 +313,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
     if ((await page.textContent('#gConfirmBtn'))?.trim() !== 'Listo, ya la publiqué') fails.push('la vuelta de Google no pide confirmación clara');
-    if (!((await page.textContent('#gValidating')) || '').includes('Registrando tu confirmación')) fails.push('Google finge una verificación que la app no puede hacer');
+    if (!((await page.textContent('#gValidating')) || '').includes('Actualizando tus puntos')) fails.push('Google no comunica con claridad qué está haciendo');
     await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
     if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');
     if (await page.textContent('#grPts') !== '40') fails.push('reseña de Google no duplica puntos');
@@ -334,10 +334,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       orbitB: getComputedStyle(document.querySelector('#gBlock'),'::after').display,
       divider: getComputedStyle(document.querySelector('.gr-score'),'::after').display,
     }));
-    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.title !== 'Te queda un último paso' ||
+    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.title !== 'Tus puntos ya se duplicaron' ||
         !googleDone.instagramCopy?.includes('ver si gané') || !googleDone.instagramHref?.includes('instagram.com/cortinas.rollershow') ||
         !googleDone.instagramFocused || googleDone.instagramWidth < googleDone.blockWidth - 2 || !googleDone.requirement?.includes('31 de julio') ||
-        !googleDone.sub?.includes('Instagram es el último requisito') ||
+        !googleDone.sub?.includes('seguinos en Instagram') ||
         !googleDone.requirement?.includes('requisito') || !googleDone.oldInstagramHidden || !googleDone.completeState ||
         googleDone.orbitA !== 'none' || googleDone.orbitB !== 'none' || googleDone.divider !== 'none') {
       fails.push(`cierre Google: estado o geometría decorativa incorrectos ${JSON.stringify(googleDone)}`);
@@ -487,7 +487,7 @@ await dpage.evaluate(() => {
   document.querySelector('#gConfirmStep').hidden=true;
   document.querySelector('#gDone').hidden=false;
   document.body.classList.add('google-complete');
-  document.querySelector('#gTitle').textContent='Te queda un último paso';
+  document.querySelector('#gTitle').textContent='Tus puntos ya se duplicaron';
   document.querySelector('#grTickets').textContent='17'; document.querySelector('#grTickets').dataset.value='17';
   document.querySelector('#grPts').textContent='170'; document.querySelector('#grPts').dataset.value='170';
 });

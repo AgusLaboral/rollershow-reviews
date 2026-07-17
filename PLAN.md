@@ -373,3 +373,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Reducir el fundido a 160 ms y reproducir sólo después de `canplay`, sin cambiar encuadre, escala ni composición.
 - [x] Agregar una regresión con 1,2 s de demora de red: pedido antes de 500 ms, poster inmóvil, variante responsive correcta y diferencia poster/cuadro cero menor a 2,5%.
 - [x] Separar el presupuesto del shell no bloqueante (850 KB) del video progresivo H.264 `faststart` (1,9 MB) para no degradar la toma por perseguir una métrica que ya no representa el arranque visual.
+
+## 44. Auditoría de copy y lectura de video mobile — 2026-07-17
+
+- [x] Auditar todo el recorrido activo con acción y consecuencia primero, voseo natural y una sola idea por bloque.
+- [x] Corregir la promesa falsa `duplicá tus chances`: Google duplica puntos y las chances se recalculan; con totales bajos no siempre se duplican.
+- [x] Reducir portada, carga, calificación, audio, texto, consentimiento, salida y cierre; eliminar confirmaciones genéricas como `¡Lo hiciste!` y muletillas `Listo,`.
+- [x] Confirmar que mobile ya recibe masters verticales propios de 720×1280, no recortes de los videos desktop.
+- [x] Mejorar la lectura de los masters actuales reduciendo el velo blanco de portada, recomponiendo el velo de confirmación y levantando detalle en Gracias.
+- [ ] Regenerar los tres masters mobile con zonas protegidas para título, CTA y puntaje. Los actuales son verticales, pero ubican producto y movimiento detrás de la interfaz; requiere una nueva generación con proveedor y aprobación de costo.
