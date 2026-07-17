@@ -421,6 +421,7 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Dejar fuera el carrusel de “ganadores” generado: las imágenes incluyen premios que no coinciden y no deben presentarse como prueba social real. Incorporarlo sólo con fotos auténticas, consentimiento y premios trazables.
 - [x] Rehacer la portada desde la propuesta completa: `Carolina, tu casa ya luce Rollershow.` reconoce la transformación; la bajada explica qué compartir, el premio nombra los cinco objetos y tres ganadores, y el guardado reduce el costo percibido. CTA: `Quiero participar`.
 - [x] Mostrar los premios como una segunda zona visual real en desktop y conservar la secuencia vertical mobile. El test exige imagen visible, separación narrativa y CTA dentro del fold.
+- [x] Reemplazar la foto rectangular por un recorte transparente verificable: tres almohadones, dos alfombras, tres cajas kraft y confeti sobrio. Sin fondo, radio ni sombra de card; la nota de guardado comparte el borde izquierdo del CTA.
 
 ## 49. Jerarquía editorial del cierre desktop — 2026-07-17
 

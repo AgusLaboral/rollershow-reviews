@@ -471,16 +471,21 @@ await dpage.waitForTimeout(950);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 const desktopIntro = await dpage.evaluate(() => {
   const copy = document.querySelector('.intro-copy-block').getBoundingClientRect();
-  const prize = document.querySelector('.intro-prize-photo').getBoundingClientRect();
+  const prizeElement = document.querySelector('.intro-prize-photo');
+  const prize = prizeElement.getBoundingClientRect();
+  const prizeStyle = getComputedStyle(prizeElement);
   const cta = document.querySelector('#startFlow').getBoundingClientRect();
+  const note = document.querySelector('#introSaveNote').getBoundingClientRect();
   return {
-    prizeVisible:getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
+    prizeVisible:prizeStyle.display !== 'none',
+    cutout:prizeStyle.backgroundColor === 'rgba(0, 0, 0, 0)' && prizeStyle.borderTopLeftRadius === '0px' && prizeStyle.overflow === 'visible',
     split:copy.right < prize.left,
     ctaInside:cta.left >= copy.left && cta.right <= copy.right && cta.bottom <= innerHeight - 12,
+    noteAligned:Math.abs(note.left-cta.left) < 2 && note.right <= cta.right + 1,
     overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
   };
 });
-if (!desktopIntro.prizeVisible || !desktopIntro.split || !desktopIntro.ctaInside || desktopIntro.overflow > 0) fails.push(`portada desktop: relato y premios no forman dos zonas legibles ${JSON.stringify(desktopIntro)}`);
+if (!desktopIntro.prizeVisible || !desktopIntro.cutout || !desktopIntro.split || !desktopIntro.ctaInside || !desktopIntro.noteAligned || desktopIntro.overflow > 0) fails.push(`portada desktop: relato y premios no forman dos zonas legibles ${JSON.stringify(desktopIntro)}`);
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);

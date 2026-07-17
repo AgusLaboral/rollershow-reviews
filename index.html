@@ -531,8 +531,8 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes heroVase{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.047) translate3d(4px,-4px,0)}}
 .intro-step .step-inner{position:relative;z-index:2;padding:clamp(225px,34dvh,290px) 20px max(20px,env(safe-area-inset-bottom));justify-content:flex-start;height:100%;min-height:0;width:min(100%,580px)}
 .intro-logo{position:absolute;top:22px;left:20px;width:202px;max-width:54vw}
-.intro-prize-photo{display:none;overflow:hidden;border-radius:18px;background:#D8C2A8;box-shadow:0 18px 42px -28px rgba(44,29,18,.7)}
-.intro-prize-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.intro-prize-photo{display:none;overflow:visible;border-radius:0;background:transparent;box-shadow:none;pointer-events:none}
+.intro-prize-photo img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 22px 18px rgba(54,35,23,.2))}
 .intro-copy-block{display:flex;flex-direction:column;align-items:stretch}
 .intro-copy-block .step-actions{margin-top:20px;padding-top:0}
 .intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:14ch}
@@ -540,13 +540,14 @@ body{min-height:100vh;min-height:100dvh}
 .intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.16;margin-top:11px;max-width:32ch}
 .intro-prize strong{display:block;color:var(--cta-deep)}
 .intro-date{font-size:.78rem;color:var(--fg-mute);line-height:1.4;margin-top:8px}.intro-date strong{color:var(--fg-soft);font-weight:800}
-.intro-save-note{align-self:center;max-width:42ch;color:var(--fg-mute);font-size:.72rem;line-height:1.35;text-align:center}
+.intro-save-note{align-self:flex-start;width:min(100%,270px);color:var(--fg-mute);font-size:.72rem;line-height:1.35;text-align:left}
 
 @media (max-width:799px){
   .intro-logo{top:max(20px,env(safe-area-inset-top))}
   .intro-step .step-inner{padding-top:72px;gap:12px}
   .intro-prize-photo{display:block;width:100%;height:clamp(150px,27dvh,220px);flex:none}
   .intro-copy-block .step-actions{margin-top:16px}
+  .intro-save-note{align-self:center;text-align:center}
 }
 
 /* Etapa de cada cortina: producto y carga son una sola pieza. */
@@ -801,9 +802,9 @@ body.done #flowApp{display:none}
   .item-step .stage-skip{left:auto;right:24px;top:calc(50% + 58px);bottom:auto;width:min(42%,430px)}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
   .item-step.has-media .step-actions{grid-column:1 / -1;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:0;padding:12px 14px}
-  .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:clamp(60px,10dvh,76px) 0 clamp(20px,4dvh,36px);display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.82fr);column-gap:clamp(32px,5vw,72px);align-items:center}
+  .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:clamp(60px,10dvh,76px) 0 clamp(20px,4dvh,36px);display:grid;grid-template-columns:minmax(0,.95fr) minmax(300px,1.05fr);column-gap:clamp(20px,3vw,40px);align-items:center}
   .intro-step .intro-logo{left:0}
-  .intro-step .intro-prize-photo{display:block;grid-column:2;grid-row:1;width:100%;height:clamp(280px,58dvh,520px);border-radius:24px}
+  .intro-step .intro-prize-photo{display:block;grid-column:2;grid-row:1;width:100%;height:clamp(280px,61dvh,540px)}
   .intro-step .intro-copy-block{grid-column:1;grid-row:1;width:100%}
   .intro-step .intro-copy-block .step-primary{width:max-content;min-width:270px}
   .intro-scene::after{background:linear-gradient(90deg,rgba(250,247,242,.98) 0%,rgba(250,247,242,.9) 40%,rgba(250,247,242,.08) 72%)}
@@ -848,7 +849,7 @@ body.done #flowApp{display:none}
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
-        <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-v2-768.webp" width="768" height="512" alt="" /></div>
+        <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-sorteo-v3.webp" width="1000" height="666" alt="" /></div>
         <div class="intro-copy-block">
           <h1 id="flowHeroTitle">Tu casa ya luce Rollershow.</h1>
           <p class="intro-lead" id="introPrizeHook">Celebremos el cambio: mostranos cómo quedó y contanos tu experiencia.</p>
@@ -924,7 +925,7 @@ body.done #flowApp{display:none}
      HERO
 ============================================================ -->
 <header class="hero">
-  <div class="hero-media"><img src="img/hero-premios-v2.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2.webp 1536w" sizes="100vw" width="1536" height="1024" alt="" fetchpriority="high" /></div>
+  <div class="hero-media"><img src="img/hero-premios-v2.webp" srcset="img/hero-premios-v2-768.webp 768w, img/hero-premios-v2.webp 1536w" sizes="100vw" width="1536" height="1024" alt="" loading="lazy" fetchpriority="low" /></div>
   <div class="hero-inner">
     <div class="hero-top">
       <img src="img/logo.svg" alt="Rollershow" />
@@ -1173,7 +1174,7 @@ const SORTEO = {
     { cantidad:3, nombre:"almohadones" },
     { cantidad:2, nombre:"alfombras premium" }
   ],
-  imagenPremios: "img/hero-premios-v2-768.webp"
+  imagenPremios: "img/hero-premios-sorteo-v3.webp"
 };
 
 function listaNatural(partes) {
