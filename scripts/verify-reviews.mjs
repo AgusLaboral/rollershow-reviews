@@ -27,7 +27,7 @@ async function reachConfirm(page, { withPhoto = false } = {}) {
   await page.click('#experienceNext'); await waitCurtain(page);
 }
 
-for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
+for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   const ctx = await browser.newContext({
     viewport: { width: vp.w, height: vp.h }, isMobile: true, hasTouch: true, deviceScaleFactor: 2,
     permissions: [],
@@ -66,7 +66,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
-  if (!initial.startCopy?.includes('Empezar y sumar chances')) fails.push(`${vp.w}px: el CTA inicial no expresa acción y beneficio`);
+  if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no es corto y directo`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.startsWith('Mostraste ') ||
@@ -207,6 +207,25 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.screenshot({ path: `${OUT}/canonical-390-audio-recording.png` });
     await page.evaluate(() => renderAudio('idle'));
     await page.click('#audioSkip');
+    await page.waitForTimeout(520);
+    const experienceHierarchy = await page.evaluate(() => {
+      const cta = document.querySelector('#experienceNext'), text = document.querySelector('#experienceText');
+      const rect = cta.getBoundingClientRect(), label = document.querySelector('.text-reward-label');
+      return {
+        focused:document.activeElement === cta,
+        visible:rect.top >= 0 && rect.bottom <= innerHeight,
+        beforeText:Boolean(cta.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING),
+        position:getComputedStyle(cta.parentElement).position,
+        labelColor:getComputedStyle(label).color,
+        helperColor:getComputedStyle(document.querySelector('.experience-prompt span')).color,
+        textDivider:getComputedStyle(text.querySelector('.experience-divider')).display,
+      };
+    });
+    if (!experienceHierarchy.focused || !experienceHierarchy.visible || !experienceHierarchy.beforeText || experienceHierarchy.position !== 'static' ||
+        experienceHierarchy.labelColor !== experienceHierarchy.helperColor || experienceHierarchy.textDivider !== 'none') {
+      fails.push(`experiencia: el CTA no recibe foco antes del texto opcional ${JSON.stringify(experienceHierarchy)}`);
+    }
+    await page.screenshot({ path: `${OUT}/canonical-390-experience-cta.png` });
     await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
     const textReward = await page.evaluate(() => ({
       live: document.querySelector('#rewardLive')?.textContent,
@@ -276,14 +295,29 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         curtainTexture: curtainStyle.backgroundImage,
         curtainFiber: getComputedStyle(curtain, '::after').backgroundImage,
         curtainBlur: curtainStyle.backdropFilter || curtainStyle.webkitBackdropFilter,
+        videoTime: document.querySelector('#thanksAmbientVideo').currentTime,
+        videoPaused: document.querySelector('#thanksAmbientVideo').paused,
+        videoLoop: document.querySelector('#thanksAmbientVideo').loop,
+        videoOpacity: parseFloat(getComputedStyle(document.querySelector('#thanksAmbientVideo')).opacity),
+        videoFilter: getComputedStyle(document.querySelector('#thanksAmbientVideo')).filter,
+        videoBlend: getComputedStyle(document.querySelector('#thanksAmbientVideo')).mixBlendMode,
+        radiance: getComputedStyle(document.querySelector('.gr-radiance')).display,
+        videoDrops: (() => { const q=document.querySelector('#thanksAmbientVideo').getVideoPlaybackQuality(); return {dropped:q.droppedVideoFrames,total:q.totalVideoFrames,corrupted:q.corruptedVideoFrames}; })(),
+        readingOrder: Boolean(document.querySelector('#gBlock').compareDocumentPosition(document.querySelector('.gr-meta')) & Node.DOCUMENT_POSITION_FOLLOWING),
+        lowerDisplay: getComputedStyle(document.querySelector('.gr-lower')).display,
+        lowerDirection: getComputedStyle(document.querySelector('.gr-lower')).flexDirection,
       };
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
-    if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
+    if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 64 || celebration.pointsSize < 64 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
         celebration.particles < 80 || celebration.particles > 650 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
         !celebration.curtainColor.startsWith('rgba') || curtainAlpha < .6 || curtainAlpha > .8 || !celebration.curtainTexture.includes('repeating-linear-gradient') ||
-        !celebration.curtainFiber.includes('data:image/svg+xml') || !celebration.curtainBlur?.includes('blur')) {
+        !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
+        celebration.videoPaused || !celebration.videoLoop || celebration.videoOpacity < .5 || !celebration.readingOrder ||
+        celebration.videoFilter !== 'none' || celebration.videoBlend !== 'normal' || celebration.radiance !== 'none' ||
+        celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .01 ||
+        celebration.lowerDisplay !== 'flex' || celebration.lowerDirection !== 'column') {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
     }
     const googleHandoff = await page.evaluate(() => {
@@ -469,7 +503,11 @@ await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
 
 await dpage.locator('#recStop').click({ force:true });
 await dpage.waitForTimeout(700);
-const reviewState = await dpage.evaluate(() => ({
+const reviewState = await dpage.evaluate(() => {
+  const cta = document.querySelector('#experienceNext');
+  const text = document.querySelector('#experienceText');
+  const ctaRect = cta.getBoundingClientRect();
+  return ({
   recorded: document.querySelector('.experience-step')?.classList.contains('has-audio'),
   recording: document.querySelector('.experience-step')?.classList.contains('is-recording'),
   player: !!document.querySelector('.voice-note'),
@@ -481,10 +519,29 @@ const reviewState = await dpage.evaluate(() => ({
   earned: document.querySelector('.audio-earned')?.innerText,
   points: document.querySelector('#flowPts')?.textContent,
   transfer: document.querySelector('.score-transfer')?.textContent,
-}));
+  ctaFocused: document.activeElement === cta,
+  ctaHighlighted: cta.classList.contains('handoff-focus'),
+  ctaVisible: ctaRect.top >= 0 && ctaRect.bottom <= innerHeight,
+  ctaWidth: Math.round(ctaRect.width),
+  ctaBeforeText: Boolean(cta.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING),
+  ctaCopy: cta.textContent.trim(),
+  });
+});
 if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
-    !reviewState.textVisible || !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30') fails.push(`audio detenido: opinión o recompensa incompleta ${JSON.stringify(reviewState)}`);
+    !reviewState.textVisible || !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30' ||
+    !reviewState.ctaFocused || !reviewState.ctaHighlighted || !reviewState.ctaVisible || reviewState.ctaWidth > 300 || !reviewState.ctaBeforeText || reviewState.ctaCopy !== 'Continuar →') fails.push(`audio detenido: opinión, foco o recompensa incompleta ${JSON.stringify(reviewState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-review.png` });
+await dpage.setViewportSize({ width:390, height:700 });
+await dpage.evaluate(() => syncExperienceProgress({ revealText:true }));
+await dpage.waitForTimeout(700);
+const mobileAudioHandoff = await dpage.evaluate(() => {
+  const cta = document.querySelector('#experienceNext');
+  const rect = cta.getBoundingClientRect();
+  return { focused:document.activeElement === cta, highlighted:cta.classList.contains('handoff-focus'), visible:rect.top >= 0 && rect.bottom <= innerHeight };
+});
+if (!mobileAudioHandoff.focused || !mobileAudioHandoff.highlighted || !mobileAudioHandoff.visible) fails.push(`audio mobile: el CTA no recibe el foco al guardar ${JSON.stringify(mobileAudioHandoff)}`);
+await dpage.screenshot({ path: `${OUT}/canonical-390-audio-review.png` });
+await dpage.setViewportSize({ width:1280, height:800 });
 await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
 await dpage.click('#experienceNext'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });

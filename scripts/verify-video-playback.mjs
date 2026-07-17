@@ -4,33 +4,50 @@ const URL = process.argv[2] || 'http://127.0.0.1:8899/index.html';
 const browser = await chromium.launch();
 const failures = [];
 
-for (const viewport of [{ name: 'desktop', width: 1440, height: 900 }, { name: 'mobile', width: 390, height: 844 }]) {
+for (const viewport of [{ name:'desktop', width:1440, height:900 }, { name:'mobile', width:390, height:844 }]) {
   const page = await browser.newPage({ viewport });
-  await page.goto(URL, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => document.querySelector('.intro-step [data-scene-video]')?.currentTime > .2, null, { timeout: 15000 });
-  await page.waitForTimeout(8000);
-  const playback = await page.evaluate(() => {
-    const video = document.querySelector('.intro-step [data-scene-video]');
-    const quality = video.getVideoPlaybackQuality();
+  await page.goto(URL, { waitUntil:'networkidle' });
+
+  const inspectVideo = selector => page.evaluate(sel => {
+    const video = document.querySelector(sel), quality = video.getVideoPlaybackQuality();
     return {
-      source: video.currentSrc,
-      currentTime: video.currentTime,
-      duration: video.duration,
-      width: video.videoWidth,
-      height: video.videoHeight,
-      total: quality.totalVideoFrames,
-      dropped: quality.droppedVideoFrames,
-      corrupted: quality.corruptedVideoFrames,
+      source:video.currentSrc,currentTime:video.currentTime,duration:video.duration,
+      width:video.videoWidth,height:video.videoHeight,total:quality.totalVideoFrames,
+      dropped:quality.droppedVideoFrames,corrupted:quality.corruptedVideoFrames,
+      paused:video.paused,cadence:quality.totalVideoFrames / Math.max(.1,video.currentTime),
     };
-  });
-  const expectedSize = viewport.name === 'desktop'
-    ? playback.width >= 1280 && playback.height >= 720
-    : playback.width >= 720 && playback.height >= 1280;
-  const dropRatio = playback.total ? playback.dropped / playback.total : 1;
-  if (!expectedSize || playback.currentTime < 8 || playback.duration < 14.8 || dropRatio > .01 || playback.corrupted > 0) {
-    failures.push(`${viewport.name}: reproducción deficiente ${JSON.stringify({ ...playback, dropRatio })}`);
+  }, selector);
+
+  const expectedCadence = viewport.name === 'mobile' ? 28.5 : 22.5;
+  const validate = (label, playback, minimumTime) => {
+    const expectedSize = viewport.name === 'desktop'
+      ? playback.width >= 1280 && playback.height >= 720
+      : playback.width >= 720 && playback.height >= 1280;
+    const rightVariant = viewport.name === 'mobile' ? playback.source.includes('mobile') : playback.source.includes('desktop');
+    const dropRatio = playback.total ? playback.dropped / playback.total : 1;
+    if (!expectedSize || !rightVariant || playback.currentTime < minimumTime || playback.duration < 14.8 ||
+        playback.cadence < expectedCadence || playback.paused || dropRatio > .01 || playback.corrupted > 0) {
+      failures.push(`${viewport.name} ${label}: reproducción deficiente ${JSON.stringify({ ...playback,dropRatio })}`);
+    }
+  };
+
+  const introSelector = '.intro-step [data-scene-video]';
+  await page.waitForFunction(sel => document.querySelector(sel)?.currentTime > .2, introSelector, { timeout:15000 });
+  await page.waitForTimeout(8000);
+  const intro = await inspectVideo(introSelector);
+  validate('inicio', intro, 8);
+
+  const laterResults = [];
+  for (const selector of ['.confirm-step [data-scene-video]', '#thanksAmbientVideo']) {
+    await page.evaluate(sel => activateSceneVideo(document.querySelector(sel), true), selector);
+    await page.waitForFunction(sel => document.querySelector(sel)?.currentTime > .2, selector, { timeout:15000 });
+    await page.waitForTimeout(4000);
+    const playback = await inspectVideo(selector);
+    validate(selector, playback, 4);
+    laterResults.push(`${playback.cadence.toFixed(1)}fps ${playback.dropped}/${playback.total}`);
   }
-  console.log(`${viewport.name}: ${playback.width}x${playback.height}, ${playback.dropped}/${playback.total} cuadros perdidos`);
+
+  console.log(`${viewport.name}: inicio ${intro.cadence.toFixed(1)}fps ${intro.dropped}/${intro.total}; posteriores ${laterResults.join(', ')}`);
   await page.close();
 }
 
@@ -39,4 +56,4 @@ if (failures.length) {
   console.error(`FALLAS:\n${failures.join('\n')}`);
   process.exit(1);
 }
-console.log('OK: fondos cinematográficos fluidos en desktop y mobile');
+console.log('OK: las tres escenas sostienen cadencia y variante responsive');

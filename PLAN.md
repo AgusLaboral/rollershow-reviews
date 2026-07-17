@@ -400,3 +400,13 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Llevar los cinco paños de 28% a 70% de opacidad y reforzar trama vertical, horizontal, ruido de fibra, luz y sombra.
 - [x] Incorporar desenfoque controlado de 5 px detrás de los paños y verificarlo en estilo computado.
 - [x] Capturar el levantamiento a mitad de animación y exigir por prueba que título, CTA y datos del sorteo permanezcan dentro del fold sin scroll.
+
+## 47. Jerarquía de audio, cierre mobile y rendimiento — 2026-07-17
+
+- [x] Acortar la entrada a `Participar ahora` y reemplazar `Revisar mi participación` por `Continuar`, sin prometer puntos en una acción que sólo avanza.
+- [x] Hacer del audio la contribución principal: al guardar u omitir, el CTA aparece antes de la frase opcional, entra centrado en el viewport, recibe foco real y un énfasis transitorio. En desktop queda limitado a 280 px; en mobile conserva el ancho táctil disponible.
+- [x] Retirar el doble separador y llevar `¿Querés agregar una frase? (+5 puntos)` a color y peso secundarios, debajo del CTA.
+- [x] Ordenar Gracias en un único eje mobile: título, chances/puntos, Google, fecha e Instagram; recuperar el video de fondo con `loop` y contraste estático legible.
+- [x] Reprocesar los tres masters mobile a 720×1280 y 30 fps mediante interpolación con compensación de movimiento; bajaron de 8,20 MB combinados a 7,23 MB.
+- [x] Precargar la escena siguiente, retirar filtros y blend modes sobre el video final, usar canvas a DPR 1/30 Hz y secuenciar cortinas, video y confeti. El `backdrop-filter` de la ronda 46 queda reemplazado por textura horneada porque producía cuadros descartados.
+- [x] Extender la regresión de reproducción a las tres escenas y ambas variantes responsive; desktop sostuvo 23,9–24,9 fps y mobile 29,8–31,0 fps sin corrupción. La prueba integral exige además foco visible después de audio grabado y omitido.
