@@ -218,8 +218,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await page.click('.text-step.active .step-primary'); await waitCurtain(page);
 
     const confirmBefore = await page.evaluate(() => ({
-      submitDisabled: document.querySelector('#submitBtn').disabled,
       authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
+      redundantSubmit: Boolean(document.querySelector('#submitBtn')),
       rollers: document.querySelectorAll('.confirm-step .celebration-roller').length,
       prizes: document.querySelectorAll('.confirm-step .confirm-world img').length,
       videos: document.querySelectorAll('.confirm-step .confirm-world video').length,
@@ -236,7 +236,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         video: document.querySelector('.confirm-world video')?.currentSrc,
       },
     }));
-    if (!confirmBefore.submitDisabled || confirmBefore.authorized || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
+    if (confirmBefore.authorized || confirmBefore.redundantSubmit || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
         confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
@@ -245,18 +245,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     }
     await page.screenshot({ path: `${OUT}/canonical-390-confirm-consent.png` });
     if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('el flujo terminó antes del consentimiento');
-    await page.check('#consent'); await page.waitForTimeout(250);
-    const confirmAfter = await page.evaluate(() => ({
-      submitDisabled: document.querySelector('#submitBtn').disabled,
-      authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
-      title: document.querySelector('#confirmTitle').textContent,
-      live: document.querySelector('#rewardLive').textContent,
-    }));
-    if (confirmAfter.submitDisabled || !confirmAfter.authorized || confirmAfter.title !== 'Ya autorizaste el material.' || !confirmAfter.live.includes('Autorización lista')) {
-      fails.push(`confirmación autorizada: relevo de CTA incompleto ${JSON.stringify(confirmAfter)}`);
-    }
-    await page.screenshot({ path: `${OUT}/canonical-390-confirm-ready.png` });
-    await page.click('#submitBtn'); await page.waitForTimeout(3300);
+    await page.check('#consent'); await page.waitForTimeout(3300);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
@@ -488,9 +477,7 @@ await dpage.click('#audioNext'); await waitCurtain(dpage);
 await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
 await dpage.click('.text-step.active .step-primary'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });
-await dpage.check('#consent'); await dpage.waitForTimeout(250);
-await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-ready.png` });
-await dpage.click('#submitBtn'); await dpage.waitForTimeout(1800);
+await dpage.check('#consent'); await dpage.waitForTimeout(1800);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
 await dpage.waitForTimeout(1500);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks.png`, fullPage:true });

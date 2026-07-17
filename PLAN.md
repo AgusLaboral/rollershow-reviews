@@ -175,10 +175,10 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 
 - [x] Convertir el cierre en una escena celebratoria con fotografía real de premios, capas móviles y bandas sunscreen, sin confetti ni badges genéricos.
 - [x] Hacer de chances el logro principal, con puntos, ambientes mostrados y premios concretos como evidencia secundaria.
-- [x] Aplicar jerarquía por estado: autorización roja y confirmación gris; después, autorización resuelta y confirmación roja.
-- [x] Mantener el botón desactivado estable y accesible; el pulso activo cambia luz/sombra, no el área clickeable.
+- [x] Simplificar el cierre a una sola acción: marcar la autorización también confirma la participación y avanza automáticamente a Gracias.
+- [x] Avisar en el propio texto del control que autorizar confirma la participación, evitando un cambio de contexto sorpresivo para tecnologías de asistencia.
 - [x] Sustituir la comparación inventada con un promedio por una consecuencia verificable: cada chance es una oportunidad en el sorteo.
-- [x] Verificar los dos estados en mobile y desktop, sin scroll en 320×700 y sin romper el grid de 320 a 1920 px.
+- [x] Verificar el consentimiento y avance automático en mobile y desktop, sin scroll en 320×700 y sin romper el grid de 320 a 1920 px.
 
 ## 20. Trayectoria causal, contador reservado y audio real — 2026-07-15
 

@@ -678,15 +678,6 @@ body{min-height:100vh;min-height:100dvh}
 .confirm-step .consent input{width:24px;height:24px;margin:0;accent-color:#fff;cursor:pointer}
 .confirm-step .consent label{display:block;min-height:0;color:#fff;font-weight:700;line-height:1.35}
 .confirm-step .consent a{color:#fff;text-decoration-color:rgba(255,255,255,.66)}
-.confirm-step.is-authorized .consent{background:rgba(250,247,242,.82);border-color:var(--border-strong);box-shadow:none;transform:scale(.985)}
-.confirm-step.is-authorized .consent label{color:var(--fg-soft);font-weight:600}.confirm-step.is-authorized .consent a{color:var(--accent-deep)}
-.confirm-step .cta{margin-top:12px}
-.confirm-step .cta:disabled{background:#D8D1C6;color:#81776E;box-shadow:none;animation:none;cursor:not-allowed;transform:none}
-.confirm-step.is-authorized .cta:not(:disabled){animation:brasa 3.4s ease-in-out infinite,confirmReady 1.5s ease-in-out infinite}
-@keyframes confirmReady{50%{box-shadow:0 15px 36px -9px rgba(198,58,33,.92);filter:saturate(1.12)}}
-.confirm-step .cta-sub{text-align:center}
-.confirm-step.is-authorized .confirm-score{animation:authorizedScore .8s cubic-bezier(.16,1,.3,1)}
-@keyframes authorizedScore{0%{transform:scale(.985)}45%{transform:scale(1.012)}100%{transform:none}}
 .rating-step .step-actions,.audio-step .step-actions,.text-step .step-actions,.confirm-step .step-actions{margin-top:20px;padding-top:0}
 
 /* Un único recorrido: la cortina roller es el gesto; escala y desplazamiento sostienen la continuidad. */
@@ -729,7 +720,7 @@ body{min-height:100vh;min-height:100dvh}
   .rec-stop,.rec-stop::after,.flow-score.gain .score-chances strong,.flow-score.receive-points,.flow-score.new-chance .score-chances{animation:none}
   .confirm-prize-base,.confirm-prize-pillow,.confirm-prize-rug{animation-duration:28s}
   .confirm-step.celebrate-in .celebration-roller{animation-duration:1.25s}
-  .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof,.confirm-step.is-authorized .cta:not(:disabled){animation:none}
+  .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof{animation:none}
 }
 
 body:not(.done) footer{display:none}
@@ -908,7 +899,6 @@ body.done #flowApp{display:none}
         </div>
         <div class="confirm-actions">
           <div id="flowConsentMount"></div>
-          <div class="step-actions" id="flowSubmitMount"></div>
         </div>
        </div>
       </div>
@@ -1042,12 +1032,8 @@ body.done #flowApp{display:none}
     <div class="wrap">
       <div class="consent" id="consentBox">
         <input type="checkbox" id="consent" />
-        <label for="consent">Autorizo a Rollershow a compartir mis fotos, videos, audio y opinión en sus redes y su web. <a href="#" id="openBases">Bases del sorteo</a></label>
+        <label for="consent">Autorizo a Rollershow a compartir mis fotos, videos, audio y opinión en sus redes y su web, y confirmo mi participación. <a href="#" id="openBases">Bases del sorteo</a></label>
       </div>
-      <button class="cta" id="submitBtn" disabled>
-        Confirmar y continuar
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
       <p class="cta-sub" id="ctaSub">Con lo que cargaste hasta ahora entrás al sorteo de julio.</p>
     </div>
   </div>
@@ -1748,7 +1734,6 @@ function setupFlow() {
   $("#flowAudioMount").append($("#audioUI"));
   $("#flowTextMount").append($("#reviewText"));
   $("#flowConsentMount").append($("#consentBox"));
-  $("#flowSubmitMount").append($("#submitBtn"));
   flowSteps = [...document.querySelectorAll("#flowApp .flow-step")];
   flowSteps.forEach(step => step.setAttribute("tabindex", "-1"));
   $("#ratingNext").disabled = state.estrellas === 0;
@@ -1767,14 +1752,11 @@ function setupFlow() {
 }
 function syncConsentState() {
   const checked = $("#consent").checked;
-  const step = $(".confirm-step"), submit = $("#submitBtn");
-  step.classList.toggle("is-authorized", checked);
-  submit.disabled = !checked;
-  submit.setAttribute("aria-disabled", String(!checked));
-  syncConfirmCopy(checked);
+  syncConfirmCopy(false);
   if (checked) {
     const live = $("#rewardLive");
-    live.textContent = `Autorización lista. Confirmá para participar con ${chancesDe(totalPuntos())} ${chancesDe(totalPuntos()) === 1 ? "chance" : "chances"}.`;
+    live.textContent = `Autorización confirmada. Tu participación quedó registrada con ${chancesDe(totalPuntos())} ${chancesDe(totalPuntos()) === 1 ? "chance" : "chances"}.`;
+    enviar();
   }
 }
 function updateFlowChrome() {
@@ -1823,10 +1805,10 @@ const basesModal = $("#basesModal");
 document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
 
 /* ---------- envío ---------- */
-$("#submitBtn").addEventListener("click", enviar);
 $("#exitConfirm").addEventListener("click", () => { $("#exitModal").close(); enviar(); });
 
 function enviar() {
+  if (state.enviado) return;
   const consent = $("#consent");
   if (!consent.checked) {
     $("#consentBox").classList.add("err");
