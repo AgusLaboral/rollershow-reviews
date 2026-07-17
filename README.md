@@ -1,6 +1,6 @@
 # Rollershow Reviews & Sorteo
 
-Mockup fase 1: web app multistep para que clientes que ya compraron recorran sus cortinas una por una, suban fotos/video, califiquen, dejen audio o texto y confirmen su participación. Todo suma chances para ganar 3 almohadones y 2 alfombras premium, sorteados entre 3 ganadores en Instagram.
+Mockup fase 1: web app multistep para que clientes que ya compraron recorran sus cortinas una por una, suban fotos/video y cuenten su experiencia en una sola etapa progresiva —estrellas, audio y una opinión breve— antes de confirmar su participación. Todo suma chances para ganar 3 almohadones y 2 alfombras premium, sorteados entre 3 ganadores en Instagram.
 
 La portada tiene una sola acción primaria. Para comparar movimiento sin duplicar lógica hay dos variantes del mismo flujo:
 

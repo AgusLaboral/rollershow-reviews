@@ -19,7 +19,7 @@ Plan completo, decisiones tomadas y razones detrás de cada una: **`PLAN.md`** (
 ## Stack — deliberadamente simple
 
 - **Un solo archivo**: `index.html` (HTML + CSS + JS inline, sin build, sin framework, sin dependencias de runtime). Así se construyó la landing legacy también — es el patrón que se usa para iterar rápido en mockups de Rollershow.
-- **Sin backend real todavía.** Todo el estado vive en memoria del navegador (`state` en el JS) + `localStorage` para persistir estrellas/texto entre visitas.
+- **Sin backend real todavía.** El estado liviano vive en memoria + `localStorage`; fotos, videos y audio se guardan en `IndexedDB`. El borrador completo vuelve al mismo paso en el mismo navegador/dispositivo.
 - **`package.json`** existe SOLO para las herramientas de verificación (Playwright), no para el sitio en sí. El sitio no tiene build step.
 
 ## Estructura
@@ -72,7 +72,7 @@ Después de cada push: esperar la propagación (`curl` el HTML hasta ver el camb
 - **Puntos**: estrellas +5, texto +5, foto +10 c/u, video +25, audio +30. Cada 10 puntos = 1 chance; toda participación confirmada tiene mínimo 1 chance.
 - **Participación sin foto**: permitida (solo calificar ya cuenta).
 - **Colores**: Rojo Teja `#C63A21` (glow `#D2451E`, deep `#97290F`) es el color institucional del CTA principal — confirmado por Agus, reemplaza al terracota viejo (`#B8662C`, que queda como acento secundario). Verde WhatsApp real (`#25D366`/`#1FAD53`) para todo el módulo de audio, no terracota.
-- **Arquitectura multistep cerrada**: portada, una cortina por pantalla, calificación, audio, texto y confirmación. No volver al formulario largo: Nicolás lo rechazó por carga cognitiva y riesgo de abandono.
+- **Arquitectura multistep cerrada**: portada, una cortina por pantalla, experiencia progresiva y confirmación. En experiencia, la foto del vendedor ancla una conversación única: estrellas → audio → opinión breve, revelados de a uno sin cambiar de pantalla. No volver al formulario largo: Nicolás lo rechazó por carga cognitiva y riesgo de abandono.
 - **Una acción primaria por pantalla**: la portada sólo tiene `Empezar y sumar chances`; links, volver, saltear y la próxima etapa insinuada nunca pueden competir visualmente.
 - **Consentimiento de una sola acción**: la autorización completa es el único CTA del cierre. Al marcarla, la participación se registra y el flujo avanza automáticamente a Gracias; no agregar un botón redundante de confirmación. El propio texto del control avisa que autorizar también confirma la participación.
 - **Celebración final intensa y honesta**: el último paso puede saturarse de recursos porque ya no enseña ni pide explorar; celebra el hito. La fiesta sale de los premios, la cortina sunscreen, los puntos y las chances reales. No inventar promedios, rankings ni cercanía determinista al premio; cada chance se explica como una oportunidad en el sorteo.

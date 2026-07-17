@@ -175,4 +175,4 @@ for (const viewport of viewports) {
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: portada y 8 etapas comparten grid; producto y carga forman una sola pieza, sin overflow');
+console.log('OK: portada y 6 etapas comparten grid; producto y carga forman una sola pieza, sin overflow');

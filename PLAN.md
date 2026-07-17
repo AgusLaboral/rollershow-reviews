@@ -3,7 +3,7 @@
 > Proyecto nuevo. Web app (mockup primero) para que clientes que YA compraron dejen fotos/video de sus cortinas instaladas + review (estrellas, audio, texto), a cambio de chances en un sorteo mensual de 3 productos de decoración publicado en Instagram.
 > Estado: **mockup deployado y verificado** en https://aguslaboral.github.io/rollershow-reviews/ (2026-07-14). Decisiones de Agus: puntos tabla §3, URL /tu-experiencia, participación sin foto sí, hero con la API GPT de Rollershow. Falta: premios reales del mes, foto real de vendedores, integración de Nico (buscar `TODO(Nico)` en index.html).
 
-> Replanteo 2026-07-15: Nicolás rechazó el formulario largo por carga cognitiva. La nueva arquitectura es multistep: portada con un CTA y premios concretos, una cortina por etapa, experiencia separada y confirmación final. Premio comunicado: **3 almohadones + 2 alfombras premium entre 3 ganadores**. Agus marcó que animar una cortina literal puede verse cursi, por lo que se prepararon dos variantes comparables: `?v=ambientes` (profundidad adelante/atrás) y `?v=scroll` (desplazamiento vertical por scroll/swipe). Un MP4 puede usarse después para afinar ritmo, no es dependencia del prototipo.
+> Replanteo 2026-07-15: Nicolás rechazó el formulario largo por carga cognitiva. La nueva arquitectura es multistep: portada con un CTA y premios concretos, una cortina por etapa, experiencia progresiva y confirmación final. Premio comunicado: **3 almohadones + 2 alfombras premium entre 3 ganadores**. Agus marcó que animar una cortina literal puede verse cursi, por lo que se prepararon dos variantes comparables: `?v=ambientes` (profundidad adelante/atrás) y `?v=scroll` (desplazamiento vertical por scroll/swipe). Un MP4 puede usarse después para afinar ritmo, no es dependencia del prototipo.
 
 ---
 
@@ -47,7 +47,7 @@ Y en la UI hablar de **chances, no puntos abstractos**: "cada 10 puntos = 1 chan
 2. **Bases y condiciones del sorteo** — en Argentina una promoción con sorteo necesita B&C aunque sea mínimas (link chico en el footer). Las redacto yo, las revisás.
 3. **Mini-guía de foto buena** — 3 tips visuales al lado del uploader ("con luz de día, que se vea la cortina entera, horizontal"). Sube la calidad del material, que es el fin real del proyecto.
 4. **Compresión de fotos en el navegador** antes de subir (canvas) — el cliente está en mobile con datos; una foto de 8 MB que tarda mata la participación.
-5. **Progreso guardado en el dispositivo** (localStorage) — si cierra y vuelve, no perdió las fotos cargadas ni el audio.
+5. **Progreso guardado en el dispositivo** (`localStorage` + `IndexedDB`) — si cierra y vuelve en el mismo navegador, conserva paso, fotos/videos, estrellas, audio y texto.
 6. **Exit popup calibrado por engagement** (no timer): si ya sumó puntos y va a irse sin confirmar → "Te vas con 40 puntos sin participar. Confirmá y entrás al sorteo". En mobile solo botón Atrás + inactividad (nada de blur/visibilitychange, ya sabemos que da falsos positivos).
 7. **Video también por ítem** — mismo uploader acepta foto o video corto (max ~30s), con el puntaje diferencial de la tabla.
 8. **Deadline real, no urgencia falsa** — fecha concreta del próximo sorteo visible ("Sorteo: 31 de julio, en vivo en Instagram"). Cero contadores fake.
@@ -110,9 +110,9 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 
 - Se eliminó la variante vertical: detrás de la cortina la diferencia no llegaba a leerse y mantenía dos comportamientos sin beneficio para la persona. Queda un único recorrido oficial con profundidad.
 - El material de la cortina pasó a sunscreen translúcido: trama tejida bidireccional, ruido fractal SVG y microvariación tonal. Se eliminó `backdrop-filter` y el blur de los planos porque provocaban cuadros negros en capturas/GPU; la transparencia y textura se conservan con CSS/SVG nativo.
-- Todas las etapas usan el mismo grid maestro. Producto ocupa columnas 1–7 y 8–12; calificación, audio, texto y confirmación ocupan columnas 3–10. Logo, copy y CTA de portada comparten el borde izquierdo del grid.
+- Todas las etapas usan el mismo grid maestro. Producto ocupa columnas 1–7 y 8–12; experiencia y confirmación ocupan columnas 3–10. Logo, copy y CTA de portada comparten el borde izquierdo del grid.
 - En mobile, las acciones de experiencia dejaron de quedar aisladas al fondo: aparecen inmediatamente después del bloque al que responden.
-- `scripts/verify-alignment.mjs` recorre las 9 etapas completas en 320/390/768/1024/1280/1440/1920 px; ya no valida sólo portada y primera cortina.
+- `scripts/verify-alignment.mjs` recorre las 7 etapas completas en 320/390/768/1024/1280/1440/1920 px; ya no valida sólo portada y primera cortina.
 
 ## 12. Cierre de composición y handoff a Google — 2026-07-15
 
@@ -382,3 +382,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Confirmar que mobile ya recibe masters verticales propios de 720×1280, no recortes de los videos desktop.
 - [x] Mejorar la lectura de los masters actuales reduciendo el velo blanco de portada, recomponiendo el velo de confirmación y levantando detalle en Gracias.
 - [ ] Regenerar los tres masters mobile con zonas protegidas para título, CTA y puntaje. Los actuales son verticales, pero ubican producto y movimiento detrás de la interfaz; requiere una nueva generación con proveedor y aprobación de costo.
+
+## 45. Experiencia contextual y borrador completo — 2026-07-17
+
+- [x] Unificar calificación, audio y opinión en una sola etapa anclada por la foto del vendedor.
+- [x] Mantener revelado progresivo: las estrellas abren el audio; guardar u omitir el audio abre una opinión breve y opcional.
+- [x] Conservar en el mismo contexto escuchar, volver a grabar y borrar el audio, sin avance automático al terminar de grabar.
+- [x] Reducir el recorrido a portada + 4 productos + experiencia + confirmación y recalibrar progreso, cierre y pruebas.
+- [x] Persistir paso actual, archivos, estrellas, audio y texto con `localStorage` + `IndexedDB`; limpiar el borrador sólo después de confirmar el envío.
+- [x] Agregar una regresión que carga una foto, graba audio, escribe, recarga la página y exige reconstrucción completa con 50 puntos.

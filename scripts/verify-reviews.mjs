@@ -22,10 +22,9 @@ async function reachConfirm(page, { withPhoto = false } = {}) {
     for (let i = 0; i < 4; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
   }
   await page.locator('#stars button').nth(4).click();
-  await page.click('#ratingNext'); await waitCurtain(page);
-  await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
+  await page.click('#audioSkip');
   await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
-  await page.click('.text-step.active .step-primary'); await waitCurtain(page);
+  await page.click('#experienceNext'); await waitCurtain(page);
 }
 
 for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
@@ -46,9 +45,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
     bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
     copy: {
-      rating: document.querySelector('.rating-step .step-title')?.textContent,
-      audio: document.querySelector('.audio-step .step-title')?.textContent,
-      text: document.querySelector('.text-step .step-title')?.textContent,
+      rating: document.querySelector('.experience-step .step-title')?.textContent,
+      audio: document.querySelector('.experience-prompt strong')?.textContent,
+      text: document.querySelector('.text-reward-label')?.textContent,
       confirm: document.querySelector('.confirm-step .step-title')?.textContent,
       consent: document.querySelector('#consentBox label')?.textContent,
       google: document.querySelector('#gBlock h3')?.textContent,
@@ -69,8 +68,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
   if (!initial.startCopy?.includes('Empezar y sumar chances')) fails.push(`${vp.w}px: el CTA inicial no expresa acción y beneficio`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
-  if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || initial.copy.audio !== 'Contalo con tu voz.' ||
-      !initial.copy.text?.includes('Ayudá a otra persona') || !initial.copy.confirm?.startsWith('Mostraste ') ||
+  if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
+      !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.startsWith('Mostraste ') ||
       !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmo mi participación') || !initial.copy.google?.includes('Duplicá tus puntos')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
@@ -185,37 +184,40 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     const ratingReward = await page.evaluate(() => ({
       live: document.querySelector('#rewardLive')?.textContent,
       randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight').length,
-      local: document.querySelector('.rating-step')?.classList.contains('rating-reward'),
+      local: document.querySelector('.experience-step')?.classList.contains('rating-reward'),
+      sameStep: document.querySelector('.flow-step.active')?.dataset.flowStep,
+      audioVisible: getComputedStyle(document.querySelector('#experienceAudio')).display !== 'none',
+      textHidden: getComputedStyle(document.querySelector('#experienceText')).display === 'none',
     }));
-    if (!ratingReward.live?.includes('5 puntos') || ratingReward.randomVisuals !== 0 || !ratingReward.local) fails.push(`estrellas: recompensa incompleta ${JSON.stringify(ratingReward)}`);
+    if (!ratingReward.live?.includes('5 puntos') || ratingReward.randomVisuals !== 0 || !ratingReward.local || ratingReward.sameStep !== 'experience' || !ratingReward.audioVisible || !ratingReward.textHidden) fails.push(`estrellas: audio no se revela en contexto ${JSON.stringify(ratingReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
-    await page.click('#ratingNext'); await waitCurtain(page);
     await page.evaluate(() => renderAudio('recording'));
     const mobileRecording = await page.evaluate(() => {
       const stop = document.querySelector('#recStop');
-      const content = document.querySelector('.audio-step .step-content');
+      const content = document.querySelector('.experience-audio');
       return {
         stopWidth: Math.round(stop.getBoundingClientRect().width),
         contentWidth: Math.round(content.getBoundingClientRect().width),
-        actionsHidden: getComputedStyle(document.querySelector('.audio-step .step-actions')).display === 'none',
+        actionsHidden: getComputedStyle(document.querySelector('.experience-step .experience-actions')).display === 'none',
         rootBackground: getComputedStyle(document.documentElement).backgroundColor,
       };
     });
-    if (mobileRecording.stopWidth < mobileRecording.contentWidth - 2 || !mobileRecording.actionsHidden || mobileRecording.rootBackground === 'rgba(0, 0, 0, 0)') fails.push(`audio mobile: jerarquía o fondo incorrectos ${JSON.stringify(mobileRecording)}`);
+    if (mobileRecording.stopWidth < mobileRecording.contentWidth - 40 || !mobileRecording.actionsHidden || mobileRecording.rootBackground === 'rgba(0, 0, 0, 0)') fails.push(`audio mobile: jerarquía o fondo incorrectos ${JSON.stringify(mobileRecording)}`);
     await page.screenshot({ path: `${OUT}/canonical-390-audio-recording.png` });
     await page.evaluate(() => renderAudio('idle'));
-    await page.click('.audio-step.active [data-flow-next]'); await waitCurtain(page);
+    await page.click('#audioSkip');
     await page.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
     const textReward = await page.evaluate(() => ({
       live: document.querySelector('#rewardLive')?.textContent,
       randomVisuals: document.querySelectorAll('.reward-moment,.reward-flight').length,
-      local: document.querySelector('.text-step')?.classList.contains('text-reward'),
+      local: document.querySelector('.experience-step')?.classList.contains('text-reward'),
+      sameStep: document.querySelector('.flow-step.active')?.dataset.flowStep,
     }));
-    if (!textReward.live?.includes('5 puntos') || textReward.randomVisuals !== 0 || !textReward.local) fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
+    if (!textReward.live?.includes('5 puntos') || textReward.randomVisuals !== 0 || !textReward.local || textReward.sameStep !== 'experience') fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
     pts = await page.textContent('#flowPts');
     if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
-    await page.click('.text-step.active .step-primary'); await waitCurtain(page);
+    await page.click('#experienceNext'); await waitCurtain(page);
 
     const confirmBefore = await page.evaluate(() => ({
       authorized: document.querySelector('.confirm-step').classList.contains('is-authorized'),
@@ -351,6 +353,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
     await p2.goBack(); await p2.waitForTimeout(500);
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
+    await p2.evaluate(async () => { localStorage.removeItem('rs-experiencia'); await clearPersistedDraft(); });
 
     const p3 = await ctx.newPage();
     await p3.goto(URL, { waitUntil: 'domcontentloaded' });
@@ -430,12 +433,11 @@ await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
 for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
 await dpage.locator('#stars button').nth(4).click();
-await dpage.click('#ratingNext'); await waitCurtain(dpage);
 if (!((await dpage.textContent('#recStart')) || '').includes('+30 puntos')) fails.push('grabar audio no recuerda que suma 30 puntos');
 await dpage.click('#recStart');
 await dpage.waitForTimeout(450);
 const recordingState = await dpage.evaluate(() => {
-  const step = document.querySelector('.audio-step');
+  const step = document.querySelector('.experience-step');
   const stop = document.querySelector('#recStop');
   const box = stop.getBoundingClientRect();
   return {
@@ -451,31 +453,31 @@ const recordingState = await dpage.evaluate(() => {
     stopColor: getComputedStyle(stop).backgroundColor,
   };
 });
-if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+30 puntos)' || recordingState.stopWidth < recordingState.contentWidth - 2 ||
-    recordingState.skipVisible || recordingState.activeStep !== 'audio' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss ||
+if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+30 puntos)' || recordingState.stopWidth < recordingState.contentWidth - 40 ||
+    recordingState.skipVisible || recordingState.activeStep !== 'experience' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss ||
     recordingState.stopColor !== 'rgb(20, 122, 58)') fails.push(`audio grabando: jerarquía, color u onda real incorrecta ${JSON.stringify(recordingState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
 
 await dpage.locator('#recStop').click({ force:true });
 await dpage.waitForTimeout(700);
 const reviewState = await dpage.evaluate(() => ({
-  recorded: document.querySelector('.audio-step')?.classList.contains('has-audio'),
-  recording: document.querySelector('.audio-step')?.classList.contains('is-recording'),
+  recorded: document.querySelector('.experience-step')?.classList.contains('has-audio'),
+  recording: document.querySelector('.experience-step')?.classList.contains('is-recording'),
   player: !!document.querySelector('.voice-note'),
   rerecord: !!document.querySelector('#reRec'),
   remove: !!document.querySelector('#delRec'),
-  continueVisible: getComputedStyle(document.querySelector('#audioNext')).display !== 'none',
+  textVisible: getComputedStyle(document.querySelector('#experienceText')).display !== 'none',
+  continueVisible: getComputedStyle(document.querySelector('#experienceNext')).display !== 'none',
   skipVisible: getComputedStyle(document.querySelector('.step-audio-skip')).display !== 'none',
   earned: document.querySelector('.audio-earned')?.innerText,
   points: document.querySelector('#flowPts')?.textContent,
   transfer: document.querySelector('.score-transfer')?.textContent,
 }));
 if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
-    !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30') fails.push(`audio detenido: revisión o recompensa incompleta ${JSON.stringify(reviewState)}`);
+    !reviewState.textVisible || !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30') fails.push(`audio detenido: opinión o recompensa incompleta ${JSON.stringify(reviewState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-review.png` });
-await dpage.click('#audioNext'); await waitCurtain(dpage);
 await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
-await dpage.click('.text-step.active .step-primary'); await waitCurtain(dpage);
+await dpage.click('#experienceNext'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });
 await dpage.check('#consent'); await dpage.waitForTimeout(1800);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
@@ -494,6 +496,45 @@ await dpage.evaluate(() => {
 await dpage.waitForTimeout(700);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-google-done.png`, fullPage:true });
 await dctx.close();
+
+// Borrador completo: una recarga debe reconstruir paso, foto, audio, estrellas y texto.
+const persistCtx = await browser.newContext({
+  viewport: { width:390, height:844 }, isMobile:true, hasTouch:true, deviceScaleFactor:2,
+  permissions:['microphone'],
+});
+const persistPage = await persistCtx.newPage();
+await persistPage.goto(URL, { waitUntil:'domcontentloaded' });
+await persistPage.evaluate(() => window.__draftReady);
+await persistPage.click('#startFlow'); await waitCurtain(persistPage);
+await persistPage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+await persistPage.waitForTimeout(500);
+await persistPage.click('.flow-step.active .step-continue'); await waitCurtain(persistPage);
+for (let i = 0; i < 3; i++) { await persistPage.click('.flow-step.active .step-secondary'); await waitCurtain(persistPage); }
+await persistPage.locator('#stars button').nth(4).click();
+await persistPage.click('#recStart'); await persistPage.waitForTimeout(450);
+await persistPage.locator('#recStop').click({ force:true }); await persistPage.waitForTimeout(800);
+await persistPage.fill('#reviewText', 'Excelente atenciÃ³n y muy buen resultado final.');
+await persistPage.waitForTimeout(250);
+await persistPage.reload({ waitUntil:'domcontentloaded' });
+await persistPage.evaluate(() => window.__draftReady);
+const restoredDraft = await persistPage.evaluate(() => ({
+  activeStep:document.querySelector('.flow-step.active')?.dataset.flowStep,
+  photoCount:state.archivos[1]?.length || 0,
+  photoPreview:!!document.querySelector('.item-step[data-item-id="1"] .stage-user-media'),
+  stars:state.estrellas,
+  audioBlob:state.audioBlob instanceof Blob && state.audioBlob.size > 0,
+  audioPlayer:!!document.querySelector('.experience-step .voice-note'),
+  text:document.querySelector('#reviewText')?.value,
+  textVisible:document.querySelector('.experience-step')?.classList.contains('show-text'),
+  points:document.querySelector('#flowPts')?.textContent,
+}));
+if (restoredDraft.activeStep !== 'experience' || restoredDraft.photoCount !== 1 || !restoredDraft.photoPreview ||
+    restoredDraft.stars !== 5 || !restoredDraft.audioBlob || !restoredDraft.audioPlayer ||
+    restoredDraft.text !== 'Excelente atenciÃ³n y muy buen resultado final.' || !restoredDraft.textVisible || restoredDraft.points !== '50') {
+  fails.push(`persistencia: el borrador no se reconstruyÃ³ completo ${JSON.stringify(restoredDraft)}`);
+}
+await persistPage.evaluate(async () => { localStorage.removeItem('rs-experiencia'); await clearPersistedDraft(); });
+await persistCtx.close();
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }

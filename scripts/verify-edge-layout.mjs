@@ -18,6 +18,7 @@ for (const viewport of viewports) {
   const reports = await page.evaluate(() => {
     const steps = [...document.querySelectorAll('.flow-step')];
     return steps.map(step => {
+      if (step.dataset.flowStep === 'experience') step.classList.add('has-rating', 'show-text');
       steps.forEach(candidate => {
         candidate.classList.toggle('active', candidate === step);
         candidate.classList.remove('entering', 'leaving');
