@@ -45,6 +45,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     prizeVisual: getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
     introTitle: document.querySelector('#flowHeroTitle')?.textContent,
     introHook: document.querySelector('#introPrizeHook')?.textContent,
+    introSaved: document.querySelector('#introSaveNote')?.textContent,
     bases: document.querySelector('.bases-txt')?.textContent,
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
     bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
@@ -69,9 +70,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('tu casa ya luce rollershow') || initial.introHook !== 'Ahora puede sumar algo más.') fails.push(`${vp.w}px: la portada no reconoce el hogar antes de presentar el premio ${JSON.stringify(initial)}`);
+  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('tu casa ya luce rollershow') ||
+      !initial.introHook?.includes('mostranos cómo quedó') || !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
-  if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no es corto y directo`);
+  if (initial.startCopy !== 'Quiero participar') fails.push(`${vp.w}px: el CTA inicial no expresa intención de participar`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.startsWith('Mostraste ') ||
@@ -465,7 +467,20 @@ await dpage.goto(URL, { waitUntil: 'domcontentloaded' });
 await dpage.evaluate(() => window.celebrateAction('audio', { points:30, origin:document.querySelector('#startFlow'), detail:'Audio guardado' }));
 const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent, transfer:document.querySelector('.score-transfer')?.textContent }));
 if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos') || audioReward.transfer !== '+30') fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
+await dpage.waitForTimeout(950);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
+const desktopIntro = await dpage.evaluate(() => {
+  const copy = document.querySelector('.intro-copy-block').getBoundingClientRect();
+  const prize = document.querySelector('.intro-prize-photo').getBoundingClientRect();
+  const cta = document.querySelector('#startFlow').getBoundingClientRect();
+  return {
+    prizeVisible:getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
+    split:copy.right < prize.left,
+    ctaInside:cta.left >= copy.left && cta.right <= copy.right && cta.bottom <= innerHeight - 12,
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+  };
+});
+if (!desktopIntro.prizeVisible || !desktopIntro.split || !desktopIntro.ctaInside || desktopIntro.overflow > 0) fails.push(`portada desktop: relato y premios no forman dos zonas legibles ${JSON.stringify(desktopIntro)}`);
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
@@ -566,6 +581,28 @@ await dpage.check('#consent'); await dpage.waitForTimeout(1800);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
 await dpage.waitForTimeout(1500);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks.png`, fullPage:true });
+const desktopThanksHierarchy = await dpage.evaluate(() => {
+  const copy = document.querySelector('.gr-copy').getBoundingClientRect();
+  const score = document.querySelector('.gr-score').getBoundingClientRect();
+  const lower = document.querySelector('.gr-lower').getBoundingClientRect();
+  const google = document.querySelector('#gBlock').getBoundingClientRect();
+  const meta = document.querySelector('.gr-meta').getBoundingClientRect();
+  const chances = document.querySelector('.gr-chances strong').getBoundingClientRect();
+  const points = document.querySelector('.gr-points strong').getBoundingClientRect();
+  return {
+    sharedAxis: Math.max(Math.abs(copy.left-score.left),Math.abs(copy.left-lower.left)) < 2,
+    boundedMeasure: copy.width <= 682 && score.width <= 682 && lower.width <= 682,
+    scoreGrouped: points.left > chances.right && points.right <= score.right + 1,
+    chanceDominates: chances.height > points.height * 1.25,
+    googleBelowScore: google.top >= score.bottom - 1,
+    metaBelowGoogle: meta.top >= google.bottom - 1,
+    lowerDirection: getComputedStyle(document.querySelector('.gr-lower')).flexDirection,
+  };
+});
+if (!desktopThanksHierarchy.sharedAxis || !desktopThanksHierarchy.boundedMeasure || !desktopThanksHierarchy.scoreGrouped || !desktopThanksHierarchy.chanceDominates ||
+    !desktopThanksHierarchy.googleBelowScore || !desktopThanksHierarchy.metaBelowGoogle || desktopThanksHierarchy.lowerDirection !== 'column') {
+  fails.push(`gracias desktop: la lectura no conserva un único eje narrativo ${JSON.stringify(desktopThanksHierarchy)}`);
+}
 await dpage.evaluate(() => {
   document.querySelector('#gIntro').style.display='none';
   document.querySelector('#gReviewBtn').hidden=true;

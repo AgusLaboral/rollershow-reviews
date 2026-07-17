@@ -419,4 +419,10 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Centralizar mes, fecha, ganadores, premios e imagen en `SORTEO`; portada, confirmación, Gracias, salida y Bases informativas usan el mismo origen. Las Bases siguen requiriendo revisión humana cuando cambian los premios.
 - [x] Limpiar los números de Gracias: ambos en marfil, sombra neutra única y jerarquía por escala. Reservar aire para el anillo de foco de Google en mobile para que no pise copy superior ni fecha.
 - [x] Dejar fuera el carrusel de “ganadores” generado: las imágenes incluyen premios que no coinciden y no deben presentarse como prueba social real. Incorporarlo sólo con fotos auténticas, consentimiento y premios trazables.
-- [x] Recuperar el arranque humano aprobado: `Carolina, tu casa ya luce Rollershow.` reconoce primero la transformación del hogar; `Ahora puede sumar algo más.` abre curiosidad antes de mostrar el premio concreto. El CTA queda como única instrucción.
+- [x] Rehacer la portada desde la propuesta completa: `Carolina, tu casa ya luce Rollershow.` reconoce la transformación; la bajada explica qué compartir, el premio nombra los cinco objetos y tres ganadores, y el guardado reduce el costo percibido. CTA: `Quiero participar`.
+- [x] Mostrar los premios como una segunda zona visual real en desktop y conservar la secuencia vertical mobile. El test exige imagen visible, separación narrativa y CTA dentro del fold.
+
+## 49. Jerarquía editorial del cierre desktop — 2026-07-17
+
+- [x] Retirar la grilla de dos columnas equivalentes en Gracias desktop: título, resultado, Google y datos del sorteo comparten un eje izquierdo de 680 px; chances domina, puntos queda como evidencia y el ambiente conserva aire a la derecha.
+- [x] Mantener mobile en un único eje vertical y agregar una regresión geométrica específica para que puntos, fecha e Instagram no vuelvan a flotar en columnas independientes.
