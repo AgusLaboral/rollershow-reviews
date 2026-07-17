@@ -288,6 +288,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
       scoreBackground: getComputedStyle(document.querySelector('#flowScore')).backgroundColor,
       compactHeader: [...document.querySelectorAll('#flowScore>span,#flowScore>i')].every(element => getComputedStyle(element).opacity === '0'),
+      headerBackground: getComputedStyle(document.querySelector('.flow-head')).backgroundColor,
       persistentRollers: document.querySelectorAll('.score-roller,.roller-chain').length,
       hero: {
         src: document.querySelector('.confirm-prize-base')?.getAttribute('src'),
@@ -297,7 +298,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     }));
     if (confirmBefore.authorized || confirmBefore.redundantSubmit || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
         confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
-        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
+        confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.headerBackground !== 'rgba(0, 0, 0, 0)' || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
       fails.push(`confirmación inicial: jerarquía o evidencia incorrecta ${JSON.stringify(confirmBefore)}`);
