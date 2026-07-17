@@ -41,6 +41,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     active: document.querySelector('.flow-step.active')?.dataset.flowStep,
     primaries: document.querySelectorAll('.intro-step.active .step-primary').length,
     prizes: document.body.innerText.includes('3 almohadones y 2 alfombras premium'),
+    prizeConfig: SORTEO.premios.map(item => `${item.cantidad} ${item.nombre}`).join(' y '),
+    prizeVisual: getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
+    introTitle: document.querySelector('#flowHeroTitle')?.textContent,
     bases: document.querySelector('.bases-txt')?.textContent,
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
     bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
@@ -65,6 +68,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || initial.introTitle !== 'Mostrá cómo quedó y entrá al sorteo.') fails.push(`${vp.w}px: la portada no prioriza premios o no deriva del sorteo ${JSON.stringify(initial)}`);
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
   if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no es corto y directo`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
@@ -76,7 +80,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
       !initial.copy.googleAction?.includes('duplicar mis puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
   if (initial.introGeometry.copyTop > initial.introGeometry.viewport * .46 || initial.introGeometry.ctaBottom > initial.introGeometry.viewport - 12 ||
-      initial.introGeometry.scroll > 2 || initial.introGeometry.copyTop - initial.introGeometry.logoBottom > initial.introGeometry.viewport * .3) {
+      initial.introGeometry.scroll > 2 || initial.introGeometry.copyTop - initial.introGeometry.logoBottom > initial.introGeometry.viewport * .42) {
     fails.push(`${vp.w}px: portada mobile desbalanceada o CTA cortado ${JSON.stringify(initial.introGeometry)}`);
   }
   const environments = await page.evaluate(() => [...document.querySelectorAll('.item-step')].map(step => ({
@@ -86,6 +90,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     unified: !!step.querySelector('.item-stage .item-visual') && !!step.querySelector('.item-stage .item-task'),
     structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status'),
     uploadReward: step.querySelector('.upload-value')?.textContent,
+    continueCopy: step.querySelector('.step-continue')?.textContent,
   })));
   if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
       environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
@@ -97,6 +102,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   }
   if (environments.some(item => !item.uploadReward?.includes('Foto +10 puntos') || !item.uploadReward?.includes('Video +25 puntos'))) {
     fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
+  }
+  if (environments.slice(0,-1).some(item => item.continueCopy !== 'Continuar') || environments.at(-1)?.continueCopy !== 'Dar mi opinión') {
+    fails.push(`${vp.w}px: los CTAs de ambiente dependen de nombres frágiles ${JSON.stringify(environments)}`);
   }
   await page.screenshot({ path: `${OUT}/canonical-${vp.w}-intro.png` });
 
@@ -284,6 +292,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         sub: document.querySelector('#grSub')?.textContent,
         chanceSize: parseFloat(getComputedStyle(chance).fontSize),
         pointsSize: parseFloat(getComputedStyle(points).fontSize),
+        chanceColor: getComputedStyle(chance).color,
+        pointsColor: getComputedStyle(points).color,
         surface: chanceSurface.backgroundColor,
         border: chanceSurface.borderTopWidth,
         canvasWidth: canvas.width,
@@ -310,7 +320,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
     if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 64 || celebration.pointsSize < 64 ||
-        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
+        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 || celebration.chanceColor !== celebration.pointsColor ||
         celebration.particles < 80 || celebration.particles > 650 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
         !celebration.curtainColor.startsWith('rgba') || curtainAlpha < .6 || curtainAlpha > .8 || !celebration.curtainTexture.includes('repeating-linear-gradient') ||
         !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
@@ -327,6 +337,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         focused: document.activeElement === button,
         highlighted: button.classList.contains('google-focus'),
         buttonRect: { top:button.getBoundingClientRect().top, bottom:button.getBoundingClientRect().bottom },
+        introBottom: document.querySelector('#gIntro').getBoundingClientRect().bottom,
+        dateTop: document.querySelector('#thanksDrawDate').getBoundingClientRect().top,
+        outlineWidth: parseFloat(getComputedStyle(button).outlineWidth),
+        outlineOffset: parseFloat(getComputedStyle(button).outlineOffset),
         titleTop: document.querySelector('#thanksTitle').getBoundingClientRect().top,
         chanceTop: document.querySelector('.gr-chances strong').getBoundingClientRect().top,
         metaBottom: document.querySelector('.gr-meta').getBoundingClientRect().bottom,
@@ -339,7 +353,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     });
     if (!googleHandoff.focused || !googleHandoff.highlighted || googleHandoff.scrollY !== 0 || googleHandoff.titleTop < 0 ||
         googleHandoff.buttonRect.top < 0 || googleHandoff.buttonRect.bottom > googleHandoff.viewportHeight ||
-        googleHandoff.chanceTop < -2 || googleHandoff.metaBottom > googleHandoff.viewportHeight) {
+        googleHandoff.chanceTop < -2 || googleHandoff.metaBottom > googleHandoff.viewportHeight ||
+        googleHandoff.buttonRect.top - googleHandoff.introBottom < googleHandoff.outlineWidth + googleHandoff.outlineOffset ||
+        googleHandoff.dateTop - googleHandoff.buttonRect.bottom < googleHandoff.outlineWidth + googleHandoff.outlineOffset) {
       fails.push(`Google no recibe foco sin cortar el logro ${JSON.stringify(googleHandoff)}`);
     }
     if (googleHandoff.host !== 'www.google.com'

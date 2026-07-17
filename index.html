@@ -140,7 +140,7 @@ section{padding:38px 0 6px}
 .exp-row{padding:20px 18px;border-top:1px solid var(--border)}
 .exp-row:first-child{border-top:none}
 
-.vendedor{display:flex;align-items:center;gap:15px;padding:16px 18px;min-width:0}
+.vendedor{display:flex;align-items:center;gap:15px;padding:16px 18px;min-width:0}.vendedor[hidden]{display:none}
 .vendedor img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--accent-soft)}
 .vendedor-txt{min-width:0}
 .vendedor-txt strong{font-family:var(--font-display);font-weight:700;font-size:1.02rem;display:block}
@@ -296,13 +296,13 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 .gr-score>div{position:relative;min-width:0;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:0;transform:translate3d(0,90px,-180px) rotateX(18deg);animation:grMonumentIn 1.35s cubic-bezier(.16,1,.3,1) forwards}
 .gr-score .gr-chances{animation-delay:1.18s}.gr-score .gr-points{animation-delay:1.42s}
 @keyframes grMonumentIn{65%{opacity:1;transform:translate3d(0,-10px,24px) rotateX(-3deg)}100%{opacity:1;transform:none}}
-.gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 0 18px rgba(232,163,61,.16),0 28px 70px rgba(0,0,0,.38);font-variant-numeric:tabular-nums}
+.gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 18px 48px rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
 .gr-score strong{position:relative;width:max-content;transform-style:preserve-3d}
 .gr-score strong::before,.gr-score strong::after{content:attr(data-value);position:absolute;inset:0;pointer-events:none;z-index:-1}
-.gr-score strong::before{color:#5F2014;transform:translate3d(5px,7px,-28px);filter:blur(.25px);opacity:.52;text-shadow:0 18px 40px rgba(0,0,0,.42)}
+.gr-score strong::before{color:#160E0B;transform:translate3d(3px,4px,-24px);filter:blur(1px);opacity:.3;text-shadow:none}
 .gr-score strong::after{display:none}
-.gr-points strong::before{color:#6E5947;opacity:.44}
-.gr-chances strong{font-size:clamp(6.6rem,12vw,10rem);color:#F3A13D}.gr-points strong{font-size:clamp(5.2rem,8.6vw,7.5rem)}
+.gr-points strong::before{color:#160E0B;opacity:.26}
+.gr-chances strong{font-size:clamp(6.6rem,12vw,10rem);color:#FFF8EE}.gr-points strong{font-size:clamp(5.2rem,8.6vw,7.5rem)}
 .gr-score span{display:flex;align-items:baseline;gap:9px;margin-top:12px;color:rgba(255,249,242,.7);font-size:clamp(.84rem,1.1vw,1rem);font-weight:600}
 .gr-score span b{font-family:var(--font-display);color:#FFF9F2;font-size:clamp(1.35rem,2.35vw,2rem);line-height:1}
 .gr-score span em{font-style:normal}
@@ -333,8 +333,8 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes gCheckIn{0%{transform:scale(.55) rotate(-12deg);opacity:0;stroke-dashoffset:30}100%{transform:none;opacity:1;stroke-dashoffset:0}}
 .gr-fecha{font-size:.95rem;color:inherit}.gr-fecha b{color:inherit}.gr-ig{display:inline-flex;align-items:center;gap:10px;color:#F5EFE6;background:none;border-radius:0;border-bottom:1px solid rgba(245,239,230,.38);text-decoration:none;font-weight:700;padding:10px 0;box-shadow:none}
 body.done footer{background:#130F0D;border-color:rgba(255,249,242,.12);color:rgba(255,249,242,.48)}body.done footer a{color:rgba(255,249,242,.58)}
-@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr 1fr;gap:20px;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances strong,.gr-points strong{font-size:clamp(4rem,20vw,5.35rem);line-height:.72}.gr-score span{display:block;margin-top:6px;font-size:.7rem;line-height:1.2}.gr-score span b{display:block;margin-bottom:2px;font-size:clamp(1rem,5vw,1.25rem)}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:9px;padding:11px 14px;font-size:.8rem;border-radius:14px}}
-@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances strong,.gr-points strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:7px;padding:9px 12px}}
+@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr 1fr;gap:20px;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances strong,.gr-points strong{font-size:clamp(4rem,20vw,5.35rem);line-height:.72}.gr-score span{display:block;margin-top:6px;font-size:.7rem;line-height:1.2}.gr-score span b{display:block;margin-bottom:2px;font-size:clamp(1rem,5vw,1.25rem)}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:14px;margin-bottom:7px;padding:11px 14px;font-size:.8rem;border-radius:14px}.g-cta.google-focus{outline-offset:4px}}
+@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances strong,.gr-points strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:12px;margin-bottom:6px;padding:9px 12px}}
 @media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
 
 /* ---------- Footer ---------- */
@@ -531,16 +531,19 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes heroVase{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.047) translate3d(4px,-4px,0)}}
 .intro-step .step-inner{position:relative;z-index:2;padding:clamp(225px,34dvh,290px) 20px max(20px,env(safe-area-inset-bottom));justify-content:flex-start;height:100%;min-height:0;width:min(100%,580px)}
 .intro-logo{position:absolute;top:22px;left:20px;width:202px;max-width:54vw}
+.intro-prize-photo{display:none;overflow:hidden;border-radius:18px;background:#D8C2A8;box-shadow:0 18px 42px -28px rgba(44,29,18,.7)}
+.intro-prize-photo img{display:block;width:100%;height:100%;object-fit:cover}
 .intro-copy-block{display:flex;flex-direction:column;align-items:stretch}
 .intro-copy-block .step-actions{margin-top:20px;padding-top:0}
-.intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:13ch}
-.intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.25;margin-top:14px;max-width:31ch}
+.intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:14ch}
+.intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.16;margin-top:14px;max-width:31ch}
 .intro-prize strong{color:var(--cta-deep)}
 .intro-date{font-size:.78rem;color:var(--fg-mute);margin-top:8px}
 
 @media (max-width:799px){
   .intro-logo{top:max(20px,env(safe-area-inset-top))}
-  .intro-step .step-inner{padding-top:clamp(170px,24dvh,215px)}
+  .intro-step .step-inner{padding-top:72px;gap:12px}
+  .intro-prize-photo{display:block;width:100%;height:clamp(150px,27dvh,220px);flex:none}
   .intro-copy-block .step-actions{margin-top:16px}
 }
 
@@ -610,7 +613,7 @@ body{min-height:100vh;min-height:100dvh}
 
 /* Experiencia: estrellas, audio y texto se revelan en la misma conversación. */
 .focus-panel{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:18px;padding:20px 18px;box-shadow:0 16px 42px -34px rgba(28,24,22,.45)}
-.rating-seller{display:flex;align-items:center;gap:12px;margin-bottom:22px}.rating-seller img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+.rating-seller{display:flex;align-items:center;gap:12px;margin-bottom:22px}.rating-seller[hidden]{display:none}.rating-seller img{width:48px;height:48px;border-radius:50%;object-fit:cover}
 .rating-seller strong{font-size:.9rem}.rating-seller span{font-size:.75rem;color:var(--fg-mute);display:block}
 .experience-step .stars{justify-content:space-between}.experience-step .stars button{width:52px;height:52px}
 .experience-step .stars-word{text-align:center;margin-top:10px;min-height:22px}
@@ -749,7 +752,8 @@ body.done #flowApp{display:none}
   .upload-zone{padding:12px 12px 54px}
   .step-actions{padding-top:12px;gap:6px}
   .intro-step{padding:0}
-  .intro-step .step-inner{padding:clamp(150px,22dvh,178px) 20px max(16px,env(safe-area-inset-bottom))}
+  .intro-step .step-inner{padding:64px 20px max(14px,env(safe-area-inset-bottom));gap:9px}
+  .intro-prize-photo{height:clamp(128px,25dvh,165px)}
   .intro-step h1{font-size:clamp(1.9rem,8.5vw,2.2rem)}
   .intro-prize{font-size:.98rem;margin-top:11px}
   .intro-date{font-size:.75rem;margin-top:7px}
@@ -839,10 +843,11 @@ body.done #flowApp{display:none}
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
+        <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-v2-768.webp" width="768" height="512" alt="" /></div>
         <div class="intro-copy-block">
-          <h1 id="flowHeroTitle">Mostrá cómo quedó tu casa.</h1>
-          <p class="intro-prize">Compartí tu experiencia y sumá chances. En julio sorteamos <strong>3 almohadones y 2 alfombras premium</strong> entre 3 personas.</p>
-          <p class="intro-date">Sorteo en vivo el 31 de julio por Instagram.</p>
+          <h1 id="flowHeroTitle">Mostrá cómo quedó y entrá al sorteo.</h1>
+          <p class="intro-prize" id="introPrizeCopy"><strong>3 almohadones y 2 alfombras premium</strong></p>
+          <p class="intro-date" id="introDateCopy">Los sorteamos entre 3 personas, en vivo por Instagram el 31 de julio.</p>
           <div class="step-actions">
             <button class="step-primary" id="startFlow" type="button">Participar ahora
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -858,7 +863,7 @@ body.done #flowApp{display:none}
         <h2 class="step-title">¿Cómo fue tu experiencia?</h2>
         <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma 5 puntos.</span></p>
         <div class="focus-panel">
-          <div class="rating-seller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
+          <div class="rating-seller" id="flowSeller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
           <div id="flowStarsMount"></div>
           <div class="experience-audio" id="experienceAudio">
             <div class="experience-divider"></div>
@@ -896,7 +901,7 @@ body.done #flowApp{display:none}
             <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">chances para ganar</span></div>
             <div class="confirm-points"><strong id="confirmPts">0</strong><span>puntos logrados</span></div>
             <p class="confirm-proof" id="confirmProof"></p>
-            <p class="confirm-prize-reminder">En julio sorteamos <strong>3 almohadones y 2 alfombras premium.</strong></p>
+            <p class="confirm-prize-reminder" id="confirmPrizeReminder">En julio sorteamos <strong>3 almohadones y 2 alfombras premium.</strong></p>
           </div>
         </div>
         <div class="confirm-actions">
@@ -997,7 +1002,7 @@ body.done #flowApp{display:none}
 
       <div class="experiencia">
         <!-- TODO(Nico): foto y nombre del vendedor vienen del presupuesto (GET /api/v2/presupuesto/:token). -->
-        <div class="vendedor">
+        <div class="vendedor" id="vendedorBlock">
           <img id="vendFoto" src="" alt="" />
           <div class="vendedor-txt">
             <strong id="vendNombre"></strong>
@@ -1088,7 +1093,7 @@ body.done #flowApp{display:none}
           </div>
           <div class="ig-final">
             <h4>Seguí a Rollershow para completar tu participación</h4>
-            <p>Es un requisito del sorteo. Lo hacemos <strong>en vivo el 31 de julio</strong> y anunciamos a los 3 ganadores en <strong>@cortinas.rollershow</strong>.</p>
+            <p id="instagramRequirement">Es un requisito del sorteo. Lo hacemos <strong>en vivo el 31 de julio</strong> y anunciamos a los 3 ganadores en <strong>@cortinas.rollershow</strong>.</p>
             <a class="ig-final-cta" id="igFinalBtn" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
               Seguir en Instagram y ver si gané
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
@@ -1098,7 +1103,7 @@ body.done #flowApp{display:none}
         </div>
       </div>
       <div class="gr-meta">
-        <p class="gr-fecha">Sorteo <b>en vivo el 31 de julio</b> por Instagram. Ahí anunciamos a los 3 ganadores.</p>
+        <p class="gr-fecha" id="thanksDrawDate">Sorteo <b>en vivo el 31 de julio</b> por Instagram. Ahí anunciamos a los 3 ganadores.</p>
         <a class="gr-ig" href="https://instagram.com/cortinas.rollershow" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
           Seguir a Rollershow
@@ -1124,7 +1129,7 @@ body.done #flowApp{display:none}
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
       <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita (5). El puntaje final lo valida Rollershow al revisar el material.</p>
-      <p>Este mes se sortean 3 almohadones y 2 alfombras premium entre 3 ganadores. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
+      <p id="basesPrizeText">Este mes se sortean 3 almohadones y 2 alfombras premium entre 3 ganadores. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
       <p>Para que la participación sea válida al momento del sorteo, la persona debe seguir a <strong>@cortinas.rollershow</strong> en Instagram. Rollershow verificará este requisito antes de entregar el premio. Instagram no patrocina, avala ni administra esta promoción, ni está asociado a ella.</p>
       <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
       <p>Sin obligación de compra adicional. Premios no canjeables por dinero.</p>
@@ -1140,20 +1145,46 @@ body.done #flowApp{display:none}
   <div class="modal-in">
     <h2 id="exitTitle">Lo que cargaste ya suma</h2>
     <strong class="big" id="exitPts">0 puntos</strong>
-    <p>Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
+    <p id="exitDrawCopy">Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
     <button class="cta" id="exitConfirm">Ir a confirmar mi participación</button>
     <button class="stay" data-close>Quiero seguir cargando</button>
   </div>
 </dialog>
 
 <script>
-/* ==========================================================================
+/* ===========================================================================
+   DATOS DEL SORTEO (mockup)
+   TODO(Nico): traer este bloque desde la configuración vigente del sorteo.
+   Cambiarlo actualiza portada, confirmación, Gracias y textos informativos.
+   Las Bases requieren revisión humana aunque estos datos se actualicen.
+   ========================================================================== */
+const SORTEO = {
+  mes: "julio",
+  fecha: "31 de julio",
+  ganadores: 3,
+  premios: [
+    { cantidad:3, nombre:"almohadones" },
+    { cantidad:2, nombre:"alfombras premium" }
+  ],
+  imagenPremios: "img/hero-premios-v2-768.webp"
+};
+
+function listaNatural(partes) {
+  if (partes.length < 2) return partes[0] || "premios de decoración";
+  return `${partes.slice(0,-1).join(", ")} y ${partes.at(-1)}`;
+}
+const premiosTexto = listaNatural(SORTEO.premios.map(premio => `${premio.cantidad} ${premio.nombre}`));
+const ganadoresTexto = `${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "persona" : "personas"}`;
+
+/* ===========================================================================
    DATOS DEL PRESUPUESTO (mockup)
    TODO(Nico): reemplazar este bloque por fetch a la API real.
    Contrato propuesto:
      GET /api/v2/presupuesto/:token
        -> { cliente: { nombre }, vendedor: { nombre, foto_url }, items: [
-            { id, ambiente, producto, tela, foto_referencia_url } ] }
+            { id, ambiente_display, producto_display, tela_display, foto_referencia_url } ] }
+   `ambiente_display` debe ser el nombre legible para la persona, no un código
+   interno. Si falta, la app usa "Tu cortina" o "Cortina N".
    El token llega en la URL (?t=...) desde el WhatsApp post-instalación.
    ========================================================================== */
 const PRESUPUESTO = {
@@ -1182,14 +1213,37 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
-$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
-$("#vendFoto").src = PRESUPUESTO.vendedor.foto;
-$("#vendFoto").alt = PRESUPUESTO.vendedor.nombre;
-$("#vendNombre").textContent = `${PRESUPUESTO.vendedor.nombre} te acompañó en tu compra`;
-$("#vendCopy").textContent = `¿Cómo fue la atención? Contalo acá; ${PRESUPUESTO.vendedor.nombre} también lo va a leer.`;
-$("#flowVendFoto").src = PRESUPUESTO.vendedor.foto;
-$("#flowVendFoto").alt = PRESUPUESTO.vendedor.nombre;
-$("#flowVendNombre").textContent = PRESUPUESTO.vendedor.nombre;
+$("#flowHeroTitle").textContent = "Mostrá cómo quedó y entrá al sorteo.";
+$("#introPrizeCopy strong").textContent = premiosTexto;
+$("#introDateCopy").textContent = `Los sorteamos entre ${ganadoresTexto}, en vivo por Instagram el ${SORTEO.fecha}.`;
+$("#introPrizeImage").src = SORTEO.imagenPremios;
+$("#introPrizeImage").alt = `Premios del sorteo: ${premiosTexto}`;
+$("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosTexto}.`;
+$("#instagramRequirement").innerHTML = `Es un requisito del sorteo. Lo hacemos <strong>en vivo el ${SORTEO.fecha}</strong> y anunciamos a ${ganadoresTexto} en <strong>@cortinas.rollershow</strong>.`;
+$("#thanksDrawDate").innerHTML = `Sorteo <b>en vivo el ${SORTEO.fecha}</b> por Instagram. Ahí anunciamos a ${ganadoresTexto}.`;
+$("#basesPrizeText").textContent = `Este mes se sortean ${premiosTexto} entre ${ganadoresTexto}. El sorteo se realiza en vivo el ${SORTEO.fecha}, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Las personas ganadoras serán contactadas por WhatsApp.`;
+$("#exitDrawCopy").textContent = `Te falta confirmar para entrar al sorteo del ${SORTEO.fecha} con todo lo que ya sumaste.`;
+
+function configurarVendedor() {
+  const nombre = String(PRESUPUESTO.vendedor?.nombre || "").trim();
+  const foto = String(PRESUPUESTO.vendedor?.foto_url || PRESUPUESTO.vendedor?.foto || "").trim();
+  const flowSeller = $("#flowSeller");
+  if (!nombre) {
+    flowSeller.hidden = true;
+    $("#vendedorBlock")?.setAttribute("hidden", "");
+    return;
+  }
+  $("#vendNombre").textContent = `${nombre} te acompañó en tu compra`;
+  $("#vendCopy").textContent = `¿Cómo fue la atención? Contalo acá; ${nombre} también lo va a leer.`;
+  $("#flowVendNombre").textContent = nombre;
+  for (const image of [$("#vendFoto"), $("#flowVendFoto")].filter(Boolean)) {
+    image.alt = nombre;
+    if (foto) image.src = foto;
+    else image.hidden = true;
+    image.addEventListener("error", () => image.hidden = true, { once:true });
+  }
+}
+configurarVendedor();
 $("#thanksTitle").textContent = `${PRESUPUESTO.cliente.nombre}, ya estás en el sorteo.`;
 
 /* ---------- puntos ---------- */
@@ -1216,7 +1270,7 @@ function renderPuntos() {
     `Te faltan ${PTS_POR_CHANCE - resto} puntos para otra chance`;
   $("#ctaSub").textContent = p === 0
     ? "Con calificar tu experiencia ya participás."
-    : `Con lo que cargaste entrás al sorteo de julio con ${t === 1 ? "1 chance" : t + " chances"}.`;
+    : `Con lo que cargaste entrás al sorteo de ${SORTEO.mes} con ${t === 1 ? "1 chance" : t + " chances"}.`;
   const flowPts = $("#flowPts");
   flowPts.textContent = p;
   $("#flowTickets").textContent = t;
@@ -1348,8 +1402,23 @@ function rewardClass(step, className, duration = 1000) {
 
 /* ---------- cards de cortinas ---------- */
 const flowItemSteps = $("#flowItemSteps");
+function textoAmbiente(item, index) {
+  const ambiente = String(item.ambiente_display || item.ambiente || "").trim();
+  if (ambiente && !/^(s\/?n|sin definir|ambiente)$/i.test(ambiente)) return ambiente;
+  return PRESUPUESTO.items.length === 1 ? "Tu cortina" : `Cortina ${index + 1}`;
+}
+function detalleCortina(item) {
+  const producto = String(item.producto_display || item.producto || "").trim();
+  const tela = String(item.tela_display || item.tela || "").trim();
+  if (producto && tela) return `${producto}, tela ${tela}`;
+  return producto || tela || "Mostranos cómo quedó instalada.";
+}
 PRESUPUESTO.items.forEach((item, index) => {
   const next = PRESUPUESTO.items[index + 1];
+  const ambiente = textoAmbiente(item, index);
+  const detalle = detalleCortina(item);
+  const referenceImage = item.foto_referencia_url || item.img;
+  const blurredReference = referenceImage?.startsWith("img/") ? referenceImage.replace(".jpg", "-blurred.jpg") : referenceImage;
   const step = document.createElement("section");
   step.className = "flow-step item-step";
   step.dataset.flowStep = `item-${item.id}`;
@@ -1357,13 +1426,13 @@ PRESUPUESTO.items.forEach((item, index) => {
   step.setAttribute("aria-hidden", "true");
   step.innerHTML = `<div class="step-inner">
     <header class="item-heading">
-      <h2 class="step-title">${item.ambiente}</h2>
-      <p class="item-subtitle">${item.producto}, tela ${item.tela}</p>
+      <h2 class="step-title">${ambiente}</h2>
+      <p class="item-subtitle">${detalle}</p>
     </header>
     <div class="item-stage">
       <div class="item-visual">
         <article class="curtain-card">
-          <div class="curtain-photo"><img class="reference-media" src="${item.img.replace(".jpg", "-blurred.jpg")}" width="1024" height="1024" alt="Ejemplo desenfocado: ${item.producto} en ${item.ambiente}" /></div>
+          <div class="curtain-photo"><img class="reference-media" src="${blurredReference}" width="1024" height="1024" alt="Ejemplo: ${detalle} en ${ambiente}" /></div>
         </article>
       </div>
       <div class="item-task">
@@ -1376,7 +1445,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       </div>
     </div>
     <div class="step-actions">
-      <button class="step-primary step-continue" data-flow-next type="button">${next ? `Seguir con ${next.ambiente}` : "Contar mi experiencia"}</button>
+      <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
       <label class="step-secondary upload-more-action"><span class="upload-more-label">Agregar otra foto o video</span><span class="upload-more-points">Foto +10 puntos. Video +25 puntos.</span><input type="file" accept="image/*,video/*" multiple /></label>
     </div>
   </div>`;

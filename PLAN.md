@@ -410,3 +410,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Reprocesar los tres masters mobile a 720×1280 y 30 fps mediante interpolación con compensación de movimiento; bajaron de 8,20 MB combinados a 7,23 MB.
 - [x] Precargar la escena siguiente, retirar filtros y blend modes sobre el video final, usar canvas a DPR 1/30 Hz y secuenciar cortinas, video y confeti. El `backdrop-filter` de la ronda 46 queda reemplazado por textura horneada porque producía cuadros descartados.
 - [x] Extender la regresión de reproducción a las tres escenas y ambas variantes responsive; desktop sostuvo 23,9–24,9 fps y mobile 29,8–31,0 fps sin corrupción. La prueba integral exige además foco visible después de audio grabado y omitido.
+
+## 48. Premio protagonista y datos variables — 2026-07-17
+
+- [x] Reemplazar los CTAs que decían `Seguir con {ambiente}` por `Continuar`; la última cortina usa `Dar mi opinión`. Así un presupuesto con un solo ambiente, nombre ausente o etiqueta interna no altera la navegación.
+- [x] Agregar fallbacks de ambiente: `Tu cortina` para un solo ítem y `Cortina N` para varios. Nicolás debe entregar `ambiente_display` como texto apto para cliente; el frontend no intenta adivinar códigos internos.
+- [x] Hacer visible el premio en el primer fold mobile con la imagen de los 3 almohadones y 2 alfombras reales de la campaña, título directo y cantidad/fecha separadas del CTA.
+- [x] Centralizar mes, fecha, ganadores, premios e imagen en `SORTEO`; portada, confirmación, Gracias, salida y Bases informativas usan el mismo origen. Las Bases siguen requiriendo revisión humana cuando cambian los premios.
+- [x] Limpiar los números de Gracias: ambos en marfil, sombra neutra única y jerarquía por escala. Reservar aire para el anillo de foco de Google en mobile para que no pise copy superior ni fecha.
+- [x] Dejar fuera el carrusel de “ganadores” generado: las imágenes incluyen premios que no coinciden y no deben presentarse como prueba social real. Incorporarlo sólo con fotos auténticas, consentimiento y premios trazables.
