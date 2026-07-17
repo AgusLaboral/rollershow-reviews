@@ -268,13 +268,14 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
   radial-gradient(ellipse at 78% 16%,rgba(210,69,30,.26),transparent 38%),
   radial-gradient(ellipse at 12% 72%,rgba(232,163,61,.14),transparent 42%),
   linear-gradient(145deg,#211713 0%,#130F0D 52%,#26150F 100%);isolation:isolate}
-#gracias>.thanks-ambient-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center 68%;opacity:0;filter:none;mix-blend-mode:normal}
+#gracias>.thanks-ambient-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center 68%;opacity:0;filter:none;mix-blend-mode:normal;transform:translateZ(0)}
 #gracias>.thanks-ambient-video.is-ready{opacity:.62}
 #gracias::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(19,15,13,.42),rgba(19,15,13,.28) 55%,rgba(19,15,13,.48))}
 #gracias::before{content:"";position:absolute;inset:-50%;z-index:0;pointer-events:none;opacity:.13;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E")}
-#celebrationCanvas{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
-.gr-radiance{position:absolute;z-index:1;width:min(72vw,920px);aspect-ratio:1;left:50%;top:34%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(198,58,33,.22),rgba(232,163,61,.06) 38%,transparent 69%);filter:blur(18px);animation:grRadiance 8s cubic-bezier(.45,0,.55,1) infinite alternate}
+#celebrationLayer{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none;contain:strict}
+.celebration-piece{position:absolute;left:0;top:0;width:8px;height:34px;border-radius:2px;opacity:0;will-change:transform,opacity;transform-origin:center}
+.gr-radiance{position:absolute;z-index:1;width:min(72vw,920px);aspect-ratio:1;left:50%;top:34%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(198,58,33,.22),rgba(232,163,61,.06) 38%,transparent 69%);animation:grRadiance 8s cubic-bezier(.45,0,.55,1) infinite alternate}
 @keyframes grRadiance{to{transform:translate(-50%,-50%) scale(1.06);opacity:.82}}
 .gr-curtain-reveal{position:absolute;inset:0;z-index:6;display:grid;grid-template-columns:repeat(5,1fr);pointer-events:none}
 .gr-curtain-reveal i{position:relative;overflow:hidden;background-color:rgba(218,211,200,.7);background-image:
@@ -1059,8 +1060,8 @@ body.done #flowApp{display:none}
      GRACIAS
 ============================================================ -->
 <section id="gracias">
-  <video class="scene-video thanks-ambient-video" id="thanksAmbientVideo" data-src-desktop="img/video/rs-reviews-scene-03-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-03-mobile-kling-v001.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
-  <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
+  <video class="scene-video thanks-ambient-video" id="thanksAmbientVideo" data-src-desktop="img/video/rs-reviews-scene-03-desktop-web-v002.mp4" data-src-mobile="img/video/rs-reviews-scene-03-mobile-kling-v001.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
+  <div id="celebrationLayer" aria-hidden="true"></div>
   <div class="gr-radiance" aria-hidden="true"></div>
   <div class="gr-curtain-reveal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="wrap">
@@ -2071,87 +2072,43 @@ function enviar() {
     googleButton.classList.add("google-focus");
   }, 2850);
 }
+
 function startCelebration() {
-  const canvas = $("#celebrationCanvas"), section = $("#gracias"), ctx = canvas.getContext("2d");
+  const layer = $("#celebrationLayer"), section = $("#gracias");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const palette = ["#F3A13D", "#D2451E", "#FFF3DE", "#B79373", "#7E2B18", "#E7CBA4"];
-  const particles = [], pointer = { x:-1000, y:-1000, active:false };
-  let exclusions = [];
-  let width = 0, height = 0, dpr = 1, started = performance.now(), last = started, raf = 0;
-  const frameInterval = innerWidth < 700 ? 1000 / 30 : 1000 / 60;
-  function resize() {
-    const rect = section.getBoundingClientRect();
-    width = Math.max(1, rect.width); height = Math.max(innerHeight, section.scrollHeight);
-    dpr = Math.min(devicePixelRatio || 1, innerWidth < 700 ? 1 : 1.35);
-    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-    canvas.style.height = height + "px"; ctx.setTransform(dpr,0,0,dpr,0,0);
-    const host = section.getBoundingClientRect();
-    exclusions = [...section.querySelectorAll(".gr-copy,.gr-score span,.g-block,.gr-meta")].map(el => {
-      const r=el.getBoundingClientRect(), pad=el.classList.contains("g-block")?18:10;
-      return {left:r.left-host.left-pad,right:r.right-host.left+pad,top:r.top-host.top-pad,bottom:r.bottom-host.top+pad};
-    });
+  const width = section.clientWidth, height = section.clientHeight;
+  const amount = reduce ? 18 : innerWidth < 700 ? 36 : 48;
+  layer.replaceChildren();
+  window.__celebrationState={particles:amount,running:true,layer:{width,height}};
+  for(let i=0;i<amount;i++){
+    const piece=document.createElement("i"), fromLeft=i%2===0;
+    const edge=innerWidth<700?.1:.16;
+    const x=(fromLeft?Math.random()*edge:1-Math.random()*edge)*width;
+    const y=-40+Math.random()*height*.48;
+    const drift=(fromLeft?-1:1)*(20+Math.random()*90);
+    const fall=height*.45+Math.random()*height*.62;
+    const turn=(fromLeft?1:-1)*(280+Math.random()*620);
+    const duration=(reduce?1700:2600)+Math.random()*(reduce?500:2100);
+    const delay=reduce?0:Math.random()*900;
+    piece.className="celebration-piece";
+    piece.style.background=palette[i%palette.length];
+    piece.style.width=`${4+Math.random()*7}px`;
+    piece.style.height=`${18+Math.random()*34}px`;
+    layer.append(piece);
+    const animation=piece.animate([
+      {transform:`translate3d(${x}px,${y}px,0) rotate(0deg)`,opacity:0},
+      {offset:.08,opacity:.94},
+      {offset:.72,opacity:.82},
+      {transform:`translate3d(${x+drift}px,${y+fall}px,0) rotate(${turn}deg)`,opacity:0}
+    ],{duration,delay,easing:"cubic-bezier(.18,.62,.34,1)",fill:"forwards"});
+    animation.finished.then(()=>{
+      piece.remove();
+      window.__celebrationState.particles=layer.childElementCount;
+      if(!layer.childElementCount)window.__celebrationState.running=false;
+    }).catch(()=>{});
   }
-  function origin() {
-    const host = section.getBoundingClientRect(), score = $(".gr-chances strong").getBoundingClientRect();
-    return { x:score.left - host.left + score.width * .52, y:score.top - host.top + score.height * .58 };
-  }
-  function addBurst(amount, spread = 1, source = origin(), direction = -Math.PI / 2) {
-    for (let i = 0; i < amount; i++) {
-      const angle = direction + (Math.random() - .5) * Math.PI * 1.08;
-      const speed = (4 + Math.random() * 10.5) * spread;
-      particles.push({
-        x:source.x + (Math.random()-.5)*34, y:source.y + (Math.random()-.5)*26,
-        vx:Math.cos(angle)*speed + (Math.random()-.5)*2.8, vy:Math.sin(angle)*speed - Math.random()*3,
-        gravity:.075 + Math.random()*.085, drag:.985 + Math.random()*.01, rotation:Math.random()*Math.PI,
-        spin:(Math.random()-.5)*.2, size:6 + Math.random()*16, length:22 + Math.random()*50,
-        color:palette[i % palette.length], alpha:.68 + Math.random()*.3, kind:i % 3, life:190 + Math.random()*180,
-        phase:Math.random()*Math.PI*2, depth:.55 + Math.random()*.75
-      });
-    }
-  }
-  function addRain(amount) {
-    for (let i=0;i<amount;i++) addBurst(1,.55,{x:Math.random()*width,y:-30-Math.random()*height*.35});
-  }
-  function drawParticle(p, time) {
-    if(exclusions.some(r=>p.x>r.left&&p.x<r.right&&p.y>r.top&&p.y<r.bottom)) return;
-    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rotation); ctx.globalAlpha=Math.max(0,Math.min(1,p.life/55))*p.alpha;
-    ctx.shadowColor=p.color; ctx.shadowBlur=p.kind===2?10:3; ctx.strokeStyle=p.color; ctx.fillStyle=p.color;
-    const wave=Math.sin(time*.004+p.phase)*p.size*.45;
-    if(p.kind===0){ctx.lineWidth=Math.max(2,p.size*.34);ctx.beginPath();ctx.moveTo(-p.length/2,0);ctx.bezierCurveTo(-p.length/5,wave,p.length/5,-wave,p.length/2,0);ctx.stroke()}
-    else if(p.kind===1){ctx.beginPath();ctx.moveTo(-p.size,-p.size*.2);ctx.lineTo(p.size*.7,-p.size*.45);ctx.lineTo(p.size,p.size*.28);ctx.lineTo(-p.size*.8,p.size*.5);ctx.closePath();ctx.fill()}
-    else{ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-p.length/2,0);ctx.quadraticCurveTo(0,wave,p.length/2,0);ctx.stroke()}
-    ctx.restore();
-  }
-  function frame(now) {
-    if(now-last<frameInterval*.9){raf=requestAnimationFrame(frame);return}
-    const dt=Math.min(2,(now-last)/16.67); last=now; ctx.clearRect(0,0,width,height);
-    for(let i=particles.length-1;i>=0;i--){const p=particles[i];
-      if(pointer.active&&!reduce){const dx=p.x-pointer.x,dy=p.y-pointer.y,d2=dx*dx+dy*dy;if(d2<24000&&d2>1){const f=(1-Math.sqrt(d2)/155)*.75;p.vx+=dx/Math.sqrt(d2)*f;p.vy+=dy/Math.sqrt(d2)*f}}
-      p.vx*=Math.pow(p.drag,dt);p.vy=p.vy*Math.pow(p.drag,dt)+p.gravity*dt;p.vx+=Math.sin(now*.001+p.phase)*.012*dt;
-      p.x+=p.vx*dt*p.depth;p.y+=p.vy*dt*p.depth;p.rotation+=p.spin*dt;p.life-=dt;drawParticle(p,now);
-      if(p.life<=0||p.y>height+80||p.x<-100||p.x>width+100)particles.splice(i,1)
-    }
-    const elapsed=now-started;
-    if(!reduce&&elapsed<7000&&Math.floor(elapsed/240)!==Math.floor((elapsed-dt*16.67)/240))addRain(1);
-    window.__celebrationState={particles:particles.length,running:true,canvas:{width:canvas.width,height:canvas.height}};
-    if(elapsed<(reduce?3200:9500)||particles.length){raf=requestAnimationFrame(frame)}else{window.__celebrationState.running=false}
-  }
-  resize();
-  const launchCelebration = () => {
-    addBurst(reduce?40:(innerWidth<700?150:230),1.08);
-    if(!reduce){
-      addBurst(innerWidth<700?38:64,.88,{x:width*.08,y:height*.72},-Math.PI*.34);
-      addBurst(innerWidth<700?38:64,.88,{x:width*.92,y:height*.72},-Math.PI*.66);
-    }
-    addRain(reduce?12:(innerWidth<700?48:70));
-  };
-  launchCelebration();
-  if(!reduce){setTimeout(()=>addBurst(innerWidth<700?64:92,.92),550);setTimeout(()=>addBurst(innerWidth<700?42:64,.76),1150)}
-  section.addEventListener("pointermove",e=>{const r=section.getBoundingClientRect();pointer.x=e.clientX-r.left;pointer.y=e.clientY-r.top;pointer.active=true},{passive:true});
-  section.addEventListener("pointerleave",()=>pointer.active=false,{passive:true});
-  addEventListener("resize",resize,{passive:true,once:true});
   if(navigator.vibrate&&!reduce) navigator.vibrate([28,42,28]);
-  cancelAnimationFrame(raf); raf=requestAnimationFrame(frame);
 }
 
 /* ---------- exit popup ----------

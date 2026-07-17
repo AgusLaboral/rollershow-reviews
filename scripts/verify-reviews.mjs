@@ -287,7 +287,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       const chance = document.querySelector('.gr-chances strong');
       const points = document.querySelector('.gr-points strong');
       const chanceSurface = getComputedStyle(document.querySelector('.gr-chances'));
-      const canvas = document.querySelector('#celebrationCanvas');
+      const layer = document.querySelector('#celebrationLayer');
       const curtain = document.querySelector('.gr-curtain-reveal i');
       const curtainStyle = getComputedStyle(curtain);
       return {
@@ -299,7 +299,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         pointsColor: getComputedStyle(points).color,
         surface: chanceSurface.backgroundColor,
         border: chanceSurface.borderTopWidth,
-        canvasWidth: canvas.width,
+        celebrationWidth: layer.clientWidth,
         particles: window.__celebrationState?.particles || 0,
         running: window.__celebrationState?.running || false,
         numberMotion: getComputedStyle(chance).animationName,
@@ -323,8 +323,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
     if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 64 || celebration.pointsSize < 64 ||
-        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 || celebration.chanceColor !== celebration.pointsColor ||
-        celebration.particles < 80 || celebration.particles > 650 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
+        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.celebrationWidth < 390 || celebration.chanceColor !== celebration.pointsColor ||
+        celebration.particles < 18 || celebration.particles > 64 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
         !celebration.curtainColor.startsWith('rgba') || curtainAlpha < .6 || curtainAlpha > .8 || !celebration.curtainTexture.includes('repeating-linear-gradient') ||
         !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
         celebration.videoPaused || !celebration.videoLoop || celebration.videoOpacity < .5 || !celebration.readingOrder ||

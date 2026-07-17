@@ -427,3 +427,10 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 
 - [x] Retirar la grilla de dos columnas equivalentes en Gracias desktop: título, resultado, Google y datos del sorteo comparten un eje izquierdo de 680 px; chances domina, puntos queda como evidencia y el ambiente conserva aire a la derecha.
 - [x] Mantener mobile en un único eje vertical y agregar una regresión geométrica específica para que puntos, fecha e Instagram no vuelvan a flotar en columnas independientes.
+
+## 50. Fluidez real de Gracias — 2026-07-17
+
+- [x] Reproducir video, cortinas y festejo juntos a 2048×1024. El test anterior activaba el MP4 aislado y no veía que el canvas descartaba 20,9% de los cuadros con pausas de hasta 200 ms.
+- [x] Sustituir el canvas full-screen por 48 cintas de `transform`/`opacity` compuestas por GPU y mantenerlas en los laterales para proteger la lectura.
+- [x] Recodificar el master desktop de Gracias a H.264 Main `faststart`: conserva 1280×720, 24 fps y 15 s, baja de 8,4 MB a 3,5 MB y mantiene SSIM 0,962 contra el original.
+- [x] Agregar `verify-finale-playback.mjs` a la batería oficial para medir cadencia, drops y pausas con toda la escena activa.
