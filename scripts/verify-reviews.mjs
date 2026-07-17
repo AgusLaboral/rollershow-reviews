@@ -157,12 +157,13 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       const prompt=step.querySelector('.upload-prompt').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
       const sourceNode=step.querySelector('.upload-library'), cameraNode=step.querySelector('.upload-camera'), promptNode=step.querySelector('.upload-prompt'), skipNode=step.querySelector('.stage-skip'), titleNode=step.querySelector('.upload-prompt strong');
       const source=sourceNode.getBoundingClientRect();
-      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom,width:prompt.width,background:getComputedStyle(promptNode).backgroundColor,radius:getComputedStyle(promptNode).borderRadius},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom,radius:getComputedStyle(skipNode).borderRadius},source:{left:source.left,width:source.width,height:source.height,radius:getComputedStyle(sourceNode).borderRadius},camera:{radius:getComputedStyle(cameraNode).borderRadius},axis:{title:titleNode.getBoundingClientRect().left,skip:skip.left}};
+      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom,width:prompt.width,background:getComputedStyle(promptNode).backgroundColor,radius:getComputedStyle(promptNode).borderRadius,floatingIcon:Boolean(promptNode.querySelector(':scope > svg'))},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom,radius:getComputedStyle(skipNode).borderRadius},source:{left:source.left,width:source.width,height:source.height,radius:getComputedStyle(sourceNode).borderRadius,copy:sourceNode.textContent},camera:{radius:getComputedStyle(cameraNode).borderRadius},axis:{title:titleNode.getBoundingClientRect().left,skip:skip.left}};
     });
     if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top - skipPlacement.prompt.bottom < 15 ||
         skipPlacement.prompt.width > 362 || skipPlacement.source.height < 40 || skipPlacement.source.width < 120 ||
         skipPlacement.prompt.background !== 'rgba(0, 0, 0, 0)' || skipPlacement.prompt.radius !== '0px' ||
         skipPlacement.source.radius !== skipPlacement.camera.radius || skipPlacement.skip.radius !== '0px' ||
+        skipPlacement.prompt.floatingIcon || skipPlacement.source.copy.includes('→') ||
         Math.abs(skipPlacement.axis.title-skipPlacement.axis.skip) > 2 || Math.abs(skipPlacement.axis.title-skipPlacement.source.left) > 2) {
       fails.push(`seguir sin subir: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
