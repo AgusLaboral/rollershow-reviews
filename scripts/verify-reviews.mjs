@@ -463,7 +463,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
     await p2.goBack(); await p2.waitForTimeout(500);
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
-    await p2.evaluate(async () => { localStorage.removeItem('rs-experiencia'); await clearPersistedDraft(); });
+    await p2.evaluate(async () => { localStorage.removeItem(LS_KEY); await clearPersistedDraft(); });
 
     const p3 = await ctx.newPage();
     await p3.goto(URL, { waitUntil: 'domcontentloaded' });
@@ -717,8 +717,50 @@ if (restoredDraft.activeStep !== 'experience' || restoredDraft.photoCount !== 1 
     restoredDraft.text !== 'Excelente atenciÃ³n y muy buen resultado final.' || !restoredDraft.textVisible || restoredDraft.points !== '50') {
   fails.push(`persistencia: el borrador no se reconstruyÃ³ completo ${JSON.stringify(restoredDraft)}`);
 }
-await persistPage.evaluate(async () => { localStorage.removeItem('rs-experiencia'); await clearPersistedDraft(); });
+await persistPage.evaluate(async () => { localStorage.removeItem(LS_KEY); await clearPersistedDraft(); });
 await persistCtx.close();
+
+// Regresión: calificar sin escribir comentario suma sólo los 5 puntos de las estrellas.
+const noTextCtx = await browser.newContext({ viewport:{ width:390,height:844 }, isMobile:true, hasTouch:true, deviceScaleFactor:2 });
+const noTextPage = await noTextCtx.newPage();
+const noTextUrl = new globalThis.URL(URL); noTextUrl.searchParams.set('t', `sin-comentario-${Date.now()}`);
+await noTextPage.goto(noTextUrl.href, { waitUntil:'domcontentloaded' });
+await noTextPage.evaluate(() => window.__draftReady);
+await noTextPage.click('#startFlow'); await waitCurtain(noTextPage);
+for (let index=0; index<4; index++) { await noTextPage.click('.flow-step.active .stage-skip'); await waitCurtain(noTextPage); }
+await noTextPage.locator('#stars button').nth(4).click();
+await noTextPage.click('#audioSkip'); await noTextPage.waitForTimeout(520);
+const noTextBefore = await noTextPage.evaluate(() => ({ text:reviewText.value,valid:textoValido(),flag:state.textoOk,points:totalPuntos(),shown:document.querySelector('#flowPts')?.textContent }));
+await noTextPage.click('#experienceNext'); await waitCurtain(noTextPage);
+const noTextConfirm = await noTextPage.evaluate(() => ({ points:document.querySelector('#confirmPts')?.textContent,chances:document.querySelector('#confirmTickets')?.textContent }));
+await noTextPage.check('#consent'); await noTextPage.waitForTimeout(120);
+const noTextThanks = await noTextPage.textContent('#grPts');
+if (noTextBefore.text !== '' || noTextBefore.valid || noTextBefore.flag || noTextBefore.points !== 5 || noTextBefore.shown !== '5' ||
+    noTextConfirm.points !== '5' || noTextConfirm.chances !== '1' || noTextThanks !== '5') {
+  fails.push(`sin comentario: se acreditaron puntos que no corresponden ${JSON.stringify({ noTextBefore,noTextConfirm,noTextThanks })}`);
+}
+await noTextCtx.close();
+
+// Regresión: un borrador de otro token o de la clave global anterior no puede contaminar al participante actual.
+const scopeCtx = await browser.newContext({ viewport:{ width:390,height:844 } });
+const scopePage = await scopeCtx.newPage();
+const scopeA = new globalThis.URL(URL); scopeA.searchParams.set('t','participante-a');
+await scopePage.goto(scopeA.href, { waitUntil:'domcontentloaded' });
+await scopePage.evaluate(() => {
+  const saved={ v:2,e:5,t:'Comentario anterior suficientemente largo',audioSkipped:true,textoVisible:true,step:5 };
+  localStorage.setItem(LS_KEY,JSON.stringify(saved));
+  localStorage.setItem('rs-experiencia',JSON.stringify(saved));
+});
+const keyA = await scopePage.evaluate(() => LS_KEY);
+const scopeB = new globalThis.URL(URL); scopeB.searchParams.set('t','participante-b');
+await scopePage.goto(scopeB.href, { waitUntil:'domcontentloaded' });
+await scopePage.evaluate(() => window.__draftReady);
+const isolatedDraft = await scopePage.evaluate(() => ({ key:LS_KEY,legacy:localStorage.getItem('rs-experiencia') !== null,text:reviewText.value,stars:state.estrellas,points:totalPuntos(),active:document.querySelector('.flow-step.active')?.dataset.flowStep }));
+if (isolatedDraft.key === keyA || !isolatedDraft.legacy || isolatedDraft.text !== '' || isolatedDraft.stars !== 0 || isolatedDraft.points !== 0 || isolatedDraft.active !== 'intro') {
+  fails.push(`persistencia: un participante heredó el borrador de otro ${JSON.stringify({ keyA,isolatedDraft })}`);
+}
+await scopePage.evaluate(() => { localStorage.removeItem(LS_KEY); localStorage.removeItem('rs-experiencia'); });
+await scopeCtx.close();
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }

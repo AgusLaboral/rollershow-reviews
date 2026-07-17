@@ -1278,7 +1278,7 @@ function totalPuntos() {
   Object.values(state.archivos).flat().forEach(f => p += f.esVideo ? PUNTOS.video : PUNTOS.foto);
   if (state.estrellas > 0) p += PUNTOS.estrellas;
   if (state.audioBlob)     p += PUNTOS.audio;
-  if (state.textoOk)       p += PUNTOS.texto;
+  if (textoValido())       p += PUNTOS.texto;
   return p;
 }
 function renderPuntos() {
@@ -1778,10 +1778,11 @@ async function startRec() {
 
 /* ---------- texto ---------- */
 const reviewText = $("#reviewText");
+function textoValido() { return reviewText.value.trim().length >= 20; }
 reviewText.addEventListener("input", () => {
   const wasComplete = state.textoOk;
   const previousPoints = totalPuntos();
-  state.textoOk = reviewText.value.trim().length >= 20; /* con 20 caracteres cuenta, para que "ok" no sume */
+  state.textoOk = textoValido(); /* con 20 caracteres cuenta, para que "ok" no sume */
   saveLocal(); renderPuntos();
   if (!wasComplete && state.textoOk) {
     const step = $(".experience-step"); rewardClass(step, "text-reward", 850);
@@ -1793,8 +1794,18 @@ reviewText.addEventListener("input", () => {
 /* El estado liviano vive en localStorage. Fotos, videos y audio van a
    IndexedDB porque localStorage no admite Blob/File ni su tamaño. En producción
    esto complementa, no reemplaza, el upload progresivo al backend. */
-const LS_KEY = "rs-experiencia";
-const DB_NAME = "rs-reviews-draft", DB_VERSION = 1;
+function draftScopeHash(value) {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index++) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(36);
+}
+const draftToken = new URLSearchParams(location.search).get("t") || JSON.stringify({ cliente:PRESUPUESTO.cliente.nombre,items:PRESUPUESTO.items.map(item => item.id) });
+const DRAFT_SCOPE = draftScopeHash(draftToken);
+const LS_KEY = `rs-experiencia:${DRAFT_SCOPE}`;
+const DB_NAME = `rs-reviews-draft-${DRAFT_SCOPE}`, DB_VERSION = 1;
 let draftDBPromise = null, restoredFlowIndex = 0;
 function saveLocal() {
   try { localStorage.setItem(LS_KEY, JSON.stringify({
@@ -1874,7 +1885,7 @@ try {
   const prev = JSON.parse(localStorage.getItem(LS_KEY) || "null");
   if (prev) {
     if (prev.e) { state.estrellas = prev.e; [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e)); $("#starsWord").textContent = PALABRAS[prev.e]; }
-    if (prev.t) { reviewText.value = prev.t; state.textoOk = prev.t.trim().length >= 20; }
+    if (prev.t) { reviewText.value = prev.t; state.textoOk = textoValido(); }
     state.audioSkipped = Boolean(prev.audioSkipped);
     state.textoVisible = Boolean(prev.textoVisible || prev.t);
     const savedStep = Number(prev.step) || 0;
