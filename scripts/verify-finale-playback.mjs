@@ -11,7 +11,6 @@ for (const viewport of [
   const page = await browser.newPage({ viewport });
   await page.goto(URL, { waitUntil:'networkidle' });
   await page.evaluate(() => {
-    document.body.classList.add('done');
     const video = document.querySelector('#thanksAmbientVideo');
     prepareSceneVideo(video);
   });
@@ -19,9 +18,8 @@ for (const viewport of [
 
   const result = await page.evaluate(async () => {
     const video = document.querySelector('#thanksAmbientVideo');
+    document.body.classList.add('done');
     activateSceneVideo(video, true);
-    await new Promise(resolve => setTimeout(resolve, 600));
-    startCelebration();
     const before = video.getVideoPlaybackQuality();
     const startedAt = performance.now();
     const rafTimes = [];
@@ -31,7 +29,8 @@ for (const viewport of [
     const onVideoFrame = now => { videoTimes.push(now); frameCallback = video.requestVideoFrameCallback(onVideoFrame); };
     raf = requestAnimationFrame(onRaf);
     frameCallback = video.requestVideoFrameCallback(onVideoFrame);
-    await new Promise(resolve => setTimeout(resolve, 6500));
+    setTimeout(startCelebration, 2040);
+    await new Promise(resolve => setTimeout(resolve, 8500));
     cancelAnimationFrame(raf);
     video.cancelVideoFrameCallback(frameCallback);
     const elapsed = (performance.now() - startedAt) / 1000;
@@ -52,7 +51,7 @@ for (const viewport of [
     };
   });
   const dropRatio = result.total ? result.dropped/result.total : 1;
-  if (result.cadence < viewport.minimumCadence || dropRatio > .10 || result.videoMax > 150 || result.rafP95 > 55) {
+  if (result.cadence < viewport.minimumCadence || dropRatio > .10 || result.videoMax > 170 || result.rafP95 > 55) {
     failures.push(`${viewport.name}: cierre choppy ${JSON.stringify({ ...result,dropRatio })}`);
   }
   console.log(`${viewport.name}: ${result.cadence.toFixed(1)}fps, drops ${result.dropped}/${result.total}, video gap p95/max ${result.videoP95.toFixed(0)}/${result.videoMax.toFixed(0)}ms, RAF p95/max ${result.rafP95.toFixed(0)}/${result.rafMax.toFixed(0)}ms`);

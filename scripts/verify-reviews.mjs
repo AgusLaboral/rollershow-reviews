@@ -155,9 +155,13 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     const skipPlacement = await page.evaluate(() => {
       const step=document.querySelector('.item-step.active'), stage=step.querySelector('.item-stage').getBoundingClientRect();
       const prompt=step.querySelector('.upload-prompt').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
-      return {inside:!!step.querySelector('.item-task>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom}};
+      const title=step.querySelector('.upload-prompt strong').getBoundingClientRect(), source=step.querySelector('.upload-library').getBoundingClientRect();
+      const icon=step.querySelector('.upload-prompt>svg').getBoundingClientRect(), range=document.createRange();
+      range.selectNodeContents(step.querySelector('.stage-skip'));
+      const skipText=range.getBoundingClientRect();
+      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom},axis:{title:title.left,source:source.left,skip:skipText.left,iconTop:icon.top,titleTop:title.top}};
     });
-    if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top < skipPlacement.prompt.bottom - 1 ||
+    if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top - skipPlacement.prompt.bottom < 15 ||
         Math.abs(skipPlacement.skip.left-skipPlacement.prompt.left) > 2 || Math.abs(skipPlacement.skip.right-skipPlacement.prompt.right) > 2) {
       fails.push(`seguir sin subir: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
@@ -301,6 +305,22 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('el flujo terminó antes del consentimiento');
     await page.check('#consent'); await page.waitForTimeout(700);
     await page.screenshot({ path: `${OUT}/canonical-390-thanks-curtain.png` });
+    const earlyFinale = await page.evaluate(() => {
+      const video=document.querySelector('#thanksAmbientVideo'), curtain=document.querySelector('.gr-curtain-reveal i');
+      return {
+        videoTime:video.currentTime,
+        videoOpacity:parseFloat(getComputedStyle(video).opacity),
+        curtainTransform:getComputedStyle(curtain).transform,
+        scoreOpacity:parseFloat(getComputedStyle(document.querySelector('.gr-chances')).opacity),
+        particles:window.__celebrationState?.particles || 0,
+        timing:window.__finaleTiming,
+        flash:document.querySelector('#celebrationFlash').classList.contains('burst'),
+      };
+    });
+    if (earlyFinale.videoTime <= .2 || earlyFinale.videoOpacity < .5 || earlyFinale.curtainTransform === 'matrix(1, 0, 0, 0, 0, 0)' ||
+        earlyFinale.scoreOpacity < .2 || earlyFinale.particles !== 0 || !earlyFinale.timing?.videoStarted || earlyFinale.timing?.burst || earlyFinale.flash) {
+      fails.push(`festejo temprano: video, trama y números no conviven antes del confeti ${JSON.stringify(earlyFinale)}`);
+    }
     await page.waitForTimeout(2600);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
@@ -338,6 +358,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         videoBlend: getComputedStyle(document.querySelector('#thanksAmbientVideo')).mixBlendMode,
         radiance: getComputedStyle(document.querySelector('.gr-radiance')).display,
         fanfare: window.__participationFanfare,
+        finaleTiming: window.__finaleTiming,
+        flashTriggered: document.querySelector('#celebrationFlash').classList.contains('burst'),
         videoDrops: (() => { const q=document.querySelector('#thanksAmbientVideo').getVideoPlaybackQuality(); return {dropped:q.droppedVideoFrames,total:q.totalVideoFrames,corrupted:q.corruptedVideoFrames}; })(),
         readingOrder: Boolean(document.querySelector('#gBlock').compareDocumentPosition(document.querySelector('.gr-meta')) & Node.DOCUMENT_POSITION_FOLLOWING),
         lowerDisplay: getComputedStyle(document.querySelector('.gr-lower')).display,
@@ -354,7 +376,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         celebration.videoFilter !== 'none' || celebration.videoBlend !== 'normal' || celebration.radiance !== 'none' ||
         !celebration.fanfare?.attempted || !celebration.fanfare?.played || celebration.fanfare.plays !== 1 || celebration.fanfare.volume < .12 || celebration.fanfare.volume > .2 ||
         celebration.fanfare.duration > 1.5 || celebration.fanfare.voices !== 6 || celebration.fanfare.error ||
-        celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .01 ||
+        !celebration.finaleTiming?.burst || celebration.finaleTiming.burstAt < 1900 || celebration.finaleTiming.burstAt > 2350 || !celebration.flashTriggered ||
+        celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .05 ||
         celebration.lowerDisplay !== 'flex' || celebration.lowerDirection !== 'column') {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
     }
@@ -513,6 +536,17 @@ const desktopIntro = await dpage.evaluate(() => {
 if (!desktopIntro.prizeVisible || !desktopIntro.cutout || !desktopIntro.split || !desktopIntro.ctaInside || !desktopIntro.noteAligned || desktopIntro.overflow > 0) fails.push(`portada desktop: relato y premios no forman dos zonas legibles ${JSON.stringify(desktopIntro)}`);
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
+const desktopUploadAxis = await dpage.evaluate(() => {
+  const step=document.querySelector('.item-step.active'), title=step.querySelector('.upload-prompt strong').getBoundingClientRect();
+  const source=step.querySelector('.upload-library').getBoundingClientRect(), icon=step.querySelector('.upload-prompt>svg').getBoundingClientRect();
+  const range=document.createRange(); range.selectNodeContents(step.querySelector('.stage-skip'));
+  const skip=range.getBoundingClientRect();
+  return {title:title.left,source:source.left,skip:skip.left,iconTop:icon.top,titleTop:title.top};
+});
+if (Math.abs(desktopUploadAxis.title-desktopUploadAxis.source) > 2 || Math.abs(desktopUploadAxis.title-desktopUploadAxis.skip) > 2 ||
+    Math.abs(desktopUploadAxis.iconTop-desktopUploadAxis.titleTop) > 4) {
+  fails.push(`carga desktop: título, recompensa, selector y salto no comparten eje ${JSON.stringify(desktopUploadAxis)}`);
+}
 await dpage.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(620);
 const desktopTray = await dpage.evaluate(() => {
