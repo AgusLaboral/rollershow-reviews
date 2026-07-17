@@ -577,7 +577,7 @@ body{min-height:100vh;min-height:100dvh}
   linear-gradient(180deg,rgba(23,20,18,.02) 35%,rgba(23,20,18,.7) 100%);pointer-events:none}
 .upload-zone{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px;text-align:left;color:#fff;touch-action:manipulation;
   background:linear-gradient(180deg,transparent 8%,rgba(22,18,15,.18) 36%,rgba(22,18,15,.82) 100%)}
-.upload-decision{display:flex;flex-direction:column;align-items:stretch;gap:22px;width:min(100%,360px);margin-left:auto}
+.upload-decision{--upload-content-offset:57px;display:flex;flex-direction:column;align-items:stretch;gap:22px;width:min(100%,360px);margin-left:auto}
 .upload-prompt{width:100%;display:grid;grid-template-columns:34px minmax(0,1fr);align-items:start;gap:10px;padding:12px 13px;
   color:#fff;border:0;border-radius:0;background:transparent;box-shadow:none}
 .upload-zone svg{width:24px;height:24px;margin:2px 0 0;color:#fff}
@@ -599,7 +599,7 @@ body{min-height:100vh;min-height:100dvh}
 .upload-prompt .upload-camera{border-color:rgba(255,255,255,.76);background:rgba(20,17,15,.34);color:#fff;box-shadow:none}
 .upload-prompt .upload-camera:hover{background:rgba(20,17,15,.58)}
 .upload-source input,.upload-zone input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.stage-skip{position:relative;z-index:5;align-self:center;width:auto;min-height:44px;padding:7px 10px;border:0;border-radius:0;background:transparent;color:#fff;font-size:.78rem;text-align:center;text-shadow:0 1px 6px rgba(0,0,0,.8);text-decoration:underline;text-decoration-color:rgba(255,255,255,.58);text-underline-offset:4px}
+.stage-skip{position:relative;z-index:5;align-self:flex-start;width:auto;min-height:44px;margin-left:var(--upload-content-offset);padding:7px 0;border:0;border-radius:0;background:transparent;color:#fff;font-size:.78rem;text-align:left;text-shadow:0 1px 6px rgba(0,0,0,.8);text-decoration:underline;text-decoration-color:rgba(255,255,255,.58);text-underline-offset:4px}
 .stage-remove{position:absolute;z-index:5;right:14px;top:14px;width:44px;height:44px;display:grid;place-items:center;color:#fff;
   border:1px solid rgba(255,255,255,.34);border-radius:8px;background:rgba(25,22,20,.62);box-shadow:0 8px 20px -14px #000}
 .stage-remove:hover{background:rgba(25,22,20,.78)}.stage-remove svg{width:17px;height:17px}
@@ -818,7 +818,7 @@ body.done #flowApp{display:none}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}
   .item-step .upload-zone{padding:24px;align-items:center;justify-content:flex-end}
   .item-step .upload-zone{background:linear-gradient(90deg,transparent 42%,rgba(22,18,15,.18) 58%,rgba(22,18,15,.82) 100%)}
-  .item-step .upload-decision{width:min(36%,380px);margin-left:auto;gap:22px}
+  .item-step .upload-decision{--upload-content-offset:58px;width:min(36%,380px);margin-left:auto;gap:22px}
   .item-step .upload-prompt{width:100%;margin:0;padding:14px;align-items:start}
   .item-step .upload-prompt>svg{margin-top:1px}
   .item-step .upload-library{grid-column:1 / -1}

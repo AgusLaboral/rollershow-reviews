@@ -155,14 +155,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     const skipPlacement = await page.evaluate(() => {
       const step=document.querySelector('.item-step.active'), stage=step.querySelector('.item-stage').getBoundingClientRect();
       const prompt=step.querySelector('.upload-prompt').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
-      const sourceNode=step.querySelector('.upload-library'), cameraNode=step.querySelector('.upload-camera'), promptNode=step.querySelector('.upload-prompt'), skipNode=step.querySelector('.stage-skip');
+      const sourceNode=step.querySelector('.upload-library'), cameraNode=step.querySelector('.upload-camera'), promptNode=step.querySelector('.upload-prompt'), skipNode=step.querySelector('.stage-skip'), titleNode=step.querySelector('.upload-prompt strong');
       const source=sourceNode.getBoundingClientRect();
-      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom,width:prompt.width,background:getComputedStyle(promptNode).backgroundColor,radius:getComputedStyle(promptNode).borderRadius},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom,radius:getComputedStyle(skipNode).borderRadius},source:{width:source.width,height:source.height,radius:getComputedStyle(sourceNode).borderRadius},camera:{radius:getComputedStyle(cameraNode).borderRadius}};
+      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom,width:prompt.width,background:getComputedStyle(promptNode).backgroundColor,radius:getComputedStyle(promptNode).borderRadius},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom,radius:getComputedStyle(skipNode).borderRadius},source:{left:source.left,width:source.width,height:source.height,radius:getComputedStyle(sourceNode).borderRadius},camera:{radius:getComputedStyle(cameraNode).borderRadius},axis:{title:titleNode.getBoundingClientRect().left,skip:skip.left}};
     });
     if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top - skipPlacement.prompt.bottom < 15 ||
         skipPlacement.prompt.width > 362 || skipPlacement.source.height < 40 || skipPlacement.source.width < 120 ||
         skipPlacement.prompt.background !== 'rgba(0, 0, 0, 0)' || skipPlacement.prompt.radius !== '0px' ||
-        skipPlacement.source.radius !== skipPlacement.camera.radius || skipPlacement.skip.radius !== '0px') {
+        skipPlacement.source.radius !== skipPlacement.camera.radius || skipPlacement.skip.radius !== '0px' ||
+        Math.abs(skipPlacement.axis.title-skipPlacement.axis.skip) > 2 || Math.abs(skipPlacement.axis.title-skipPlacement.source.left) > 2) {
       fails.push(`seguir sin subir: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
@@ -538,12 +539,13 @@ await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 const desktopUploadAxis = await dpage.evaluate(() => {
   const step=document.querySelector('.item-step.active'), prompt=step.querySelector('.upload-prompt').getBoundingClientRect();
-  const source=step.querySelector('.upload-library').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
-  return {prompt:{left:prompt.left,right:prompt.right,width:prompt.width,bottom:prompt.bottom},source:{left:source.left,right:source.right,height:source.height},skip:{top:skip.top},stageRight:step.querySelector('.item-stage').getBoundingClientRect().right};
+  const source=step.querySelector('.upload-library').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect(), title=step.querySelector('.upload-prompt strong').getBoundingClientRect();
+  return {prompt:{left:prompt.left,right:prompt.right,width:prompt.width,bottom:prompt.bottom},source:{left:source.left,right:source.right,height:source.height},skip:{left:skip.left,top:skip.top},title:{left:title.left},stageRight:step.querySelector('.item-stage').getBoundingClientRect().right};
 });
 if (desktopUploadAxis.prompt.width > 382 || desktopUploadAxis.source.height < 40 ||
     desktopUploadAxis.source.left < desktopUploadAxis.prompt.left || desktopUploadAxis.source.right > desktopUploadAxis.prompt.right ||
-    desktopUploadAxis.skip.top - desktopUploadAxis.prompt.bottom < 18 || Math.abs(desktopUploadAxis.prompt.right-desktopUploadAxis.stageRight) > 26) {
+    desktopUploadAxis.skip.top - desktopUploadAxis.prompt.bottom < 18 || Math.abs(desktopUploadAxis.prompt.right-desktopUploadAxis.stageRight) > 26 ||
+    Math.abs(desktopUploadAxis.title.left-desktopUploadAxis.source.left) > 2 || Math.abs(desktopUploadAxis.title.left-desktopUploadAxis.skip.left) > 2) {
   fails.push(`carga desktop: selector poco claro, grande o mal separado ${JSON.stringify(desktopUploadAxis)}`);
 }
 await dpage.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
