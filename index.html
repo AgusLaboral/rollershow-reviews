@@ -513,7 +513,8 @@ body{min-height:100vh;min-height:100dvh}
 .intro-scene img,.intro-scene .scene-video{object-fit:cover;object-position:66% 50%}
 .scene-video{opacity:0;transition:opacity .7s ease;pointer-events:none}
 .scene-video.is-ready{opacity:1}
-.intro-base{transform:scale(1.035);animation:heroBreath 13s ease-in-out infinite alternate}
+.intro-scene .scene-video{transition-duration:.16s;transition-timing-function:linear}
+.intro-base{transform:none;animation:none}
 .intro-float{pointer-events:none;will-change:transform}
 .intro-float-pillow{clip-path:polygon(0 16%,96% 16%,96% 69%,0 69%);animation:heroPillow 10s cubic-bezier(.45,0,.55,1) infinite alternate}
 .intro-float-rug{clip-path:polygon(12% 57%,100% 53%,100% 94%,12% 98%);animation:heroRug 12s cubic-bezier(.45,0,.55,1) -3s infinite alternate}
@@ -716,7 +717,7 @@ body{min-height:100vh;min-height:100dvh}
 
 /* La animación sigue activa, pero con menos recorrido para quien lo solicita. */
 @media (prefers-reduced-motion:reduce){
-  .intro-base,.intro-float{animation-duration:24s;transform:scale(1.015)}
+  .intro-float{animation-duration:24s;transform:scale(1.015)}
   .flow-shell.curtain-running .roller-fabric{animation-duration:.74s}
   .variant-ambientes .flow-step{transition-duration:.38s;filter:none}
   .variant-ambientes .flow-step,.variant-ambientes .flow-step.active.entering{transform:scale(.94)}
@@ -826,7 +827,10 @@ body.done #flowApp{display:none}
           <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-01-living-wide-mobile.webp" />
           <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1440" height="810" alt="" fetchpriority="high" />
         </picture>
-        <video class="scene-video" data-scene-video data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="none" aria-hidden="true"></video>
+        <video class="scene-video" data-scene-video data-seamless-start data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="auto" aria-hidden="true">
+          <source media="(max-width:799px)" src="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" type="video/mp4" />
+          <source src="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" type="video/mp4" />
+        </video>
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
@@ -1708,15 +1712,25 @@ try {
 let flowIndex = 0, flowBusy = false, flowSteps = [];
 function activateSceneVideo(video, restart = false) {
   if (!video) return;
-  if (!video.src) {
+  const embeddedSource = video.querySelector("source[src]");
+  if (!video.src && !embeddedSource) {
     video.src = matchMedia("(max-width:799px)").matches ? video.dataset.srcMobile : video.dataset.srcDesktop;
-    video.addEventListener("canplay", () => video.classList.add("is-ready"), { once:true });
+  }
+  const start = () => {
+    video.pause();
+    if (restart || video.hasAttribute("data-seamless-start")) {
+      try { video.currentTime = 0; } catch (_) {}
+    }
+    requestAnimationFrame(() => {
+      video.classList.add("is-ready");
+      video.play().catch(() => {});
+    });
+  };
+  if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) start();
+  else {
+    video.addEventListener("canplay", start, { once:true });
     video.load();
   }
-  if (restart) {
-    try { video.currentTime = 0; } catch (_) {}
-  }
-  video.play().catch(() => {});
 }
 function activateStepScene(step, restart = false) {
   step?.querySelectorAll("source[data-srcset]").forEach(source => {
@@ -1729,7 +1743,6 @@ function activateStepScene(step, restart = false) {
   });
   activateSceneVideo(step?.querySelector("[data-scene-video]"), restart);
 }
-window.addEventListener("load", () => setTimeout(() => activateStepScene(document.querySelector(".intro-step.active")), 1400), { once:true });
 function setupFlow() {
   $("#flowStarsMount").append($("#stars"), $("#starsWord"));
   $("#flowAudioMount").append($("#audioUI"));
@@ -1802,6 +1815,7 @@ function goToFlow(target) {
   setTimeout(() => { app.classList.remove("curtain-running"); }, 1240);
 }
 setupFlow();
+activateStepScene(document.querySelector(".intro-step.active"));
 
 /* ---------- bases ---------- */
 const basesModal = $("#basesModal");

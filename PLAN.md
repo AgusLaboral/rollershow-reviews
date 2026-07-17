@@ -364,3 +364,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Calibrar hilos verticales y horizontales de bajo contraste, variación de luz y ruido de fibra para que la textura no parezca una cuadrícula digital.
 - [x] Mantener paneles, secuencia escalonada y timing del cierre sin afectar la entrega de foco a Google.
 - [x] Agregar regresión sobre alfa máximo, trama bidireccional y fibra; verificar flujo, grid y overflow entre 320 y 1920 px.
+
+## 43. Inicio cinematográfico sin salto — 2026-07-16
+
+- [x] Eliminar la espera artificial de 1,4 s que pedía el primer video recién después de `window.load`.
+- [x] Declarar las fuentes desktop y mobile dentro del HTML para iniciar la descarga durante el parseo y conservar la carga diferida en las escenas posteriores.
+- [x] Regenerar ambos posters desde el cuadro cero exacto de sus MP4 y retirar el zoom autónomo que movía el still antes del empalme.
+- [x] Reducir el fundido a 160 ms y reproducir sólo después de `canplay`, sin cambiar encuadre, escala ni composición.
+- [x] Agregar una regresión con 1,2 s de demora de red: pedido antes de 500 ms, poster inmóvil, variante responsive correcta y diferencia poster/cuadro cero menor a 2,5%.
+- [x] Separar el presupuesto del shell no bloqueante (850 KB) del video progresivo H.264 `faststart` (1,9 MB) para no degradar la toma por perseguir una métrica que ya no representa el arranque visual.
