@@ -265,6 +265,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
       const points = document.querySelector('.gr-points strong');
       const chanceSurface = getComputedStyle(document.querySelector('.gr-chances'));
       const canvas = document.querySelector('#celebrationCanvas');
+      const curtain = document.querySelector('.gr-curtain-reveal i');
+      const curtainStyle = getComputedStyle(curtain);
       return {
         title: document.querySelector('#thanksTitle')?.textContent,
         sub: document.querySelector('#grSub')?.textContent,
@@ -277,11 +279,16 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         running: window.__celebrationState?.running || false,
         numberMotion: getComputedStyle(chance).animationName,
         oldConfetti: document.querySelectorAll('.confetti').length,
+        curtainColor: curtainStyle.backgroundColor,
+        curtainTexture: curtainStyle.backgroundImage,
+        curtainFiber: getComputedStyle(curtain, '::after').backgroundImage,
       };
     });
+    const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
     if (!celebration.title?.startsWith('¡Lo hiciste') || !celebration.sub?.includes('duplicar tus chances en Google') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
-        celebration.particles < 35 || celebration.particles > 180 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0) {
+        celebration.particles < 35 || celebration.particles > 180 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
+        !celebration.curtainColor.startsWith('rgba') || curtainAlpha > .35 || !celebration.curtainTexture.includes('repeating-linear-gradient') || !celebration.curtainFiber.includes('data:image/svg+xml')) {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
     }
     const googleHandoff = await page.evaluate(() => {

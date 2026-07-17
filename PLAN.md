@@ -356,3 +356,11 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Publicar H.264 `faststart` a resolución nativa útil —1280×720 desktop y 720×1280 mobile—, con posters estáticos y carga diferida de escenas posteriores.
 - [x] Verificar en GitHub Pages 15,04 s de duración, encuadre final detenido, cero cuadros corruptos y 2 cuadros perdidos sobre 402 presentados entre desktop y mobile.
 - [x] Recorrer el flujo completo de 320 a 1920 px, pantallas bajas, accesibilidad y arranque mobile sin regresiones.
+
+## 42. Sunscreen translúcida en la apertura final — 2026-07-16
+
+- [x] Detectar que los cinco paños del cierre usaban una base beige completamente opaca y que la microtrama sólo estaba dibujada encima.
+- [x] Reemplazarla por material transmisivo por alfa, sin `backdrop-filter`: 72% de paso base para conservar ambiente y producto detrás.
+- [x] Calibrar hilos verticales y horizontales de bajo contraste, variación de luz y ruido de fibra para que la textura no parezca una cuadrícula digital.
+- [x] Mantener paneles, secuencia escalonada y timing del cierre sin afectar la entrega de foco a Google.
+- [x] Agregar regresión sobre alfa máximo, trama bidireccional y fibra; verificar flujo, grid y overflow entre 320 y 1920 px.
