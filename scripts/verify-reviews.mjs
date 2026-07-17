@@ -44,6 +44,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     prizeConfig: SORTEO.premios.map(item => `${item.cantidad} ${item.nombre}`).join(' y '),
     prizeVisual: getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
     introTitle: document.querySelector('#flowHeroTitle')?.textContent,
+    introHook: document.querySelector('#introPrizeHook')?.textContent,
     bases: document.querySelector('.bases-txt')?.textContent,
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
     bannedCopy: /[·—]/.test(document.querySelector('#flowApp')?.innerText || ''),
@@ -68,7 +69,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('mostrá cómo quedó tu casa')) fails.push(`${vp.w}px: la portada no prioriza premios o no conserva la conversación sobre el hogar ${JSON.stringify(initial)}`);
+  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('tu casa ya luce rollershow') || initial.introHook !== 'Ahora puede sumar algo más.') fails.push(`${vp.w}px: la portada no reconoce el hogar antes de presentar el premio ${JSON.stringify(initial)}`);
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
   if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no es corto y directo`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);

@@ -419,3 +419,4 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Centralizar mes, fecha, ganadores, premios e imagen en `SORTEO`; portada, confirmación, Gracias, salida y Bases informativas usan el mismo origen. Las Bases siguen requiriendo revisión humana cuando cambian los premios.
 - [x] Limpiar los números de Gracias: ambos en marfil, sombra neutra única y jerarquía por escala. Reservar aire para el anillo de foco de Google en mobile para que no pise copy superior ni fecha.
 - [x] Dejar fuera el carrusel de “ganadores” generado: las imágenes incluyen premios que no coinciden y no deben presentarse como prueba social real. Incorporarlo sólo con fotos auténticas, consentimiento y premios trazables.
+- [x] Recuperar el arranque humano aprobado: `Carolina, tu casa ya luce Rollershow.` reconoce primero la transformación del hogar; `Ahora puede sumar algo más.` abre curiosidad antes de mostrar el premio concreto. El CTA queda como única instrucción.

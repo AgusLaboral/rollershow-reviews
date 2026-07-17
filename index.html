@@ -537,7 +537,8 @@ body{min-height:100vh;min-height:100dvh}
 .intro-copy-block .step-actions{margin-top:20px;padding-top:0}
 .intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:14ch}
 .intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.16;margin-top:14px;max-width:31ch}
-.intro-prize strong{color:var(--cta-deep)}
+.intro-prize span{display:block;margin-bottom:4px;color:var(--fg-soft);font-family:var(--font-body);font-size:.82em;font-weight:600}
+.intro-prize strong{display:block;color:var(--cta-deep)}
 .intro-date{font-size:.78rem;color:var(--fg-mute);margin-top:8px}
 
 @media (max-width:799px){
@@ -845,8 +846,8 @@ body.done #flowApp{display:none}
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
         <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-v2-768.webp" width="768" height="512" alt="" /></div>
         <div class="intro-copy-block">
-          <h1 id="flowHeroTitle">Mostrá cómo quedó tu casa.</h1>
-          <p class="intro-prize" id="introPrizeCopy"><strong>3 almohadones y 2 alfombras premium</strong></p>
+          <h1 id="flowHeroTitle">Tu casa ya luce Rollershow.</h1>
+          <p class="intro-prize" id="introPrizeCopy"><span id="introPrizeHook">Ahora puede sumar algo más.</span><strong>3 almohadones y 2 alfombras premium</strong></p>
           <p class="intro-date" id="introDateCopy">Los sorteamos entre 3 personas, en vivo por Instagram el 31 de julio.</p>
           <div class="step-actions">
             <button class="step-primary" id="startFlow" type="button">Participar ahora
@@ -1213,7 +1214,8 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
-$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
+$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, tu casa ya luce Rollershow.`;
+$("#introPrizeHook").textContent = "Ahora puede sumar algo más.";
 $("#introPrizeCopy strong").textContent = premiosTexto;
 $("#introDateCopy").textContent = `Los sorteamos entre ${ganadoresTexto}, en vivo por Instagram el ${SORTEO.fecha}.`;
 $("#introPrizeImage").src = SORTEO.imagenPremios;
