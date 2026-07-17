@@ -391,3 +391,12 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Reducir el recorrido a portada + 4 productos + experiencia + confirmación y recalibrar progreso, cierre y pruebas.
 - [x] Persistir paso actual, archivos, estrellas, audio y texto con `localStorage` + `IndexedDB`; limpiar el borrador sólo después de confirmar el envío.
 - [x] Agregar una regresión que carga una foto, graba audio, escribe, recarga la página y exige reconstrucción completa con 50 puntos.
+
+## 46. Cierre en un fold y celebración más intensa — 2026-07-17
+
+- [x] Eliminar el auto-scroll que empujaba el título al entregar el foco al CTA de Google.
+- [x] Recomponer título, puntos, chances, Google, fecha e Instagram dentro del primer viewport en mobile y desktop.
+- [x] Multiplicar los estallidos del canvas desde el puntaje y ambos laterales, con mayor tamaño, recorrido y lluvia de fibras.
+- [x] Llevar los cinco paños de 28% a 70% de opacidad y reforzar trama vertical, horizontal, ruido de fibra, luz y sombra.
+- [x] Incorporar desenfoque controlado de 5 px detrás de los paños y verificarlo en estilo computado.
+- [x] Capturar el levantamiento a mitad de animación y exigir por prueba que título, CTA y datos del sorteo permanezcan dentro del fold sin scroll.

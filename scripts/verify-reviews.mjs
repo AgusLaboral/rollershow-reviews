@@ -247,7 +247,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
     }
     await page.screenshot({ path: `${OUT}/canonical-390-confirm-consent.png` });
     if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('el flujo terminó antes del consentimiento');
-    await page.check('#consent'); await page.waitForTimeout(3300);
+    await page.check('#consent'); await page.waitForTimeout(700);
+    await page.screenshot({ path: `${OUT}/canonical-390-thanks-curtain.png` });
+    await page.waitForTimeout(2600);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
     if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
@@ -273,13 +275,15 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         curtainColor: curtainStyle.backgroundColor,
         curtainTexture: curtainStyle.backgroundImage,
         curtainFiber: getComputedStyle(curtain, '::after').backgroundImage,
+        curtainBlur: curtainStyle.backdropFilter || curtainStyle.webkitBackdropFilter,
       };
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
     if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 100 || celebration.pointsSize < 65 ||
         celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.canvasWidth < 390 ||
-        celebration.particles < 35 || celebration.particles > 180 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
-        !celebration.curtainColor.startsWith('rgba') || curtainAlpha > .35 || !celebration.curtainTexture.includes('repeating-linear-gradient') || !celebration.curtainFiber.includes('data:image/svg+xml')) {
+        celebration.particles < 80 || celebration.particles > 650 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
+        !celebration.curtainColor.startsWith('rgba') || curtainAlpha < .6 || curtainAlpha > .8 || !celebration.curtainTexture.includes('repeating-linear-gradient') ||
+        !celebration.curtainFiber.includes('data:image/svg+xml') || !celebration.curtainBlur?.includes('blur')) {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
     }
     const googleHandoff = await page.evaluate(() => {
@@ -289,14 +293,19 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
         focused: document.activeElement === button,
         highlighted: button.classList.contains('google-focus'),
         buttonRect: { top:button.getBoundingClientRect().top, bottom:button.getBoundingClientRect().bottom },
+        titleTop: document.querySelector('#thanksTitle').getBoundingClientRect().top,
         chanceTop: document.querySelector('.gr-chances strong').getBoundingClientRect().top,
+        metaBottom: document.querySelector('.gr-meta').getBoundingClientRect().bottom,
+        scrollY,
         viewportHeight: innerHeight,
         host: url.hostname,
         path: url.pathname,
         href: button.href,
       };
     });
-    if (!googleHandoff.focused || !googleHandoff.highlighted || googleHandoff.buttonRect.top < 0 || googleHandoff.buttonRect.bottom > googleHandoff.viewportHeight || googleHandoff.chanceTop < -2) {
+    if (!googleHandoff.focused || !googleHandoff.highlighted || googleHandoff.scrollY !== 0 || googleHandoff.titleTop < 0 ||
+        googleHandoff.buttonRect.top < 0 || googleHandoff.buttonRect.bottom > googleHandoff.viewportHeight ||
+        googleHandoff.chanceTop < -2 || googleHandoff.metaBottom > googleHandoff.viewportHeight) {
       fails.push(`Google no recibe foco sin cortar el logro ${JSON.stringify(googleHandoff)}`);
     }
     if (googleHandoff.host !== 'www.google.com'
