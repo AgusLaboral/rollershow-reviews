@@ -2049,6 +2049,68 @@ document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click
 /* ---------- envío ---------- */
 $("#exitConfirm").addEventListener("click", () => { $("#exitModal").close(); enviar(); });
 
+let participationFanfarePlayed = false;
+function playParticipationFanfare() {
+  if (participationFanfarePlayed) return;
+  participationFanfarePlayed = true;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  window.__participationFanfare = { attempted:true, played:false, plays:0, volume:.18, duration:1.22, voices:0 };
+  if (!AudioCtx) return;
+  try {
+    const context = new AudioCtx();
+    const state = window.__participationFanfare;
+    const start = context.currentTime + .08;
+    const master = context.createGain();
+    const compressor = context.createDynamicsCompressor();
+    master.gain.setValueAtTime(.0001, start);
+    master.gain.exponentialRampToValueAtTime(state.volume, start + .035);
+    master.gain.setValueAtTime(state.volume, start + 1.02);
+    master.gain.exponentialRampToValueAtTime(.0001, start + state.duration);
+    compressor.threshold.value = -18;
+    compressor.knee.value = 16;
+    compressor.ratio.value = 4;
+    compressor.attack.value = .004;
+    compressor.release.value = .16;
+    master.connect(compressor).connect(context.destination);
+
+    const horn = (frequency, offset, length, level = .16) => {
+      const oscillator = context.createOscillator();
+      const filter = context.createBiquadFilter();
+      const gain = context.createGain();
+      const begins = start + offset, ends = begins + length;
+      oscillator.type = "sawtooth";
+      oscillator.frequency.setValueAtTime(frequency * .985, begins);
+      oscillator.frequency.exponentialRampToValueAtTime(frequency, begins + .045);
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(1900, begins);
+      filter.Q.value = 1.15;
+      gain.gain.setValueAtTime(.0001, begins);
+      gain.gain.exponentialRampToValueAtTime(level, begins + .018);
+      gain.gain.exponentialRampToValueAtTime(level * .58, Math.max(begins + .04, ends - .08));
+      gain.gain.exponentialRampToValueAtTime(.0001, ends);
+      oscillator.connect(filter).connect(gain).connect(master);
+      oscillator.start(begins);
+      oscillator.stop(ends + .02);
+      state.voices += 1;
+    };
+
+    horn(392, 0, .18, .32);
+    horn(523.25, .17, .2, .32);
+    horn(659.25, .34, .22, .3);
+    horn(523.25, .54, .62, .2);
+    horn(659.25, .54, .62, .17);
+    horn(783.99, .54, .62, .185);
+    context.resume().then(() => {
+      state.played = true;
+      state.plays = 1;
+      state.contextState = context.state;
+    }).catch(() => { state.contextState = context.state; });
+    setTimeout(() => context.close().catch(() => {}), 1500);
+  } catch (_) {
+    window.__participationFanfare.error = true;
+  }
+}
+
 function enviar() {
   if (state.enviado) return;
   const consent = $("#consent");
@@ -2092,6 +2154,7 @@ function enviar() {
   const p = totalPuntos(), t = chancesDe(p);
   $("#grSub").textContent = `Entraste con ${t} ${t === 1 ? "chance" : "chances"}. Dejá una reseña en Google y duplicá tus puntos.`;
   document.body.classList.add("done");
+  playParticipationFanfare();
   setTimeout(() => activateSceneVideo($("#thanksAmbientVideo"), true), 1850);
   window.scrollTo({ top: 0 });
   $("#grTicketsWord").textContent = t === 1 ? "chance" : "chances";

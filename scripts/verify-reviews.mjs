@@ -337,6 +337,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         videoFilter: getComputedStyle(document.querySelector('#thanksAmbientVideo')).filter,
         videoBlend: getComputedStyle(document.querySelector('#thanksAmbientVideo')).mixBlendMode,
         radiance: getComputedStyle(document.querySelector('.gr-radiance')).display,
+        fanfare: window.__participationFanfare,
         videoDrops: (() => { const q=document.querySelector('#thanksAmbientVideo').getVideoPlaybackQuality(); return {dropped:q.droppedVideoFrames,total:q.totalVideoFrames,corrupted:q.corruptedVideoFrames}; })(),
         readingOrder: Boolean(document.querySelector('#gBlock').compareDocumentPosition(document.querySelector('.gr-meta')) & Node.DOCUMENT_POSITION_FOLLOWING),
         lowerDisplay: getComputedStyle(document.querySelector('.gr-lower')).display,
@@ -351,6 +352,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
         celebration.videoPaused || !celebration.videoLoop || celebration.videoOpacity < .5 || !celebration.readingOrder ||
         celebration.videoFilter !== 'none' || celebration.videoBlend !== 'normal' || celebration.radiance !== 'none' ||
+        !celebration.fanfare?.attempted || !celebration.fanfare?.played || celebration.fanfare.plays !== 1 || celebration.fanfare.volume < .12 || celebration.fanfare.volume > .2 ||
+        celebration.fanfare.duration > 1.5 || celebration.fanfare.voices !== 6 || celebration.fanfare.error ||
         celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .01 ||
         celebration.lowerDisplay !== 'flex' || celebration.lowerDirection !== 'column') {
       fails.push(`festejo final: sigue siendo una confirmación plana o en cards ${JSON.stringify(celebration)}`);
