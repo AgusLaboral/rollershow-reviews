@@ -155,14 +155,11 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     const skipPlacement = await page.evaluate(() => {
       const step=document.querySelector('.item-step.active'), stage=step.querySelector('.item-stage').getBoundingClientRect();
       const prompt=step.querySelector('.upload-prompt').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
-      const title=step.querySelector('.upload-prompt strong').getBoundingClientRect(), source=step.querySelector('.upload-library').getBoundingClientRect();
-      const icon=step.querySelector('.upload-prompt>svg').getBoundingClientRect(), range=document.createRange();
-      range.selectNodeContents(step.querySelector('.stage-skip'));
-      const skipText=range.getBoundingClientRect();
-      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom},axis:{title:title.left,source:source.left,skip:skipText.left,iconTop:icon.top,titleTop:title.top}};
+      const source=step.querySelector('.upload-library').getBoundingClientRect();
+      return {inside:!!step.querySelector('.upload-decision>.stage-skip'),stage:{bottom:stage.bottom},prompt:{left:prompt.left,right:prompt.right,bottom:prompt.bottom,width:prompt.width},skip:{left:skip.left,right:skip.right,top:skip.top,bottom:skip.bottom},source:{width:source.width,height:source.height}};
     });
     if (!skipPlacement.inside || skipPlacement.skip.bottom > skipPlacement.stage.bottom + 1 || skipPlacement.skip.top - skipPlacement.prompt.bottom < 15 ||
-        Math.abs(skipPlacement.skip.left-skipPlacement.prompt.left) > 2 || Math.abs(skipPlacement.skip.right-skipPlacement.prompt.right) > 2) {
+        skipPlacement.prompt.width > 362 || skipPlacement.source.height < 40 || skipPlacement.source.width < 120) {
       fails.push(`seguir sin subir: no pertenece al bloque de carga ${JSON.stringify(skipPlacement)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
@@ -537,15 +534,14 @@ if (!desktopIntro.prizeVisible || !desktopIntro.cutout || !desktopIntro.split ||
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
 const desktopUploadAxis = await dpage.evaluate(() => {
-  const step=document.querySelector('.item-step.active'), title=step.querySelector('.upload-prompt strong').getBoundingClientRect();
-  const source=step.querySelector('.upload-library').getBoundingClientRect(), icon=step.querySelector('.upload-prompt>svg').getBoundingClientRect();
-  const range=document.createRange(); range.selectNodeContents(step.querySelector('.stage-skip'));
-  const skip=range.getBoundingClientRect();
-  return {title:title.left,source:source.left,skip:skip.left,iconTop:icon.top,titleTop:title.top};
+  const step=document.querySelector('.item-step.active'), prompt=step.querySelector('.upload-prompt').getBoundingClientRect();
+  const source=step.querySelector('.upload-library').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect();
+  return {prompt:{left:prompt.left,right:prompt.right,width:prompt.width,bottom:prompt.bottom},source:{left:source.left,right:source.right,height:source.height},skip:{top:skip.top},stageRight:step.querySelector('.item-stage').getBoundingClientRect().right};
 });
-if (Math.abs(desktopUploadAxis.title-desktopUploadAxis.source) > 2 || Math.abs(desktopUploadAxis.title-desktopUploadAxis.skip) > 2 ||
-    Math.abs(desktopUploadAxis.iconTop-desktopUploadAxis.titleTop) > 4) {
-  fails.push(`carga desktop: título, recompensa, selector y salto no comparten eje ${JSON.stringify(desktopUploadAxis)}`);
+if (desktopUploadAxis.prompt.width > 382 || desktopUploadAxis.source.height < 40 ||
+    desktopUploadAxis.source.left < desktopUploadAxis.prompt.left || desktopUploadAxis.source.right > desktopUploadAxis.prompt.right ||
+    desktopUploadAxis.skip.top - desktopUploadAxis.prompt.bottom < 18 || Math.abs(desktopUploadAxis.prompt.right-desktopUploadAxis.stageRight) > 26) {
+  fails.push(`carga desktop: selector poco claro, grande o mal separado ${JSON.stringify(desktopUploadAxis)}`);
 }
 await dpage.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(620);
