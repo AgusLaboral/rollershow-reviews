@@ -200,7 +200,7 @@ section{padding:38px 0 6px}
 .consent{display:flex;gap:11px;align-items:flex-start}
 .consent input{width:19px;height:19px;margin-top:2px;accent-color:var(--accent);flex:none}
 .consent label{min-height:44px;font-size:.86rem;color:var(--fg-soft);cursor:pointer}
-.consent.err label{color:var(--danger)}
+.consent.err .consent-note{color:var(--danger)}
 .cta{display:flex;width:100%;justify-content:center;align-items:center;gap:10px;margin-top:16px;
   background:linear-gradient(120deg,var(--cta-glow),var(--cta-deep),var(--cta-glow));background-size:220% 220%;
   animation:brasa 5s ease-in-out infinite;color:var(--on-accent);font-family:var(--font-display);font-weight:700;
@@ -702,13 +702,15 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes finalChanceLand{0%{opacity:0;transform:translateY(28px) scale(.62)}65%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{opacity:1;transform:none}}
 @keyframes finalProof{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .confirm-actions{margin-top:18px;align-self:stretch}
-.confirm-step .consent{position:relative;margin:0;min-height:64px;padding:15px 16px;align-items:center;border:1px solid transparent;border-radius:14px;
-  background:var(--cta);color:#fff;box-shadow:0 16px 34px -17px rgba(151,41,15,.9);transition:background .34s,box-shadow .34s,transform .34s,border-color .34s}
-.confirm-step .consent:hover{background:var(--cta-deep)}
-.confirm-step .consent:has(:focus-visible){outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
-.confirm-step .consent input{width:24px;height:24px;margin:0;accent-color:#fff;cursor:pointer}
-.confirm-step .consent label{display:block;min-height:0;color:#fff;font-weight:700;line-height:1.35}
-.confirm-step .consent a{color:#fff;text-decoration-color:rgba(255,255,255,.66)}
+.confirm-step .consent{display:block;position:relative;margin:0;padding:0;background:none;color:inherit}
+.confirm-step .consent-action{display:flex;width:100%;min-height:64px;padding:15px 18px;align-items:center;justify-content:center;gap:10px;border:1px solid transparent;border-radius:14px;
+  background:var(--cta);color:#fff;font-family:var(--font-display);font-size:1rem;font-weight:800;line-height:1.2;text-align:center;box-shadow:0 16px 34px -17px rgba(151,41,15,.9);transition:background .34s,box-shadow .34s,transform .2s,border-color .34s}
+.confirm-step .consent-action:hover{background:var(--cta-deep)}
+.confirm-step .consent-action:active{transform:scale(.985)}
+.confirm-step .consent-action:focus-visible{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
+.confirm-step .consent-action svg{width:18px;height:18px;flex:none}
+.confirm-step .consent-note{margin:10px auto 0;max-width:46ch;color:var(--fg-mute);font-size:.76rem;line-height:1.4;text-align:center}
+.confirm-step .consent-note a{display:inline-block;min-height:32px;padding:6px 4px;color:var(--accent-deep);font-weight:700;text-underline-offset:3px}
 .experience-step .step-actions,.confirm-step .step-actions{margin-top:20px;padding-top:0}
 
 /* Un único recorrido: la cortina roller es el gesto; escala y desplazamiento sostienen la continuidad. */
@@ -782,7 +784,7 @@ body.done #flowApp{display:none}
   .confirm-step .confirm-proof{margin-top:5px}
   .confirm-step .confirm-prize-reminder{margin-top:4px}
   .confirm-step .confirm-actions{margin-top:9px}
-  .confirm-step .consent{min-height:56px;padding:10px 12px}
+  .confirm-step .consent-action{min-height:56px;padding:10px 12px}
   .confirm-step .step-actions{margin-top:10px}
 }
 @media (max-width:799px){
@@ -889,7 +891,7 @@ body.done #flowApp{display:none}
           <div id="flowStarsMount"></div>
           <div class="experience-audio" id="experienceAudio">
             <div class="experience-divider"></div>
-            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Un audio corto alcanza y suma 30 puntos. Podés escucharlo antes de seguir.</span></div>
+            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Con 20 a 45 segundos alcanza y sumás 30 puntos. Tu navegador te va a pedir permiso para usar el micrófono.</span></div>
             <div id="flowAudioMount"></div>
             <button class="step-secondary step-audio-skip" id="audioSkip" type="button">Seguir sin audio</button>
           </div>
@@ -969,7 +971,7 @@ body.done #flowApp{display:none}
     </div>
     <div class="mecanica-track">
       <div class="mecanica-step" data-step="01"><strong>Compartí tu experiencia</strong><span>Calificación, texto, fotos, video o audio</span></div>
-      <div class="mecanica-step" data-step="02"><strong>Sumá chances</strong><span>Cada 10 puntos es una chance</span></div>
+      <div class="mecanica-step" data-step="02"><strong>Sumá chances</strong><span>Tenés al menos 1; el puntaje puede sumar más</span></div>
       <div class="mecanica-step" data-step="03"><strong>Seguí el sorteo</strong><span>En vivo por nuestro Instagram</span></div>
     </div>
   </div>
@@ -982,7 +984,7 @@ body.done #flowApp{display:none}
   <div class="chancebar-in">
     <div class="chance-count"><strong id="ptsNum">0</strong><span>puntos</span></div>
     <div class="chance-meter">
-      <div class="chance-meter-label" id="meterLabel">Sumá 10 puntos y tenés tu primera chance</div>
+      <div class="chance-meter-label" id="meterLabel">Al confirmar ya tenés 1 chance</div>
       <div class="chance-track"><div class="chance-fill" id="meterFill"></div></div>
     </div>
     <div class="tickets">
@@ -1042,7 +1044,7 @@ body.done #flowApp{display:none}
 
         <div class="exp-row">
           <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+30</span></div>
-          <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Lo podés escuchar y regrabar las veces que quieras.</p>
+          <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Con 20 a 45 segundos alcanza; el navegador te va a pedir permiso para usar el micrófono.</p>
           <div class="audio-ui" id="audioUI"></div>
         </div>
 
@@ -1060,8 +1062,11 @@ body.done #flowApp{display:none}
   <div class="cierre">
     <div class="wrap">
       <div class="consent" id="consentBox">
-        <input type="checkbox" id="consent" />
-        <label for="consent">Autorizo a Rollershow a publicar mis fotos, videos, audios y opinión en sus redes y web. Al marcar, confirmo mi participación. <a href="#" id="openBases">Bases del sorteo</a></label>
+        <input type="checkbox" id="consent" hidden />
+        <button class="consent-action" id="confirmParticipation" type="button">Autorizar el uso y confirmar mi participación
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="consent-note">Autorizás a Rollershow a publicar las fotos, videos, audios y opinión que compartiste en sus redes y web. Este único toque autoriza y confirma. <a href="#" id="openBases">Ver bases del sorteo</a></p>
       </div>
       <p class="cta-sub" id="ctaSub">Con lo que cargaste hasta ahora entrás al sorteo de julio.</p>
     </div>
@@ -1151,7 +1156,7 @@ body.done #flowApp{display:none}
     <h2 id="basesTitle">Bases del sorteo</h2>
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
-      <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita (5). El puntaje final lo valida Rollershow al revisar el material.</p>
+      <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo; mientras el total sea menor a 20, se mantiene la chance mínima de participación. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita de al menos 20 caracteres (5). El puntaje final lo valida Rollershow al revisar el material.</p>
       <p id="basesPrizeText">Este mes se sortean 3 almohadones y 2 alfombras premium entre 3 ganadores. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
       <p>Para que la participación sea válida al momento del sorteo, la persona debe seguir a <strong>@cortinas.rollershow</strong> en Instagram. Rollershow verificará este requisito antes de entregar el premio. Instagram no patrocina, avala ni administra esta promoción, ni está asociado a ella.</p>
       <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
@@ -1271,8 +1276,15 @@ configurarVendedor();
 $("#thanksTitle").textContent = `${PRESUPUESTO.cliente.nombre}, ya estás en el sorteo.`;
 
 /* ---------- puntos ---------- */
-/* Toda participación con algo cargado entra con al menos 1 chance. */
+/* Cada 10 puntos equivalen a una chance, con un mínimo de 1 al participar. */
 function chancesDe(p) { return p > 0 ? Math.max(1, Math.floor(p / PTS_POR_CHANCE)) : 0; }
+function puntosParaProximaChance(p) {
+  if (p <= 0) return PTS_POR_CHANCE * 2;
+  const nextChanceAt = chancesDe(p) <= 1
+    ? PTS_POR_CHANCE * 2
+    : (chancesDe(p) + 1) * PTS_POR_CHANCE;
+  return Math.max(0, nextChanceAt - p);
+}
 function totalPuntos() {
   let p = 0;
   Object.values(state.archivos).flat().forEach(f => p += f.esVideo ? PUNTOS.video : PUNTOS.foto);
@@ -1286,12 +1298,14 @@ function renderPuntos() {
   const num = $("#ptsNum"), tick = $("#ticketNum");
   if (num.textContent != p) { num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump"); }
   num.textContent = p; tick.textContent = t;
-  const resto = p % PTS_POR_CHANCE;
-  $("#meterFill").style.width = (p === 0 ? 0 : (resto === 0 ? 100 : resto * 10)) + "%";
-  $("#meterLabel").textContent =
-    p === 0 ? "Con 10 puntos sumás una chance" :
-    resto === 0 ? "¡Sumaste otra chance! Seguí si querés sumar más" :
-    `Te faltan ${PTS_POR_CHANCE - resto} puntos para otra chance`;
+  const missingForNext = puntosParaProximaChance(p);
+  const nextChanceAt = p + missingForNext;
+  const currentFloor = p < PTS_POR_CHANCE * 2 ? 0 : Math.floor(p / PTS_POR_CHANCE) * PTS_POR_CHANCE;
+  const intervalProgress = p === 0 ? 0 : Math.min(1, (p - currentFloor) / (nextChanceAt - currentFloor));
+  $("#meterFill").style.width = `${intervalProgress * 100}%`;
+  $("#meterLabel").textContent = p === 0
+    ? "Al confirmar ya tenés 1 chance"
+    : `Ya tenés ${t} ${t === 1 ? "chance" : "chances"}. Te faltan ${missingForNext} puntos para sumar otra`;
   $("#ctaSub").textContent = p === 0
     ? "Con calificar tu experiencia ya participás."
     : `Con lo que cargaste entrás al sorteo de ${SORTEO.mes} con ${t === 1 ? "1 chance" : t + " chances"}.`;
@@ -1311,8 +1325,13 @@ function renderPuntos() {
 
 function syncConfirmCopy(checked = $("#consent").checked) {
   const roomsShown = PRESUPUESTO.items.filter(item => state.archivos[item.id].length > 0).length;
-  const shown = roomsShown === 1 ? "un ambiente" : roomsShown > 1 ? `${roomsShown} ambientes` : "tu experiencia";
-  $("#confirmTitle").textContent = checked ? "Ya autorizaste el material." : `Mostraste ${shown}.`;
+  const sharedExperience = Boolean(state.audioBlob || textoValido());
+  const title = roomsShown === 1 ? "Mostraste un ambiente."
+    : roomsShown > 1 ? `Mostraste ${roomsShown} ambientes.`
+    : sharedExperience ? "Contaste tu experiencia."
+    : state.estrellas ? "Calificaste tu experiencia."
+    : "Tu participación está lista.";
+  $("#confirmTitle").textContent = checked ? "Ya autorizaste el material." : title;
   $("#confirmIntro").textContent = checked
     ? "Confirmá y tu participación queda registrada."
     : "Para participar, autorizá el uso de lo que compartiste.";
@@ -1322,7 +1341,7 @@ function syncConfirmCopy(checked = $("#consent").checked) {
 const REWARD_COPY = {
   photo: ["Foto guardada.", "Esta foto ya suma.", "Sumaste otra foto."],
   video: ["Video guardado.", "Este recorrido ya suma.", "Sumaste otro video."],
-  rating: ["Calificación guardada.", "Tu calificación ya suma.", "Ya calificaste."],
+  rating: ["Selección guardada en tu avance.", "Tu calificación ya suma.", "Ya calificaste."],
   audio: ["Audio guardado.", "Tu audio ya suma.", "Guardamos tu audio."],
   text: ["Opinión guardada.", "Tu opinión ya suma.", "Guardamos tu opinión."]
 };
@@ -1374,7 +1393,7 @@ function rewardResult(beforePoints, afterPoints, updated = false) {
   const gained = Math.max(0, afterChances - beforeChances);
   if (updated) return `Conservás tus ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
   if (gained > 0) return `${gained === 1 ? "Una chance más de ganar" : `${gained} chances más de ganar`}. Ya tenés ${afterChances}.`;
-  const missing = PTS_POR_CHANCE - (afterPoints % PTS_POR_CHANCE || PTS_POR_CHANCE);
+  const missing = puntosParaProximaChance(afterPoints);
   return missing > 0 ? `Te faltan ${missing} puntos para sumar otra chance.` : `Ya tenés ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
 }
 function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Acción completada", updated = false, origin = null } = {}) {
@@ -1613,7 +1632,7 @@ for (let i = 1; i <= 5; i++) {
     const previousPoints = totalPuntos();
     state.estrellas = i;
     [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < i));
-    $("#starsWord").textContent = PALABRAS[i];
+    $("#starsWord").textContent = `${PALABRAS[i]}. Seleccionaste ${i} ${i === 1 ? "estrella" : "estrellas"} (+${PUNTOS.estrellas} puntos)`;
     saveLocal(); renderPuntos(); syncExperienceProgress({ revealAudio:firstRating });
     if (firstRating) {
       [...starsBox.children].forEach((star, index) => star.style.setProperty("--star-index", index));
@@ -1884,7 +1903,11 @@ async function clearPersistedDraft() {
 try {
   const prev = JSON.parse(localStorage.getItem(LS_KEY) || "null");
   if (prev) {
-    if (prev.e) { state.estrellas = prev.e; [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e)); $("#starsWord").textContent = PALABRAS[prev.e]; }
+    if (prev.e) {
+      state.estrellas = prev.e;
+      [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e));
+      $("#starsWord").textContent = `${PALABRAS[prev.e]}. Seleccionaste ${prev.e} ${prev.e === 1 ? "estrella" : "estrellas"} (+${PUNTOS.estrellas} puntos)`;
+    }
     if (prev.t) { reviewText.value = prev.t; state.textoOk = textoValido(); }
     state.audioSkipped = Boolean(prev.audioSkipped);
     state.textoVisible = Boolean(prev.textoVisible || prev.t);
@@ -1994,7 +2017,10 @@ function setupFlow() {
     state.textoVisible = true;
     saveLocal(); syncExperienceProgress({ revealText:true });
   });
-  $("#consent").addEventListener("change", syncConsentState);
+  $("#confirmParticipation").addEventListener("click", () => {
+    $("#consent").checked = true;
+    syncConsentState();
+  });
   $("#flowApp").addEventListener("click", event => {
     const next = event.target.closest("[data-flow-next]");
     if (next) goToFlow(flowIndex + 1);

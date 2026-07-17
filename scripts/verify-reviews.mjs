@@ -55,7 +55,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       audio: document.querySelector('.experience-prompt strong')?.textContent,
       text: document.querySelector('.text-reward-label')?.textContent,
       confirm: document.querySelector('.confirm-step .step-title')?.textContent,
-      consent: document.querySelector('#consentBox label')?.textContent,
+      consent: document.querySelector('#consentBox')?.textContent,
       google: document.querySelector('#gBlock h3')?.textContent,
       ratingAction: document.querySelector('#starsWord')?.textContent,
       textAction: document.querySelector('.text-reward-label')?.textContent,
@@ -91,8 +91,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no expresa intención de participar`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
-      !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.startsWith('Mostraste ') ||
-      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmo mi participación') || !initial.copy.google?.includes('Duplicá tus puntos')) {
+      !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.includes('participación') ||
+      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmar mi participación') || !initial.copy.google?.includes('Duplicá tus puntos')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
   if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
@@ -282,7 +282,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       prizes: document.querySelectorAll('.confirm-step .confirm-world img').length,
       videos: document.querySelectorAll('.confirm-step .confirm-world video').length,
       proof: document.querySelector('#confirmProof').textContent,
-      consentBg: getComputedStyle(document.querySelector('#consentBox')).backgroundColor,
+      consentBg: getComputedStyle(document.querySelector('#confirmParticipation')).backgroundColor,
       fabricatedAverage: /promedio|veces más que/i.test(document.querySelector('.confirm-step').innerText),
       concretePrizes: document.querySelector('.confirm-prize-reminder')?.textContent,
       scoreBackground: getComputedStyle(document.querySelector('#flowScore')).backgroundColor,
@@ -303,7 +303,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     }
     await page.screenshot({ path: `${OUT}/canonical-390-confirm-consent.png` });
     if (await page.evaluate(() => document.body.classList.contains('done'))) fails.push('el flujo terminó antes del consentimiento');
-    await page.check('#consent'); await page.waitForTimeout(700);
+    await page.click('#confirmParticipation'); await page.waitForTimeout(700);
     await page.screenshot({ path: `${OUT}/canonical-390-thanks-curtain.png` });
     const earlyFinale = await page.evaluate(() => {
       const video=document.querySelector('#thanksAmbientVideo'), curtain=document.querySelector('.gr-curtain-reveal i');
@@ -641,7 +641,7 @@ await dpage.setViewportSize({ width:1280, height:800 });
 await dpage.fill('#reviewText', 'Excelente atención, quedaron hermosas las cortinas del living.');
 await dpage.click('#experienceNext'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-confirm-consent.png` });
-await dpage.check('#consent'); await dpage.waitForTimeout(1800);
+await dpage.click('#confirmParticipation'); await dpage.waitForTimeout(1800);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks-entry.png`, fullPage:true });
 await dpage.waitForTimeout(1500);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-thanks.png`, fullPage:true });
@@ -733,7 +733,7 @@ await noTextPage.click('#audioSkip'); await noTextPage.waitForTimeout(520);
 const noTextBefore = await noTextPage.evaluate(() => ({ text:reviewText.value,valid:textoValido(),flag:state.textoOk,points:totalPuntos(),shown:document.querySelector('#flowPts')?.textContent }));
 await noTextPage.click('#experienceNext'); await waitCurtain(noTextPage);
 const noTextConfirm = await noTextPage.evaluate(() => ({ points:document.querySelector('#confirmPts')?.textContent,chances:document.querySelector('#confirmTickets')?.textContent }));
-await noTextPage.check('#consent'); await noTextPage.waitForTimeout(120);
+await noTextPage.click('#confirmParticipation'); await noTextPage.waitForTimeout(120);
 const noTextThanks = await noTextPage.textContent('#grPts');
 if (noTextBefore.text !== '' || noTextBefore.valid || noTextBefore.flag || noTextBefore.points !== 5 || noTextBefore.shown !== '5' ||
     noTextConfirm.points !== '5' || noTextConfirm.chances !== '1' || noTextThanks !== '5') {
