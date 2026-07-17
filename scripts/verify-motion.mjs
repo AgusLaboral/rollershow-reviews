@@ -103,7 +103,15 @@ const heroMotion = await heroPage.evaluate(() => {
 if (heroMotion.count !== 1 || !heroMotion.src?.includes('scene-01-desktop') || heroMotion.currentTime <= .15 || heroMotion.readyState < 2 || heroMotion.loop || heroMotion.duration < 14.8 || heroMotion.width < 1280 || heroMotion.height < 720 || heroMotion.visible !== '1' || heroMotion.rollerVisibility !== 'hidden') {
   fails.push(`portada: el fondo cinematográfico no reproduce o no se asienta correctamente ${JSON.stringify(heroMotion)}`);
 }
-await heroPage.waitForFunction(() => document.querySelector('.intro-step [data-scene-video]')?.ended, null, { timeout: 18000 });
+await heroPage.evaluate(() => {
+  const video = document.querySelector('.intro-step [data-scene-video]');
+  video.currentTime = Math.max(0, video.duration - .3);
+  video.play();
+});
+await heroPage.waitForFunction(() => {
+  const video = document.querySelector('.intro-step [data-scene-video]');
+  return video?.currentTime > .05 && video.currentTime < 1 && !video.paused && !video.classList.contains('soft-loop-fade');
+}, null, { timeout: 5000 });
 const heroEnding = await heroPage.evaluate(() => {
   const video = document.querySelector('.intro-step [data-scene-video]');
   return {
@@ -111,10 +119,12 @@ const heroEnding = await heroPage.evaluate(() => {
     paused: video?.paused,
     currentTime: video?.currentTime || 0,
     duration: video?.duration || 0,
+    softLoop: video?.dataset.softLoopReady,
+    faded: video?.classList.contains('soft-loop-fade'),
   };
 });
-if (!heroEnding.ended || !heroEnding.paused || heroEnding.duration - heroEnding.currentTime > .08) {
-  fails.push(`portada: la toma no termina quieta en su encuadre final ${JSON.stringify(heroEnding)}`);
+if (heroEnding.ended || heroEnding.paused || heroEnding.currentTime >= 1 || heroEnding.softLoop !== 'true' || heroEnding.faded) {
+  fails.push(`portada: la toma no retoma su loop suave ${JSON.stringify(heroEnding)}`);
 }
 await heroPage.close();
 

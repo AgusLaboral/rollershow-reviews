@@ -36,6 +36,20 @@ for (const viewport of [{ name:'desktop', width:1440, height:900 }, { name:'mobi
   await page.waitForTimeout(8000);
   const intro = await inspectVideo(introSelector);
   validate('inicio', intro, 8);
+  await page.evaluate(sel => {
+    const video = document.querySelector(sel);
+    video.currentTime = Math.max(0, video.duration - .3);
+    video.play();
+  }, introSelector);
+  await page.waitForFunction(sel => {
+    const video = document.querySelector(sel);
+    return video?.currentTime > .05 && video.currentTime < 1 && !video.paused && !video.classList.contains('soft-loop-fade');
+  }, introSelector, { timeout:5000 });
+  const introLoop = await page.evaluate(sel => {
+    const video = document.querySelector(sel);
+    return { currentTime:video.currentTime, paused:video.paused, softLoop:video.dataset.softLoopReady, faded:video.classList.contains('soft-loop-fade') };
+  }, introSelector);
+  if (introLoop.softLoop !== 'true' || introLoop.paused || introLoop.faded) failures.push(`${viewport.name} inicio: el loop suave no retomó ${JSON.stringify(introLoop)}`);
 
   const laterResults = [];
   for (const selector of ['.confirm-step [data-scene-video]', '#thanksAmbientVideo']) {

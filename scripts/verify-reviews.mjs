@@ -14,7 +14,7 @@ const testImage = 'C:/Users/Agus/Desktop/rollershow-reviews/img/blackout-sand-be
 async function reachConfirm(page, { withPhoto = false } = {}) {
   await page.click('#startFlow'); await waitCurtain(page);
   if (withPhoto) {
-    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(300);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
@@ -45,6 +45,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     prizeVisual: getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
     introTitle: document.querySelector('#flowHeroTitle')?.textContent,
     introHook: document.querySelector('#introPrizeHook')?.textContent,
+    introPrize: document.querySelector('#introPrizeCopy')?.textContent,
     introSaved: document.querySelector('#introSaveNote')?.textContent,
     bases: document.querySelector('.bases-txt')?.textContent,
     startCopy: document.querySelector('#startFlow')?.textContent.trim(),
@@ -65,15 +66,29 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       const copy=document.querySelector('.intro-copy-block').getBoundingClientRect(), cta=document.querySelector('#startFlow').getBoundingClientRect();
       return {copyTop:copy.top,logoBottom:logo.bottom,ctaBottom:cta.bottom,viewport:innerHeight,scroll:step.scrollHeight-step.clientHeight};
     })(),
+    introType: (() => {
+      const nodes = ['#flowHeroTitle','#introPrizeHook','#introPrizeCopy','#introDateCopy'].map(selector => document.querySelector(selector));
+      const styles = nodes.map(node => getComputedStyle(node));
+      return {
+        families:new Set(styles.map(style => style.fontFamily)).size,
+        bodySame:styles[1].fontFamily === styles[2].fontFamily && styles[1].fontSize === styles[2].fontSize,
+        prizeColor:styles[2].color,
+        ctaColor:getComputedStyle(document.querySelector('#startFlow')).backgroundColor,
+      };
+    })(),
   }));
   if (initial.overflow > 0) fails.push(`${vp.w}px: overflow horizontal ${initial.overflow}`);
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('tu casa ya luce rollershow') ||
-      !initial.introHook?.includes('mostranos cómo quedó') || !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
+  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu rollershow') ||
+      !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') || !initial.introPrize?.includes('Podés ganar') ||
+      !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
+  if (initial.introType.families > 2 || !initial.introType.bodySame || initial.introType.prizeColor === initial.introType.ctaColor) {
+    fails.push(`${vp.w}px: la portada vuelve a mezclar demasiadas voces tipográficas ${JSON.stringify(initial.introType)}`);
+  }
   if (!initial.bases?.includes('@cortinas.rollershow') || !initial.bases?.includes('Instagram no patrocina')) fails.push(`${vp.w}px: las bases no explican seguimiento obligatorio y descargo de Instagram`);
-  if (initial.startCopy !== 'Quiero participar') fails.push(`${vp.w}px: el CTA inicial no expresa intención de participar`);
+  if (initial.startCopy !== 'Participar ahora') fails.push(`${vp.w}px: el CTA inicial no expresa intención de participar`);
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.startsWith('Mostraste ') ||
@@ -93,6 +108,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     unified: !!step.querySelector('.item-stage .item-visual') && !!step.querySelector('.item-stage .item-task'),
     structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status'),
     uploadReward: step.querySelector('.upload-value')?.textContent,
+    uploadTitle: step.querySelector('.upload-prompt strong')?.textContent,
+    gallery: (() => { const input=step.querySelector('.upload-library input'); return {accept:input?.accept,multiple:input?.multiple}; })(),
+    camera: (() => { const input=step.querySelector('.upload-camera input'); return {accept:input?.accept,capture:input?.getAttribute('capture')}; })(),
     continueCopy: step.querySelector('.step-continue')?.textContent,
   })));
   if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
@@ -103,8 +121,12 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => !item.uploadReward?.includes('Foto +10 puntos') || !item.uploadReward?.includes('Video +25 puntos'))) {
+  if (environments.some(item => !item.uploadReward?.includes('Cada foto +10 puntos') || !item.uploadReward?.includes('Cada video +25 puntos'))) {
     fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
+  }
+  if (environments.some(item => !item.uploadTitle?.includes('Subí fotos y videos de esta cortina') || item.gallery.accept !== 'image/*,video/*' || !item.gallery.multiple ||
+      item.camera.accept !== 'image/*' || item.camera.capture !== 'environment')) {
+    fails.push(`${vp.w}px: la carga no ofrece galería múltiple y cámara trasera ${JSON.stringify(environments)}`);
   }
   if (environments.slice(0,-1).some(item => item.continueCopy !== 'Continuar') || environments.at(-1)?.continueCopy !== 'Dar mi opinión') {
     fails.push(`${vp.w}px: los CTAs de ambiente dependen de nombres frágiles ${JSON.stringify(environments)}`);
@@ -141,7 +163,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     }
     await page.screenshot({ path: `${OUT}/canonical-390-item.png` });
 
-    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(620);
     const photoReward = await page.evaluate(() => ({
       points: document.querySelector('.item-step.active .stage-score-burst strong')?.textContent,
@@ -177,8 +199,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     let pts = await page.textContent('#flowPts');
     if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
     const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
-    if (!addMoreCopy.includes('+10 puntos') || !addMoreCopy.includes('+25 puntos')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
-    await page.locator('.flow-step.active .upload-more-action input[type=file]').setInputFiles(testImage);
+    if (!addMoreCopy.includes('Otra foto suma 10 puntos') || !addMoreCopy.includes('Otro video suma 25')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
+    await page.locator('.flow-step.active .upload-more-action .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '20');
     if (await page.textContent('#flowPts') !== '20') fails.push('segunda foto: no suma puntos');
     await page.click('.flow-step.active .stage-remove');
@@ -186,7 +208,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     await page.click('.flow-step.active .stage-remove');
     const emptyStage = await page.evaluate(() => ({ points:document.querySelector('#flowPts')?.textContent, media:!!document.querySelector('.flow-step.active .stage-user-media'), hasMedia:document.querySelector('.flow-step.active')?.classList.contains('has-media') }));
     if (emptyStage.points !== '0' || emptyStage.media || emptyStage.hasMedia) fails.push(`quitar la última foto no recupera el placeholder ${JSON.stringify(emptyStage)}`);
-    await page.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+    await page.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(80);
     await page.click('.flow-step.active .step-continue'); await waitCurtain(page);
     for (let i = 0; i < 3; i++) { await page.click('.flow-step.active .step-secondary'); await waitCurtain(page); }
@@ -411,7 +433,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     const p2 = await ctx.newPage();
     await p2.goto(URL, { waitUntil: 'domcontentloaded' });
     await p2.click('#startFlow'); await waitCurtain(p2);
-    await p2.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+    await p2.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
     await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
     await p2.goBack(); await p2.waitForTimeout(500);
     if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
@@ -488,7 +510,7 @@ const desktopIntro = await dpage.evaluate(() => {
 if (!desktopIntro.prizeVisible || !desktopIntro.cutout || !desktopIntro.split || !desktopIntro.ctaInside || !desktopIntro.noteAligned || desktopIntro.overflow > 0) fails.push(`portada desktop: relato y premios no forman dos zonas legibles ${JSON.stringify(desktopIntro)}`);
 await dpage.click('#startFlow'); await waitCurtain(dpage);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-item.png` });
-await dpage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+await dpage.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
 await dpage.waitForTimeout(620);
 const desktopTray = await dpage.evaluate(() => {
   const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
@@ -631,7 +653,7 @@ const persistPage = await persistCtx.newPage();
 await persistPage.goto(URL, { waitUntil:'domcontentloaded' });
 await persistPage.evaluate(() => window.__draftReady);
 await persistPage.click('#startFlow'); await waitCurtain(persistPage);
-await persistPage.locator('.flow-step.active .item-task input[type=file]').setInputFiles(testImage);
+await persistPage.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
 await persistPage.waitForTimeout(500);
 await persistPage.click('.flow-step.active .step-continue'); await waitCurtain(persistPage);
 for (let i = 0; i < 3; i++) { await persistPage.click('.flow-step.active .step-secondary'); await waitCurtain(persistPage); }

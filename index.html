@@ -518,6 +518,8 @@ body{min-height:100vh;min-height:100dvh}
 .scene-video{opacity:0;transition:opacity .7s ease;pointer-events:none}
 .scene-video.is-ready{opacity:1}
 .intro-scene .scene-video{transition-duration:.16s;transition-timing-function:linear}
+.intro-scene .scene-video.soft-looping{transition-duration:.42s}
+.intro-scene .scene-video.soft-loop-fade{opacity:0}
 .intro-base{transform:none;animation:none}
 .intro-float{pointer-events:none;will-change:transform}
 .intro-float-pillow{clip-path:polygon(0 16%,96% 16%,96% 69%,0 69%);animation:heroPillow 10s cubic-bezier(.45,0,.55,1) infinite alternate}
@@ -537,10 +539,11 @@ body{min-height:100vh;min-height:100dvh}
 .intro-copy-block{display:flex;flex-direction:column;align-items:stretch}
 .intro-copy-block .step-actions{margin-top:20px;padding-top:0}
 .intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:14ch}
-.intro-lead{max-width:42ch;margin-top:12px;color:var(--fg-soft);font-size:.94rem;line-height:1.4}
-.intro-prize{font-family:var(--font-display);font-size:1.12rem;font-weight:800;line-height:1.16;margin-top:11px;max-width:32ch}
-.intro-prize strong{display:block;color:var(--cta-deep)}
-.intro-date{font-size:.78rem;color:var(--fg-mute);line-height:1.4;margin-top:8px}.intro-date strong{color:var(--fg-soft);font-weight:800}
+.intro-lead,.intro-prize{max-width:43ch;color:var(--fg-soft);font-family:var(--font-body);font-size:.94rem;line-height:1.4}
+.intro-lead{margin-top:14px}
+.intro-prize{margin-top:3px;font-weight:650}
+.intro-prize strong{display:block;color:inherit;font-weight:inherit}
+.intro-date{font-size:.78rem;color:var(--fg-mute);line-height:1.4;margin-top:9px}.intro-date strong{color:inherit;font-weight:650}
 .intro-save-note{align-self:flex-start;width:min(100%,270px);color:var(--fg-mute);font-size:.72rem;line-height:1.35;text-align:left}
 
 @media (max-width:799px){
@@ -569,11 +572,10 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes userMediaReveal{to{transform:scale(1);opacity:1}}
 .curtain-photo::before{content:"";position:absolute;z-index:1;inset:0;background:
   linear-gradient(180deg,rgba(23,20,18,.02) 35%,rgba(23,20,18,.7) 100%);pointer-events:none}
-.upload-zone{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 12px 58px;cursor:pointer;text-align:left;color:#fff;touch-action:manipulation}
+.upload-zone{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px 12px 58px;text-align:left;color:#fff;touch-action:manipulation}
 .upload-prompt{width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:11px;padding:13px 14px;
   background:var(--cta);border:1px solid rgba(255,255,255,.18);border-radius:14px;box-shadow:0 16px 34px -20px rgba(198,58,33,.78),inset 0 1px rgba(255,255,255,.16);transition:transform .2s,background .2s,box-shadow .2s}
-.upload-zone:hover .upload-prompt{background:var(--cta-hover);box-shadow:0 18px 38px -20px rgba(198,58,33,.86),inset 0 1px rgba(255,255,255,.18)}
-.upload-zone:active .upload-prompt{transform:scale(.985)}
+.upload-zone:focus-within .upload-prompt{background:var(--cta-hover);box-shadow:0 18px 38px -20px rgba(198,58,33,.86),inset 0 1px rgba(255,255,255,.18)}
 .upload-zone svg{width:27px;height:27px;margin:0;color:#fff}
 .upload-zone strong{display:block;font-family:var(--font-display);font-size:1rem;line-height:1.05}
 .upload-zone small{display:block;color:rgba(255,255,255,.78);font-size:.71rem;margin-top:4px;line-height:1.25}
@@ -582,7 +584,10 @@ body{min-height:100vh;min-height:100dvh}
 .item-step.is-processing .upload-prompt svg{animation:uploadBreathe .8s ease-in-out infinite alternate}
 @keyframes uploadBreathe{to{transform:translateY(-3px);opacity:.58}}
 .upload-value{display:block;margin-top:6px;font-family:var(--font-display);font-size:.72rem;line-height:1.25;font-weight:800;color:#fff}
-.upload-zone input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.upload-source-actions{display:flex;align-items:center;flex-wrap:wrap;gap:4px 16px;margin-top:9px}
+.upload-source{position:relative;display:inline-flex;align-items:center;min-height:36px;color:#fff;font-size:.73rem;font-weight:750;text-decoration:underline;text-decoration-color:rgba(255,255,255,.6);text-underline-offset:4px;cursor:pointer}
+.upload-source:hover{text-decoration-color:#fff}
+.upload-source input,.upload-zone input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .upload-zone:focus-within{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
 .stage-skip{position:absolute;z-index:5;left:12px;right:12px;bottom:8px;min-height:40px;color:rgba(255,255,255,.9);font-size:.82rem;text-shadow:0 1px 6px rgba(0,0,0,.7);text-decoration-color:rgba(255,255,255,.55)}
 .stage-remove{position:absolute;z-index:5;right:14px;top:14px;width:44px;height:44px;display:grid;place-items:center;color:#fff;
@@ -609,11 +614,12 @@ body{min-height:100vh;min-height:100dvh}
 .item-step.has-media .step-skip{display:none}
 .item-step.has-media .item-stage{border-radius:20px 20px 0 0;box-shadow:none}
 .item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68);align-items:center;gap:6px}
-.upload-more-action{display:none;position:relative;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;line-height:1.25}
+.upload-more-action{display:none;position:relative;align-items:center;justify-content:center;text-decoration:none;line-height:1.25}
 .item-step.has-media .upload-more-action{display:flex;width:min(100%,640px);flex-direction:column;gap:3px;justify-content:center;text-align:center}
-.upload-more-label{text-decoration:underline;text-decoration-color:var(--border-strong);text-underline-offset:4px}
+.upload-more-label{font-weight:700}
 .upload-more-points{font-size:.72rem;font-weight:600;color:var(--fg-mute);text-decoration:none}
-.upload-more-action input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.upload-more-action .upload-source-actions{justify-content:center;margin-top:3px}
+.upload-more-action .upload-source{min-height:32px;color:var(--fg-soft);font-size:.72rem;text-decoration-color:var(--border-strong)}
 
 /* Experiencia: estrellas, audio y texto se revelan en la misma conversación. */
 .focus-panel{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:18px;padding:20px 18px;box-shadow:0 16px 42px -34px rgba(28,24,22,.45)}
@@ -760,7 +766,7 @@ body.done #flowApp{display:none}
   .intro-prize-photo{height:clamp(128px,25dvh,165px)}
   .intro-step h1{font-size:clamp(1.9rem,8.5vw,2.2rem)}
   .intro-lead{margin-top:8px;font-size:.82rem;line-height:1.32}
-  .intro-prize{font-size:.98rem;margin-top:11px}
+  .intro-prize{font-size:.82rem;margin-top:3px}
   .intro-date{font-size:.75rem;margin-top:7px}
   .intro-copy-block .step-actions{margin-top:12px;padding-top:0;gap:6px}
   .intro-save-note{font-size:.65rem}
@@ -813,7 +819,8 @@ body.done #flowApp{display:none}
   .intro-float-pillow{clip-path:polygon(27% 18%,72% 18%,72% 76%,27% 76%)}
   .intro-float-rug{clip-path:polygon(0 52%,100% 50%,100% 100%,0 100%)}
   .intro-float-vase{display:block;clip-path:polygon(68% 18%,100% 18%,100% 76%,68% 76%);animation:heroVase 14s cubic-bezier(.45,0,.55,1) -5s infinite alternate}
-  .intro-step h1{font-size:clamp(2.75rem,4.7vw,3.65rem)}.intro-lead{font-size:1rem}.intro-prize{font-size:1.26rem}
+  .intro-step h1{font-size:clamp(2.75rem,4.7vw,3.65rem)}.intro-lead,.intro-prize{font-size:1rem}
+  .upload-camera{display:none}
 }
 </style>
 </head>
@@ -843,7 +850,7 @@ body.done #flowApp{display:none}
           <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-01-living-wide-mobile.webp" />
           <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1440" height="810" alt="" fetchpriority="high" />
         </picture>
-        <video class="scene-video" data-scene-video data-seamless-start data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="auto" aria-hidden="true">
+        <video class="scene-video" data-scene-video data-seamless-start data-soft-loop data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="auto" aria-hidden="true">
           <source media="(max-width:799px)" src="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" type="video/mp4" />
           <source src="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" type="video/mp4" />
         </video>
@@ -852,12 +859,12 @@ body.done #flowApp{display:none}
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
         <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-sorteo-v3.webp" width="1000" height="666" alt="" /></div>
         <div class="intro-copy-block">
-          <h1 id="flowHeroTitle">Tu casa ya luce Rollershow.</h1>
-          <p class="intro-lead" id="introPrizeHook">Celebremos el cambio: mostranos cómo quedó y contanos tu experiencia.</p>
-          <p class="intro-prize" id="introPrizeCopy"><strong>Participás por 3 almohadones y 2 alfombras premium.</strong></p>
-          <p class="intro-date" id="introDateCopy"><strong>3 ganadores.</strong> Sorteo en vivo por Instagram el 31 de julio.</p>
+          <h1 id="flowHeroTitle">Compartí tu Rollershow y participá del sorteo.</h1>
+          <p class="intro-lead" id="introPrizeHook">Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.</p>
+          <p class="intro-prize" id="introPrizeCopy"><strong>Podés ganar 3 almohadones y 2 alfombras premium.</strong></p>
+          <p class="intro-date" id="introDateCopy"><strong>3 ganadores.</strong> En vivo por Instagram el 31 de julio.</p>
           <div class="step-actions">
-            <button class="step-primary" id="startFlow" type="button">Quiero participar
+            <button class="step-primary" id="startFlow" type="button">Participar ahora
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
             <p class="intro-save-note" id="introSaveNote">Tu avance queda guardado para que puedas seguir cuando quieras.</p>
@@ -1222,10 +1229,10 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
-$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, tu casa ya luce Rollershow.`;
-$("#introPrizeHook").textContent = "Celebremos el cambio: mostranos cómo quedó y contanos tu experiencia.";
-$("#introPrizeCopy strong").textContent = `Participás por ${premiosTexto}.`;
-$("#introDateCopy").innerHTML = `<strong>${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "ganador" : "ganadores"}.</strong> Sorteo en vivo por Instagram el ${SORTEO.fecha}.`;
+$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, compartí tu Rollershow y participá del sorteo.`;
+$("#introPrizeHook").textContent = "Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.";
+$("#introPrizeCopy strong").textContent = `Podés ganar ${premiosTexto}.`;
+$("#introDateCopy").innerHTML = `<strong>${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "ganador" : "ganadores"}.</strong> En vivo por Instagram el ${SORTEO.fecha}.`;
 $("#introPrizeImage").src = SORTEO.imagenPremios;
 $("#introPrizeImage").alt = `Premios del sorteo: ${premiosTexto}`;
 $("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosTexto}.`;
@@ -1417,6 +1424,13 @@ function textoAmbiente(item, index) {
   if (ambiente && !/^(s\/?n|sin definir|ambiente)$/i.test(ambiente)) return ambiente;
   return PRESUPUESTO.items.length === 1 ? "Tu cortina" : `Cortina ${index + 1}`;
 }
+function cantidadCortinasEnAmbiente(item) {
+  const ambiente = String(item.ambiente_display || item.ambiente || "").trim().toLocaleLowerCase("es");
+  if (!ambiente || /^(s\/?n|sin definir|ambiente)$/i.test(ambiente)) return 1;
+  return PRESUPUESTO.items.filter(candidate =>
+    String(candidate.ambiente_display || candidate.ambiente || "").trim().toLocaleLowerCase("es") === ambiente
+  ).length;
+}
 function detalleCortina(item) {
   const producto = String(item.producto_display || item.producto || "").trim();
   const tela = String(item.tela_display || item.tela || "").trim();
@@ -1426,6 +1440,7 @@ function detalleCortina(item) {
 PRESUPUESTO.items.forEach((item, index) => {
   const next = PRESUPUESTO.items[index + 1];
   const ambiente = textoAmbiente(item, index);
+  const sujetoCortina = cantidadCortinasEnAmbiente(item) > 1 ? "estas cortinas" : "esta cortina";
   const detalle = detalleCortina(item);
   const referenceImage = item.foto_referencia_url || item.img;
   const blurredReference = referenceImage?.startsWith("img/") ? referenceImage.replace(".jpg", "-blurred.jpg") : referenceImage;
@@ -1446,17 +1461,17 @@ PRESUPUESTO.items.forEach((item, index) => {
         </article>
       </div>
       <div class="item-task">
-        <label class="upload-zone">
+        <div class="upload-zone">
           <span class="upload-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-          <span><strong>Subí una foto o un video</strong><small>Que se vea la cortina completa, con luz de día</small><b class="upload-value">Foto +10 puntos. Video +25 puntos.</b></span></span>
-          <input type="file" accept="image/*,video/*" multiple />
-        </label>
+          <span><strong>Subí fotos y videos de ${sujetoCortina}</strong><small>Que se vea completa, con luz de día</small><b class="upload-value">Cada foto +10 puntos. Cada video +25 puntos.</b>
+          <span class="upload-source-actions"><label class="upload-source upload-library">Elegir fotos o videos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
+        </div>
         <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
       </div>
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
-      <label class="step-secondary upload-more-action"><span class="upload-more-label">Agregar otra foto o video</span><span class="upload-more-points">Foto +10 puntos. Video +25 puntos.</span><input type="file" accept="image/*,video/*" multiple /></label>
+      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Otra foto suma 10 puntos. Otro video suma 25.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
@@ -1884,8 +1899,28 @@ function prepareSceneVideo(video) {
   video.preload = "auto";
   video.load();
 }
+function setupSoftVideoLoop(video) {
+  if (!video?.hasAttribute("data-soft-loop") || video.dataset.softLoopReady) return;
+  video.dataset.softLoopReady = "true";
+  video.addEventListener("timeupdate", () => {
+    if (video.duration && video.currentTime >= video.duration - .48 && !video.classList.contains("soft-loop-fade")) {
+      video.classList.add("soft-looping", "soft-loop-fade");
+    }
+  });
+  video.addEventListener("ended", () => {
+    video.currentTime = 0;
+    const resume = () => {
+      video.play().catch(() => {});
+      requestAnimationFrame(() => requestAnimationFrame(() => video.classList.remove("soft-loop-fade")));
+      setTimeout(() => video.classList.remove("soft-looping"), 460);
+    };
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) resume();
+    else video.addEventListener("canplay", resume, { once:true });
+  });
+}
 function activateSceneVideo(video, restart = false) {
   if (!video) return;
+  setupSoftVideoLoop(video);
   const embeddedSource = video.querySelector("source[src]");
   if (!video.src && !embeddedSource) {
     video.src = matchMedia("(max-width:799px)").matches ? video.dataset.srcMobile : video.dataset.srcDesktop;
