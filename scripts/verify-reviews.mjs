@@ -34,7 +34,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   });
   const page = await ctx.newPage();
   await page.goto(URL, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(700);
+  await page.waitForFunction(() => [...document.querySelectorAll('.reference-media')].every(img =>
+    img.complete && img.naturalWidth >= 1000
+  ), null, { timeout: 15000 });
+  await page.waitForTimeout(300);
 
   const initial = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
