@@ -385,7 +385,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         celebration.videoFilter !== 'none' || celebration.videoBlend !== 'normal' || celebration.radiance !== 'none' ||
         !celebration.fanfare?.attempted || !celebration.fanfare?.played || celebration.fanfare.plays !== 1 || celebration.fanfare.volume < .08 || celebration.fanfare.volume > .12 ||
         celebration.fanfare.duration > 1.1 || celebration.fanfare.voices !== 8 || celebration.fanfare.error ||
-        celebration.sounds.filter(sound => sound.kind === 'finale').length !== 1 || celebration.sounds.some(sound => !['upload','finale'].includes(sound.kind)) ||
+        celebration.sounds.filter(sound => sound.kind === 'finale').length !== 1 || celebration.sounds.some(sound => !['click','upload','finale'].includes(sound.kind)) ||
+        !celebration.sounds.some(sound => sound.kind === 'click') || celebration.sounds.filter(sound => sound.kind === 'click').some(sound =>
+          !sound.played || sound.plays !== 1 || sound.volume > .025 || sound.duration > .08 || sound.voices !== 1 || sound.error) ||
         !celebration.finaleTiming?.burst || celebration.finaleTiming.burstAt < 1900 || celebration.finaleTiming.burstAt > 2350 || !celebration.flashTriggered ||
         celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .05 ||
         celebration.lowerDisplay !== 'flex' || celebration.lowerDirection !== 'column') {
