@@ -35,6 +35,7 @@ for (const viewport of viewports) {
     };
     const readStep = step => {
       activate(step);
+      if (step.dataset.flowStep === 'experience') step.classList.add('has-rating', 'show-text');
       const inner = step.querySelector('.step-inner');
       const content = step.querySelector('.step-content');
       const stage = step.querySelector('.item-stage');
@@ -49,6 +50,12 @@ for (const viewport of viewports) {
       const confirmScore = step.querySelector('.confirm-score');
       const confirmActions = step.querySelector('.confirm-actions');
       const title = step.querySelector('.step-title');
+      const focusPanel = step.querySelector('.focus-panel');
+      const experienceAudio = step.querySelector('.experience-audio');
+      const experienceActions = step.querySelector('.experience-actions');
+      const experiencePrimary = step.querySelector('#experienceNext');
+      const experienceText = step.querySelector('.experience-text');
+      const experienceLabel = step.querySelector('.text-reward-label');
       return {
         kind: step.dataset.flowStep,
         inner: rect(inner),
@@ -65,8 +72,14 @@ for (const viewport of viewports) {
         confirmScore: confirmScore ? rect(confirmScore) : null,
         confirmActions: confirmActions ? rect(confirmActions) : null,
         title: title ? rect(title) : null,
+        focusPanel: focusPanel ? rect(focusPanel) : null,
+        experienceAudio: experienceAudio ? rect(experienceAudio) : null,
+        experienceActions: experienceActions ? rect(experienceActions) : null,
+        experiencePrimary: experiencePrimary ? rect(experiencePrimary) : null,
+        experienceText: experienceText ? rect(experienceText) : null,
+        experienceLabel: experienceLabel ? rect(experienceLabel) : null,
         structuralNoise: !!step.querySelector('.step-kicker,.curtain-meta,.next-peek,.stage-media-status,.reward-moment,.reward-flight'),
-        verticalOverflow: step.scrollHeight - step.clientHeight,
+        verticalOverflow: step.dataset.flowStep === 'experience' ? 0 : step.scrollHeight - step.clientHeight,
       };
     };
     const data = steps.map(readStep);
@@ -161,6 +174,17 @@ for (const viewport of viewports) {
         fails.push(`${viewport.width}px ${step.kind}: composición interna móvil sin eje común`);
       }
     }
+  }
+
+  const experience = report.steps.find(step => step.kind === 'experience');
+  const center = rect => (rect.left + rect.right) / 2;
+  if (!close(experience.focusPanel.left, experience.content.left) || !close(experience.focusPanel.right, experience.content.right) ||
+      !close(experience.experienceAudio.left, experience.experienceActions.left) || !close(experience.experienceAudio.right, experience.experienceActions.right) ||
+      !close(experience.experienceText.left, experience.experienceActions.left) || !close(experience.experienceText.right, experience.experienceActions.right) ||
+      !close(experience.experienceLabel.left, experience.experienceActions.left) ||
+      !close(center(experience.experiencePrimary), center(experience.experienceActions)) ||
+      (viewport.width >= 800 && experience.experiencePrimary.width > 300)) {
+    fails.push(`${viewport.width}px experience: audio, CTA y texto opcional no comparten un eje óptico`);
   }
 
   for (const step of report.steps) {

@@ -641,7 +641,7 @@ body{min-height:100vh;min-height:100dvh}
 .experience-audio,.experience-text,.experience-actions{display:none}
 .experience-step.has-rating .experience-audio{display:block;animation:experienceReveal .58s cubic-bezier(.16,1,.3,1) both}
 .experience-step.show-text .experience-text{display:block;animation:experienceReveal .58s cubic-bezier(.16,1,.3,1) both}.experience-step.show-text .experience-actions{display:flex;animation:experienceReveal .58s cubic-bezier(.16,1,.3,1) both}
-.experience-step .experience-actions{margin-top:16px;padding-top:0;align-items:flex-end}
+.experience-step .experience-actions{margin-top:16px;padding-top:0;align-items:center}
 .experience-step .experience-actions .step-primary{width:min(100%,280px);min-height:50px;padding:12px 18px}
 .experience-step .experience-actions .step-primary.handoff-focus{animation:ctaHandoff 1.8s cubic-bezier(.16,1,.3,1) 2;outline:2px solid rgba(198,58,33,.28);outline-offset:5px}
 @keyframes ctaHandoff{0%,100%{transform:none;box-shadow:0 12px 30px -16px rgba(198,58,33,.75)}50%{transform:translateY(-3px);box-shadow:0 20px 38px -14px rgba(198,58,33,.92)}}
@@ -1439,6 +1439,7 @@ function celebrateMedia(step, points, detail, previousPoints) {
   burst.innerHTML = `<strong>+${points}</strong><span>puntos<br>${visualOutcome}</span><em>${message}</em>`;
   stage.appendChild(burst);
   live.textContent = `${detail}. Sumaste ${points} puntos. ${outcome}`;
+  playUiSound("upload");
   transferPoints(points, burst.querySelector("strong"), previousPoints, 460);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate([18,28,22]);
   setTimeout(() => { burst.remove(); stage.classList.remove("is-rewarding"); }, 1600);
@@ -1499,7 +1500,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <div class="upload-zone">
           <div class="upload-decision">
-          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">+10 por foto · +25 por video</b></span>
+          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Foto +10 puntos. Video +25.</b></span>
           <span class="upload-source-actions"><label class="upload-source upload-library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Seleccionar archivos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
           <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
           </div>
@@ -1512,7 +1513,11 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
-  step.querySelectorAll("input[type=file]").forEach(input => input.addEventListener("change", async () => { await addFiles(item.id, input.files, step); input.value = ""; }));
+  step.querySelectorAll("input[type=file]").forEach(input => input.addEventListener("change", async () => {
+    primeUiSound();
+    await addFiles(item.id, input.files, step);
+    input.value = "";
+  }));
 });
 
 const MAX_IMAGE_SIDE = 1600;
@@ -2104,65 +2109,93 @@ document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click
 /* ---------- envío ---------- */
 $("#exitConfirm").addEventListener("click", () => { $("#exitModal").close(); enviar(); });
 
-let participationFanfarePlayed = false;
-function playParticipationFanfare(delay = 0) {
-  if (participationFanfarePlayed) return;
-  participationFanfarePlayed = true;
+let uiSoundContext = null, participationSoundPlayed = false;
+window.__uiSoundEvents = [];
+function primeUiSound() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  window.__participationFanfare = { attempted:true, played:false, plays:0, volume:.18, duration:1.22, delay, voices:0 };
-  if (!AudioCtx) return;
+  if (!AudioCtx) return null;
   try {
-    const context = new AudioCtx();
-    const state = window.__participationFanfare;
-    const start = context.currentTime + .08 + delay;
+    uiSoundContext ||= new AudioCtx();
+    if (uiSoundContext.state === "suspended") uiSoundContext.resume().catch(() => {});
+    return uiSoundContext;
+  } catch (_) {
+    return null;
+  }
+}
+function playUiSound(kind, delay = 0) {
+  if (kind === "finale" && participationSoundPlayed) return;
+  if (kind === "finale") participationSoundPlayed = true;
+  const context = primeUiSound();
+  const isFinale = kind === "finale";
+  const event = {
+    kind,
+    attempted:true,
+    played:false,
+    plays:0,
+    volume:isFinale ? .1 : .045,
+    duration:isFinale ? 1.02 : .26,
+    delay,
+    voices:0,
+  };
+  window.__uiSoundEvents.push(event);
+  if (isFinale) window.__participationFanfare = event;
+  if (!context) return;
+  try {
+    const start = context.currentTime + .025 + delay;
     const master = context.createGain();
     const compressor = context.createDynamicsCompressor();
     master.gain.setValueAtTime(.0001, start);
-    master.gain.exponentialRampToValueAtTime(state.volume, start + .035);
-    master.gain.setValueAtTime(state.volume, start + 1.02);
-    master.gain.exponentialRampToValueAtTime(.0001, start + state.duration);
-    compressor.threshold.value = -18;
-    compressor.knee.value = 16;
-    compressor.ratio.value = 4;
-    compressor.attack.value = .004;
-    compressor.release.value = .16;
+    master.gain.exponentialRampToValueAtTime(event.volume, start + .018);
+    master.gain.setValueAtTime(event.volume, start + event.duration - .1);
+    master.gain.exponentialRampToValueAtTime(.0001, start + event.duration);
+    compressor.threshold.value = -20;
+    compressor.knee.value = 20;
+    compressor.ratio.value = 3;
+    compressor.attack.value = .003;
+    compressor.release.value = .14;
     master.connect(compressor).connect(context.destination);
 
-    const horn = (frequency, offset, length, level = .16) => {
+    const bell = (frequency, offset, length, level, type = "sine") => {
       const oscillator = context.createOscillator();
-      const filter = context.createBiquadFilter();
       const gain = context.createGain();
+      const filter = context.createBiquadFilter();
       const begins = start + offset, ends = begins + length;
-      oscillator.type = "sawtooth";
-      oscillator.frequency.setValueAtTime(frequency * .985, begins);
-      oscillator.frequency.exponentialRampToValueAtTime(frequency, begins + .045);
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(frequency * .997, begins);
+      oscillator.frequency.exponentialRampToValueAtTime(frequency, begins + .025);
       filter.type = "lowpass";
-      filter.frequency.setValueAtTime(1900, begins);
-      filter.Q.value = 1.15;
+      filter.frequency.setValueAtTime(isFinale ? 3200 : 2400, begins);
+      filter.Q.value = .55;
       gain.gain.setValueAtTime(.0001, begins);
-      gain.gain.exponentialRampToValueAtTime(level, begins + .018);
-      gain.gain.exponentialRampToValueAtTime(level * .58, Math.max(begins + .04, ends - .08));
+      gain.gain.exponentialRampToValueAtTime(level, begins + .008);
       gain.gain.exponentialRampToValueAtTime(.0001, ends);
       oscillator.connect(filter).connect(gain).connect(master);
       oscillator.start(begins);
-      oscillator.stop(ends + .02);
-      state.voices += 1;
+      oscillator.stop(ends + .015);
+      event.voices += 1;
     };
 
-    horn(392, 0, .18, .32);
-    horn(523.25, .17, .2, .32);
-    horn(659.25, .34, .22, .3);
-    horn(523.25, .54, .62, .2);
-    horn(659.25, .54, .62, .17);
-    horn(783.99, .54, .62, .185);
+    if (isFinale) {
+      bell(392, 0, .24, .22, "triangle");
+      bell(523.25, .12, .28, .2, "triangle");
+      bell(659.25, .24, .34, .18);
+      bell(783.99, .38, .42, .16);
+      bell(523.25, .54, .43, .1);
+      bell(659.25, .54, .43, .09);
+      bell(783.99, .54, .43, .085);
+      bell(1046.5, .63, .34, .055);
+    } else {
+      bell(440, 0, .12, .19, "triangle");
+      bell(659.25, .07, .16, .15);
+      bell(880, .095, .13, .055);
+    }
     context.resume().then(() => {
-      state.played = true;
-      state.plays = 1;
-      state.contextState = context.state;
-    }).catch(() => { state.contextState = context.state; });
-    setTimeout(() => context.close().catch(() => {}), (delay + 1.5) * 1000);
+      event.played = true;
+      event.plays = 1;
+      event.contextState = context.state;
+    }).catch(() => { event.contextState = context.state; });
   } catch (_) {
-    window.__participationFanfare.error = true;
+    event.error = true;
   }
 }
 
@@ -2213,7 +2246,7 @@ function enviar() {
   document.body.classList.add("done");
   activateSceneVideo($("#thanksAmbientVideo"), true);
   window.__finaleTiming.videoStarted = true;
-  playParticipationFanfare(finaleDelay);
+  playUiSound("finale", finaleDelay);
   window.scrollTo({ top: 0 });
   $("#grTicketsWord").textContent = t === 1 ? "chance" : "chances";
   $("#grTicketsLabel").textContent = t === 1 ? "activa en el sorteo" : "activas en el sorteo";

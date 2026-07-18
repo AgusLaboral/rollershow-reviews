@@ -124,7 +124,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => !item.uploadReward?.includes('+10 por foto') || !item.uploadReward?.includes('+25 por video'))) {
+  if (environments.some(item => !item.uploadReward?.includes('Foto +10 puntos') || !item.uploadReward?.includes('Video +25'))) {
     fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
   }
   if (environments.some(item => item.uploadTitle !== 'Subí fotos o videos' || item.gallery.accept !== 'image/*,video/*' || !item.gallery.multiple ||
@@ -188,6 +188,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       bannedSeparators: /[·—]/.test(document.querySelector('.item-step.active .stage-score-burst')?.innerText || ''),
       transfer: document.querySelector('.score-transfer')?.textContent,
       transferAnimated: (document.querySelector('.score-transfer')?.getAnimations().length || 0) > 0,
+      sound: window.__uiSoundEvents.at(-1),
       actionTray: (() => {
         const stage = document.querySelector('.item-step.active .item-stage').getBoundingClientRect();
         const actions = document.querySelector('.item-step.active .step-actions').getBoundingClientRect();
@@ -200,7 +201,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     }));
     if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
         !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated ||
-        !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight || !photoReward.actionTray.sharedAxis || !photoReward.actionTray.stacked) {
+        !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight || !photoReward.actionTray.sharedAxis || !photoReward.actionTray.stacked ||
+        photoReward.sound?.kind !== 'upload' || !photoReward.sound.played || photoReward.sound.plays !== 1 || photoReward.sound.volume > .06 || photoReward.sound.duration > .3 || photoReward.sound.voices !== 3 || photoReward.sound.error) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
@@ -364,6 +366,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         videoBlend: getComputedStyle(document.querySelector('#thanksAmbientVideo')).mixBlendMode,
         radiance: getComputedStyle(document.querySelector('.gr-radiance')).display,
         fanfare: window.__participationFanfare,
+        sounds: window.__uiSoundEvents,
         finaleTiming: window.__finaleTiming,
         flashTriggered: document.querySelector('#celebrationFlash').classList.contains('burst'),
         videoDrops: (() => { const q=document.querySelector('#thanksAmbientVideo').getVideoPlaybackQuality(); return {dropped:q.droppedVideoFrames,total:q.totalVideoFrames,corrupted:q.corruptedVideoFrames}; })(),
@@ -380,8 +383,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
         celebration.videoPaused || !celebration.videoLoop || celebration.videoOpacity < .5 || !celebration.readingOrder ||
         celebration.videoFilter !== 'none' || celebration.videoBlend !== 'normal' || celebration.radiance !== 'none' ||
-        !celebration.fanfare?.attempted || !celebration.fanfare?.played || celebration.fanfare.plays !== 1 || celebration.fanfare.volume < .12 || celebration.fanfare.volume > .2 ||
-        celebration.fanfare.duration > 1.5 || celebration.fanfare.voices !== 6 || celebration.fanfare.error ||
+        !celebration.fanfare?.attempted || !celebration.fanfare?.played || celebration.fanfare.plays !== 1 || celebration.fanfare.volume < .08 || celebration.fanfare.volume > .12 ||
+        celebration.fanfare.duration > 1.1 || celebration.fanfare.voices !== 8 || celebration.fanfare.error ||
+        celebration.sounds.filter(sound => sound.kind === 'finale').length !== 1 || celebration.sounds.some(sound => !['upload','finale'].includes(sound.kind)) ||
         !celebration.finaleTiming?.burst || celebration.finaleTiming.burstAt < 1900 || celebration.finaleTiming.burstAt > 2350 || !celebration.flashTriggered ||
         celebration.videoDrops.corrupted > 0 || (celebration.videoDrops.dropped / Math.max(1,celebration.videoDrops.total)) > .05 ||
         celebration.lowerDisplay !== 'flex' || celebration.lowerDirection !== 'column') {
