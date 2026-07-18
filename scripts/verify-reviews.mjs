@@ -121,10 +121,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => !item.uploadReward?.includes('Cada foto +10 puntos') || !item.uploadReward?.includes('Cada video +25 puntos'))) {
+  if (environments.some(item => !item.uploadReward?.includes('+10 por foto') || !item.uploadReward?.includes('+25 por video'))) {
     fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => !item.uploadTitle?.includes('Subí fotos y videos de esta cortina') || item.gallery.accept !== 'image/*,video/*' || !item.gallery.multiple ||
+  if (environments.some(item => item.uploadTitle !== 'Subí fotos o videos' || item.gallery.accept !== 'image/*,video/*' || !item.gallery.multiple ||
       item.camera.accept !== 'image/*' || item.camera.capture !== 'environment')) {
     fails.push(`${vp.w}px: la carga no ofrece galería múltiple y cámara trasera ${JSON.stringify(environments)}`);
   }
@@ -544,7 +544,7 @@ const desktopUploadAxis = await dpage.evaluate(() => {
   const source=step.querySelector('.upload-library').getBoundingClientRect(), skip=step.querySelector('.stage-skip').getBoundingClientRect(), title=step.querySelector('.upload-prompt strong').getBoundingClientRect();
   return {prompt:{left:prompt.left,right:prompt.right,width:prompt.width,bottom:prompt.bottom},source:{left:source.left,right:source.right,height:source.height},skip:{left:skip.left,top:skip.top},title:{left:title.left},stageRight:step.querySelector('.item-stage').getBoundingClientRect().right};
 });
-if (desktopUploadAxis.prompt.width > 382 || desktopUploadAxis.source.height < 40 ||
+if (desktopUploadAxis.prompt.width > 282 || desktopUploadAxis.source.height < 40 ||
     desktopUploadAxis.source.left < desktopUploadAxis.prompt.left || desktopUploadAxis.source.right > desktopUploadAxis.prompt.right ||
     desktopUploadAxis.skip.top - desktopUploadAxis.prompt.bottom < 18 || Math.abs(desktopUploadAxis.prompt.right-desktopUploadAxis.stageRight) > 26 ||
     Math.abs(desktopUploadAxis.title.left-desktopUploadAxis.source.left) > 2 || Math.abs(desktopUploadAxis.title.left-desktopUploadAxis.skip.left) > 2) {

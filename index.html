@@ -578,21 +578,21 @@ body{min-height:100vh;min-height:100dvh}
   linear-gradient(180deg,rgba(23,20,18,.02) 35%,rgba(23,20,18,.7) 100%);pointer-events:none}
 .upload-zone{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px;text-align:left;color:#fff;touch-action:manipulation;
   background:linear-gradient(180deg,transparent 8%,rgba(22,18,15,.18) 36%,rgba(22,18,15,.82) 100%)}
-.upload-decision{display:flex;flex-direction:column;align-items:stretch;gap:22px;width:min(100%,360px);margin-left:auto}
-.upload-prompt{width:100%;display:block;padding:12px 0 0;
+.upload-decision{display:flex;flex-direction:column;align-items:stretch;gap:20px;width:min(100%,320px);margin-left:auto}
+.upload-prompt{width:100%;display:block;padding:0;
   color:#fff;border:0;border-radius:0;background:transparent;box-shadow:none}
 .upload-zone strong{display:block;font-family:var(--font-display);font-size:.92rem;line-height:1.08}
-.upload-zone small{display:block;color:rgba(255,255,255,.8);font-size:.71rem;margin-top:4px;line-height:1.25}
+.upload-meta{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin-top:5px;color:rgba(255,255,255,.82);font-size:.71rem;line-height:1.25}
 .upload-zone .upload-error{color:#fff;font-weight:700}
 .item-step.is-processing .upload-prompt{cursor:wait}
 .item-step.is-processing .upload-prompt svg{animation:uploadBreathe .8s ease-in-out infinite alternate}
 @keyframes uploadBreathe{to{transform:translateY(-3px);opacity:.58}}
-.upload-value{display:block;margin-top:6px;font-family:var(--font-display);font-size:.72rem;line-height:1.25;font-weight:800;color:#fff}
+.upload-value{font-family:var(--font-display);font-size:.72rem;line-height:1.25;font-weight:800;color:#fff}
 .upload-source-actions{display:flex;align-items:center;flex-wrap:wrap;gap:4px 16px;margin-top:9px}
 .upload-source{position:relative;display:inline-flex;align-items:center;min-height:36px;color:#fff;font-size:.73rem;font-weight:750;text-decoration:underline;text-decoration-color:rgba(255,255,255,.6);text-underline-offset:4px;cursor:pointer}
 .upload-source:hover{text-decoration-color:#fff}
-.upload-prompt .upload-source-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:8px;margin-top:10px}
-.upload-prompt .upload-source{justify-content:center;gap:8px;min-height:46px;padding:9px 12px;border:1px solid var(--cta);border-radius:10px;background:var(--cta);color:#fff;font-size:.76rem;font-weight:800;line-height:1.15;text-align:center;text-decoration:none;box-shadow:0 10px 22px -13px rgba(0,0,0,.72);transition:transform .15s,background .15s,box-shadow .15s}
+.upload-prompt .upload-source-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:8px;margin-top:9px}
+.upload-prompt .upload-source{justify-content:center;gap:8px;min-height:44px;padding:8px 12px;border:1px solid var(--cta);border-radius:10px;background:var(--cta);color:#fff;font-size:.76rem;font-weight:800;line-height:1.15;text-align:center;text-decoration:none;box-shadow:0 10px 22px -13px rgba(0,0,0,.72);transition:transform .15s,background .15s,box-shadow .15s}
 .upload-prompt .upload-source svg{width:18px;height:18px;margin:0;color:currentColor;flex:none}
 .upload-prompt .upload-source:hover{transform:translateY(-1px);background:var(--cta-deep);box-shadow:0 14px 26px -13px rgba(151,41,15,.95)}
 .upload-prompt .upload-source:active{transform:scale(.975)}
@@ -819,8 +819,8 @@ body.done #flowApp{display:none}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}
   .item-step .upload-zone{padding:24px;align-items:center;justify-content:flex-end}
   .item-step .upload-zone{background:linear-gradient(90deg,transparent 42%,rgba(22,18,15,.18) 58%,rgba(22,18,15,.82) 100%)}
-  .item-step .upload-decision{width:min(36%,380px);margin-left:auto;gap:22px}
-  .item-step .upload-prompt{width:100%;margin:0;padding:14px 0 0}
+  .item-step .upload-decision{width:min(28%,280px);margin-left:auto;gap:20px}
+  .item-step .upload-prompt{width:100%;margin:0;padding:0}
   .item-step .upload-library{grid-column:1 / -1}
   .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
   .item-step.has-media .step-actions{grid-column:1 / -1;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:0;padding:12px 14px}
@@ -1474,6 +1474,9 @@ PRESUPUESTO.items.forEach((item, index) => {
   const next = PRESUPUESTO.items[index + 1];
   const ambiente = textoAmbiente(item, index);
   const sujetoCortina = cantidadCortinasEnAmbiente(item) > 1 ? "estas cortinas" : "esta cortina";
+  const indicacionCortina = cantidadCortinasEnAmbiente(item) > 1
+    ? "Estas cortinas, completas y con luz de día"
+    : "Esta cortina, completa y con luz de día";
   const detalle = detalleCortina(item);
   const referenceImage = item.foto_referencia_url || item.img;
   const blurredReference = referenceImage?.startsWith("img/") ? referenceImage.replace(".jpg", "-blurred.jpg") : referenceImage;
@@ -1496,7 +1499,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <div class="upload-zone">
           <div class="upload-decision">
-          <span class="upload-prompt"><span><strong>Subí fotos y videos de ${sujetoCortina}</strong><small>Que se vea completa, con luz de día</small><b class="upload-value">Cada foto +10 puntos. Cada video +25 puntos.</b>
+          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">+10 por foto · +25 por video</b></span>
           <span class="upload-source-actions"><label class="upload-source upload-library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Seleccionar archivos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
           <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
           </div>
