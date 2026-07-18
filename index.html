@@ -2218,7 +2218,8 @@ function playUiSound(kind, delay = 0) {
 }
 
 document.addEventListener("click", event => {
-  if (event.target.closest("button:not(:disabled)")) playUiSound("click");
+  const control = event.target.closest("button:not(:disabled), label.upload-source, a.g-cta, a.ig-final-cta");
+  if (control) playUiSound("click");
 }, { capture:true });
 
 function enviar() {

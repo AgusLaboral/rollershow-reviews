@@ -39,6 +39,24 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   ), null, { timeout: 15000 });
   await page.waitForTimeout(300);
 
+  if (vp.w === 320) {
+    const visualButtonSounds = await page.evaluate(() => {
+      const targets = ['label.upload-source', 'a.g-cta', 'a.ig-final-cta'];
+      const before = window.__uiSoundEvents.length;
+      targets.forEach(selector => {
+        const target = document.querySelector(selector);
+        target.addEventListener('click', event => event.preventDefault(), { once:true });
+        target.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true }));
+      });
+      const sounds = window.__uiSoundEvents.slice(before).map(sound => sound.kind);
+      window.__uiSoundEvents.splice(before);
+      return sounds;
+    });
+    if (visualButtonSounds.length !== 3 || visualButtonSounds.some(kind => kind !== 'click')) {
+      fails.push(`controles visuales sin clic consistente ${JSON.stringify(visualButtonSounds)}`);
+    }
+  }
+
   const initial = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     active: document.querySelector('.flow-step.active')?.dataset.flowStep,
