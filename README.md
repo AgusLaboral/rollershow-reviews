@@ -1,6 +1,6 @@
 # Rollershow Reviews & Sorteo
 
-Mockup fase 1: web app multistep para que clientes que ya compraron recorran sus cortinas una por una, suban fotos/video y cuenten su experiencia en una sola etapa progresiva —estrellas, audio y una opinión breve— antes de confirmar su participación. Todo suma chances para ganar 3 almohadones y 2 alfombras premium, sorteados entre 3 ganadores en Instagram.
+Mockup fase 1: web app multistep para que clientes que ya compraron recorran sus cortinas una por una, suban fotos/video y cuenten su experiencia en una sola etapa progresiva —estrellas, audio y una opinión breve— antes de confirmar su participación. Todo suma tickets para ganar 3 almohadones y 2 alfombras premium, sorteados entre 3 ganadores en Instagram.
 
 La portada tiene una sola acción primaria. Para comparar movimiento sin duplicar lógica hay dos variantes del mismo flujo:
 
@@ -21,19 +21,19 @@ La portada tiene una sola acción primaria. Para comparar movimiento sin duplica
 
 Buscar `TODO(Nico)` en `index.html`:
 1. `GET /api/v2/presupuesto/:token` → cliente, vendedor (nombre + foto) e ítems comprados. El token llega por query (`?t=...`) desde el WhatsApp post-instalación.
-2. `POST /api/v2/reviews` (multipart) → estrellas, texto, audio, media por ítem, consentimiento. **Los puntos/chances se recalculan server-side.**
+2. `POST /api/v2/reviews` (multipart) → estrellas, texto, audio, media por ítem, consentimiento. **Los tickets se recalculan server-side.**
 3. Upload progresivo de archivos apenas se eligen + compresión de imágenes client-side (máx 1600px, JPEG q0.82).
 
 ## Mecánica
 
-Foto 10 pts, video 25, audio 30, estrellas 5, texto 5. Cada 10 pts = 1 chance; toda participación confirmada tiene al menos 1 chance. La fecha concreta del sorteo se publica en la app y la transmisión se hace en vivo por Instagram.
+Cada foto, video, calificación u opinión escrita suma 1 ticket; el audio suma 3. Cada ticket es una chance en el sorteo y toda participación confirmada tiene al menos 1. La fecha concreta del sorteo se publica en la app y la transmisión se hace en vivo por Instagram.
 
 ## Verificación
 
 ```bash
 npm install && npx playwright install chromium   # una vez
 python -m http.server 8899                       # servir la carpeta
-node scripts/verify-reviews.mjs                  # funcional: puntos, consentimiento, gracias, exit popup, bases, Google review
+node scripts/verify-reviews.mjs                  # funcional: tickets, consentimiento, gracias, exit popup, bases, Google review
 node scripts/verify-alignment.mjs                # alineación real (getBoundingClientRect) en desktop — no comparar screenshots a ojo
 ```
 

@@ -227,7 +227,7 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 .gr-score strong{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent-deep);display:block}
 .gr-score span{font-size:.8rem;font-weight:600;color:var(--fg-mute)}
 
-/* ---------- Duplicar chances con reseña de Google ---------- */
+/* ---------- Duplicar tickets con reseña de Google ---------- */
 .g-block{margin-top:34px;padding-top:30px;border-top:1px solid var(--border)}
 .g-block h3{font-family:var(--font-display);font-weight:800;font-size:1.2rem}
 .g-block p{color:var(--fg-soft);margin:8px auto 0;font-size:.92rem;max-width:36ch}
@@ -295,18 +295,18 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes grCopyIn{to{opacity:1;transform:none}}
 #gracias h1{font-family:var(--font-display);font-weight:850;font-size:clamp(2.6rem,5.8vw,5.35rem);line-height:.88;letter-spacing:-.065em;text-wrap:balance}
 #gracias .gr-sub{color:rgba(255,249,242,.72);margin:12px 0 0;max-width:48ch;font-size:clamp(.95rem,1.35vw,1.16rem)}
-.gr-score{position:relative;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);align-items:end;gap:clamp(32px,4vw,48px);width:min(100%,680px);margin-top:clamp(18px,2.8dvh,30px);padding:0 0 clamp(10px,1.8dvh,18px);perspective:900px}
+.gr-score{position:relative;display:grid;grid-template-columns:minmax(0,1fr);align-items:end;width:min(100%,680px);margin-top:clamp(18px,2.8dvh,30px);padding:0 0 clamp(10px,1.8dvh,18px);perspective:900px}
 .gr-score::after{display:none}
 .gr-score>div{position:relative;min-width:0;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:0;transform:translate3d(0,90px,-180px) rotateX(18deg);animation:grMonumentIn .8s cubic-bezier(.16,1,.3,1) forwards}
-.gr-score .gr-chances{animation-delay:.34s}.gr-score .gr-points{animation-delay:.46s}
+.gr-score .gr-chances{animation-delay:.34s}
 @keyframes grMonumentIn{35%{opacity:1;transform:translate3d(0,-10px,24px) rotateX(-3deg)}100%{opacity:1;transform:none}}
 .gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 18px 48px rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
 .gr-score strong{position:relative;width:max-content;transform-style:preserve-3d}
 .gr-score strong::before,.gr-score strong::after{content:attr(data-value);position:absolute;inset:0;pointer-events:none;z-index:-1}
 .gr-score strong::before{color:#160E0B;transform:translate3d(3px,4px,-24px);filter:blur(1px);opacity:.3;text-shadow:none}
 .gr-score strong::after{display:none}
-.gr-points strong::before{color:#160E0B;opacity:.26}
-.gr-chances strong{font-size:clamp(6.6rem,10vw,8.6rem);color:#FFF8EE}.gr-points strong{font-size:clamp(4.6rem,6.8vw,5.9rem)}
+.gr-chances strong{font-size:clamp(6.6rem,10vw,8.6rem);color:#FFF8EE}
+.gr-ticket-icon{width:clamp(30px,3.4vw,42px);height:auto;flex:none;color:#FFF8EE;filter:drop-shadow(0 10px 26px rgba(0,0,0,.35));align-self:center}
 .gr-score span{display:flex;align-items:baseline;gap:9px;margin-top:12px;color:rgba(255,249,242,.7);font-size:clamp(.84rem,1.1vw,1rem);font-weight:600}
 .gr-score span b{font-family:var(--font-display);color:#FFF9F2;font-size:clamp(1.35rem,2.35vw,2rem);line-height:1}
 .gr-score span em{font-style:normal}
@@ -337,8 +337,8 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes gCheckIn{0%{transform:scale(.55) rotate(-12deg);opacity:0;stroke-dashoffset:30}100%{transform:none;opacity:1;stroke-dashoffset:0}}
 .gr-fecha{font-size:.95rem;color:inherit}.gr-fecha b{color:inherit}.gr-ig{display:inline-flex;align-items:center;gap:10px;color:#F5EFE6;background:none;border-radius:0;border-bottom:1px solid rgba(245,239,230,.38);text-decoration:none;font-weight:700;padding:10px 0;box-shadow:none}
 body.done footer{background:#130F0D;border-color:rgba(255,249,242,.12);color:rgba(255,249,242,.48)}body.done footer a{color:rgba(255,249,242,.58)}
-@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr 1fr;gap:20px;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances strong,.gr-points strong{font-size:clamp(4rem,20vw,5.35rem);line-height:.72}.gr-score span{display:block;margin-top:6px;font-size:.7rem;line-height:1.2}.gr-score span b{display:block;margin-bottom:2px;font-size:clamp(1rem,5vw,1.25rem)}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:14px;margin-bottom:7px;padding:11px 14px;font-size:.8rem;border-radius:14px}.g-cta.google-focus{outline-offset:4px}}
-@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances strong,.gr-points strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:12px;margin-bottom:6px;padding:9px 12px}}
+@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances strong{font-size:clamp(4rem,20vw,5.35rem);line-height:.72}.gr-ticket-icon{width:22px;margin-right:2px}.gr-score span{display:block;margin-top:6px;font-size:.7rem;line-height:1.2}.gr-score span b{display:inline-block;vertical-align:middle;font-size:clamp(1rem,5vw,1.25rem)}.gr-score span .gr-ticket-icon{display:inline-block;vertical-align:middle}.gr-score span em{display:block;margin-top:3px}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:14px;margin-bottom:7px;padding:11px 14px;font-size:.8rem;border-radius:14px}.g-cta.google-focus{outline-offset:4px}}
+@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:12px;margin-bottom:6px;padding:9px 12px}}
 @media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
 
 /* ---------- Footer ---------- */
@@ -437,12 +437,15 @@ body{min-height:100vh;min-height:100dvh}
   font-size:.72rem;color:var(--fg-mute);font-variant-numeric:tabular-nums;
   transition:opacity .2s,transform .2s,color .2s;transform-style:preserve-3d}
 .flow-score strong{display:inline-block;font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep);transform-origin:center}
-.flow-score .score-chances strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
-.flow-score i{width:1px;height:14px;background:var(--border)}
+.flow-score .score-tickets{display:inline-flex;align-items:center;gap:6px}
+.flow-score .score-tickets strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
+.score-ticket-icon{width:19px;height:19px;flex:none;color:var(--cta-deep)}
 .flow-score.gain{color:var(--cta)}
-.flow-score.gain .score-chances strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
+.flow-score.gain .score-tickets strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
+.flow-score.gain .score-ticket-icon{animation:ticketTilt .72s cubic-bezier(.2,1.7,.35,1) both}
 .flow-score.receive-points{animation:scoreReceive .72s cubic-bezier(.16,1,.3,1) both}
-.flow-score.new-chance .score-chances{animation:chanceGlow .9s cubic-bezier(.16,1,.3,1) both}
+.flow-score.new-chance .score-tickets{animation:chanceGlow .9s cubic-bezier(.16,1,.3,1) both}
+@keyframes ticketTilt{0%{transform:rotate(0)}45%{transform:rotate(-11deg) scale(1.14)}100%{transform:none}}
 @keyframes chanceLand{0%{transform:translateY(6px) scale(.72);opacity:.4}62%{transform:translateY(-2px) scale(1.22)}100%{transform:none;opacity:1}}
 @keyframes scoreReceive{0%{transform:perspective(500px) rotateX(0) translateY(0)}42%{transform:perspective(500px) rotateX(-8deg) translateY(-3px)}100%{transform:none}}
 @keyframes chanceGlow{0%{text-shadow:none}45%{text-shadow:0 0 22px rgba(198,58,33,.48)}100%{text-shadow:none}}
@@ -450,14 +453,15 @@ body{min-height:100vh;min-height:100dvh}
 .flow-shell[data-current="6"] .flow-score{background:transparent}
 .flow-shell[data-current="6"] .flow-score>span,.flow-shell[data-current="6"] .flow-score>i{opacity:0;pointer-events:none}
 
-/* La recompensa recorre una trayectoria causal: nace en la acción y aterriza en el total estable. */
+/* La recompensa es un ticket: nace en la acción y aterriza en el contador estable. */
 .score-transfer{position:fixed;z-index:80;left:0;top:0;pointer-events:none;display:grid;place-items:center;
-  width:70px;height:46px;margin:-23px 0 0 -35px;color:#fff;font-family:var(--font-display);font-size:1.35rem;font-weight:800;
-  border-radius:5px;background-color:rgba(183,174,160,.94);background-image:
-  repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 4px),
-  repeating-linear-gradient(0deg,rgba(48,42,37,.12) 0 1px,transparent 1px 5px);
-  border-bottom:4px solid #8f826f;box-shadow:0 12px 30px rgba(28,24,22,.28);will-change:transform,opacity}
-.score-transfer::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:30px;transform:translateX(-50%);background:linear-gradient(rgba(198,58,33,.5),transparent)}
+  width:72px;height:44px;margin:-22px 0 0 -36px;color:#fff;font-family:var(--font-display);font-size:1.3rem;font-weight:800;
+  filter:drop-shadow(0 12px 26px rgba(151,41,15,.42));will-change:transform,opacity}
+.score-transfer>svg{position:absolute;inset:0;width:100%;height:100%}
+.score-transfer .ticket-body{fill:var(--cta)}
+.score-transfer .ticket-sheen{fill:rgba(255,255,255,.16)}
+.score-transfer .ticket-perf{stroke:rgba(255,244,235,.62);stroke-width:1.6;stroke-dasharray:2.4 3.4;fill:none}
+.score-transfer b{position:relative;padding-right:14px;letter-spacing:-.02em;text-shadow:0 1px 2px rgba(105,25,9,.5)}
 
 /* Gesto de marca: sólo aparece el paño durante el cambio, desde el borde superior de la app. */
 .roller-wipe{position:absolute;z-index:40;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}
@@ -698,10 +702,8 @@ body{min-height:100vh;min-height:100dvh}
 .confirm-score{margin-top:16px;padding-block:14px;border-block:1px solid rgba(142,77,31,.28);color:var(--fg-soft)}
 .confirm-chances{display:flex;align-items:flex-end;gap:12px}
 .confirm-chances strong{font-family:var(--font-display);font-size:clamp(4.8rem,18vw,8.2rem);font-weight:800;line-height:.72;letter-spacing:-.075em;color:var(--cta-deep);font-variant-numeric:tabular-nums}
-.confirm-chances span{font-family:var(--font-display);font-size:1.05rem;font-weight:800;line-height:1.05;max-width:9ch;padding-bottom:4px}
-.confirm-points{margin-top:17px;display:flex;align-items:baseline;gap:6px;color:var(--fg-mute);font-size:.82rem}
-.confirm-points strong{font-family:var(--font-display);font-size:1.4rem;color:var(--accent-deep)}
-.confirm-proof{margin-top:9px;max-width:36ch;font-weight:700;font-size:.9rem;color:var(--fg-soft)}
+.confirm-chances span{font-family:var(--font-display);font-size:1.05rem;font-weight:800;line-height:1.05;max-width:11ch;padding-bottom:4px}
+.confirm-proof{margin-top:12px;max-width:36ch;font-weight:700;font-size:.9rem;color:var(--fg-soft)}
 .confirm-prize-reminder{margin-top:8px;max-width:40ch;color:var(--fg-mute);font-size:.8rem}
 .confirm-prize-reminder strong{color:var(--accent-deep)}
 .confirm-step.celebrate-in .confirm-chances strong{animation:finalChanceLand 1.05s .3s cubic-bezier(.2,1.7,.35,1) both}
@@ -757,7 +759,7 @@ body{min-height:100vh;min-height:100dvh}
   .stage-user-media{animation-duration:.2s}.stage-score-burst,.stage-score-burst::before,.stage-score-burst::after{animation-duration:1.15s}
   .stage-score-burst strong,.stage-score-burst>span{animation-duration:1.15s}
   .flow-step.active.entering .item-heading,.flow-step.active.entering .step-content>*{transform:translateY(4px)}
-  .rec-stop,.rec-stop::after,.flow-score.gain .score-chances strong,.flow-score.receive-points,.flow-score.new-chance .score-chances{animation:none}
+  .rec-stop,.rec-stop::after,.flow-score.gain .score-tickets strong,.flow-score.gain .score-ticket-icon,.flow-score.receive-points,.flow-score.new-chance .score-tickets{animation:none}
   .confirm-prize-base,.confirm-prize-pillow,.confirm-prize-rug{animation-duration:28s}
   .confirm-step.celebrate-in .celebration-roller{animation-duration:1.25s}
   .confirm-step.celebrate-in .confirm-chances strong,.confirm-step.celebrate-in .confirm-proof{animation:none}
@@ -852,7 +854,7 @@ body.done #flowApp{display:none}
   </header>
   <div class="flow-rail" id="flowRail" role="progressbar" aria-label="Progreso del formulario" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><i id="flowRailFill"></i></div>
   <div class="flow-score" id="flowScore" aria-live="polite">
-    <span class="score-chances"><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">chances</span></span><i></i><span><strong id="flowPts">0</strong> puntos</span>
+    <span class="score-tickets"><svg class="score-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg><strong id="flowTickets">0</strong> <span id="flowTicketsLabel">tickets</span></span>
   </div>
   <div class="roller-wipe" aria-hidden="true">
     <div class="roller-fabric"><span class="roller-bar"></span></div>
@@ -874,7 +876,7 @@ body.done #flowApp{display:none}
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
         <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-sorteo-v3.webp" width="1000" height="666" alt="" /></div>
         <div class="intro-copy-block">
-          <h1 id="flowHeroTitle">Compartí tu Rollershow y participá del sorteo.</h1>
+          <h1 id="flowHeroTitle">Compartí tu cortina y participá del sorteo.</h1>
           <p class="intro-lead" id="introPrizeHook">Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.</p>
           <p class="intro-prize" id="introPrizeCopy"><strong>Podés ganar 3 almohadones y 2 alfombras premium.</strong></p>
           <p class="intro-date" id="introDateCopy"><strong>3 ganadores.</strong> En vivo por Instagram el 31 de julio.</p>
@@ -892,13 +894,13 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">¿Cómo fue tu experiencia?</h2>
-        <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma 5 puntos.</span></p>
+        <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma 1 ticket para el sorteo.</span></p>
         <div class="focus-panel">
           <div class="rating-seller" id="flowSeller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
           <div id="flowStarsMount"></div>
           <div class="experience-audio" id="experienceAudio">
             <div class="experience-divider"></div>
-            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Con 20 a 45 segundos alcanza y sumás 30 puntos. Tu navegador te va a pedir permiso para usar el micrófono.</span></div>
+            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Con 20 a 45 segundos alcanza y sumás 3 tickets. Tu navegador te va a pedir permiso para usar el micrófono.</span></div>
             <div id="flowAudioMount"></div>
             <button class="step-secondary step-audio-skip" id="audioSkip" type="button">Seguir sin audio</button>
           </div>
@@ -907,7 +909,7 @@ body.done #flowApp{display:none}
           </div>
           <div class="experience-text" id="experienceText">
             <div class="experience-divider"></div>
-            <label class="text-reward-label" for="reviewText">¿Querés agregar una frase? (+5 puntos)</label>
+            <label class="text-reward-label" for="reviewText">¿Querés agregar una frase? (+1 ticket)</label>
             <div id="flowTextMount"></div>
           </div>
         </div>
@@ -929,8 +931,7 @@ body.done #flowApp{display:none}
           <h2 class="step-title" id="confirmTitle">Mostraste tu casa.</h2>
           <p class="step-copy" id="confirmIntro">Para participar, autorizá el uso de lo que compartiste.</p>
           <div class="confirm-score" aria-live="polite">
-            <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">chances para ganar</span></div>
-            <div class="confirm-points"><strong id="confirmPts">0</strong><span>puntos logrados</span></div>
+            <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">tickets para el sorteo</span></div>
             <p class="confirm-proof" id="confirmProof"></p>
             <p class="confirm-prize-reminder" id="confirmPrizeReminder">En julio sorteamos <strong>3 almohadones y 2 alfombras premium.</strong></p>
           </div>
@@ -959,7 +960,7 @@ body.done #flowApp{display:none}
     </div>
     <div class="hero-copy">
       <h1 id="heroTitle">Mostrá cómo quedó tu casa.</h1>
-      <p>Compartí fotos, un video o tu experiencia y sumá chances para el sorteo de julio.</p>
+      <p>Compartí fotos, un video o tu experiencia y sumá tickets para el sorteo de julio.</p>
       <span class="hero-fecha">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
         Este mes sorteamos el 31 de julio, en vivo por Instagram
@@ -974,11 +975,11 @@ body.done #flowApp{display:none}
   <div class="wrap">
     <div class="sec-head">
       <h2 id="mecanicaTitle">Participar es así de simple</h2>
-      <p>Vos elegís cuánto compartir. La app te muestra tus puntos y chances en el momento.</p>
+      <p>Vos elegís cuánto compartir. La app te muestra tus tickets en el momento.</p>
     </div>
     <div class="mecanica-track">
       <div class="mecanica-step" data-step="01"><strong>Compartí tu experiencia</strong><span>Calificación, texto, fotos, video o audio</span></div>
-      <div class="mecanica-step" data-step="02"><strong>Sumá chances</strong><span>Tenés al menos 1; el puntaje puede sumar más</span></div>
+      <div class="mecanica-step" data-step="02"><strong>Sumá tickets</strong><span>Cada aporte suma 1 y el audio suma 3</span></div>
       <div class="mecanica-step" data-step="03"><strong>Seguí el sorteo</strong><span>En vivo por nuestro Instagram</span></div>
     </div>
   </div>
@@ -989,14 +990,14 @@ body.done #flowApp{display:none}
 ============================================================ -->
 <div class="chancebar">
   <div class="chancebar-in">
-    <div class="chance-count"><strong id="ptsNum">0</strong><span>puntos</span></div>
+    <div class="chance-count"><strong id="ptsNum">0</strong><span>tickets</span></div>
     <div class="chance-meter">
-      <div class="chance-meter-label" id="meterLabel">Al confirmar ya tenés 1 chance</div>
+      <div class="chance-meter-label" id="meterLabel">Al confirmar ya tenés 1 ticket</div>
       <div class="chance-track"><div class="chance-fill" id="meterFill"></div></div>
     </div>
     <div class="tickets">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M13 5v2.5M13 11v2M13 16.5V19" stroke-dasharray="1 3"/></svg>
-      <span id="ticketNum">0</span>&nbsp;chances
+      <span id="ticketNum">0</span>&nbsp;tickets
     </div>
   </div>
 </div>
@@ -1010,7 +1011,7 @@ body.done #flowApp{display:none}
     <div class="wrap">
       <div class="sec-head">
         <h2>Tus cortinas</h2>
-        <p>Estas son las que instalaste con nosotros. Una foto por ambiente ya te suma <span class="pts-hint">+10 c/u</span> y un video vale <span class="pts-hint">+25</span></p>
+        <p>Estas son las que instalaste con nosotros. Cada foto o video que subas suma <span class="pts-hint">+1 ticket</span></p>
       </div>
       <ul class="tips">
         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>Con luz de día</li>
@@ -1046,11 +1047,11 @@ body.done #flowApp{display:none}
           <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
             <!-- estrellas SVG propias, generadas por JS -->
           </div>
-          <div class="stars-word" id="starsWord">Elegir una calificación (+5 puntos)</div>
+          <div class="stars-word" id="starsWord">Elegir una calificación (+1 ticket)</div>
         </div>
 
         <div class="exp-row">
-          <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+30</span></div>
+          <div class="block-label">Dejanos un mensaje de voz <span class="pts-hint">+3 tickets</span></div>
           <p class="audio-sub">Contanos qué elegiste y cómo quedó, como si fuera un audio de WhatsApp. Con 20 a 45 segundos alcanza; el navegador te va a pedir permiso para usar el micrófono.</p>
           <div class="audio-ui" id="audioUI"></div>
         </div>
@@ -1093,11 +1094,10 @@ body.done #flowApp{display:none}
   <div class="wrap">
     <div class="gr-copy">
       <h1 id="thanksTitle">Ya estás en el sorteo.</h1>
-      <p class="gr-sub" id="grSub">Dejá una reseña en Google y duplicá tus puntos.</p>
+      <p class="gr-sub" id="grSub">Dejá una reseña en Google y duplicá tus tickets.</p>
     </div>
     <div class="gr-score" aria-live="polite">
-      <div class="gr-chances"><strong id="grTickets">0</strong><span><b id="grTicketsWord">chances</b><em id="grTicketsLabel">activas en el sorteo</em></span></div>
-      <div class="gr-points"><strong id="grPts">0</strong><span><b>puntos</b><em>que ganaste</em></span></div>
+      <div class="gr-chances"><strong id="grTickets">0</strong><span><svg class="gr-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg><b id="grTicketsWord">tickets</b><em id="grTicketsLabel">en el sorteo</em></span></div>
     </div>
 
     <!-- Google no avisa si alguien realmente publicó la reseña (no hay webhook
@@ -1113,18 +1113,18 @@ body.done #flowApp{display:none}
          Agus si un solo link (CABA) alcanza para los dos. -->
     <div class="gr-lower">
       <div class="g-block" id="gBlock">
-        <h3 id="gTitle">Duplicá tus puntos en Google</h3>
+        <h3 id="gTitle">Duplicá tus tickets en Google</h3>
         <p id="gIntro">Publicá tu reseña y, cuando vuelvas, confirmá que ya está.</p>
         <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/place/Cortinas+RollerShow/@-34.5819602,-58.4652317,20z/data=!4m8!3m7!1s0x95bcb6719099596b:0x4354517b56352268!8m2!3d-34.5817708!4d-58.4657373!9m1!1b1!16s%2Fg%2F11ddzr18df?entry=ttu&amp;g_ep=EgoyMDI2MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
-          Ir a Google y duplicar mis puntos
+          Ir a Google y duplicar mis tickets
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <div class="g-confirm" id="gConfirmStep" hidden><p>¿Ya la publicaste?</p><button type="button" id="gConfirmBtn">Listo, ya la publiqué</button></div>
-        <div class="g-validating" id="gValidating" hidden><span class="g-spinner"></span> Actualizando tus puntos...</div>
+        <div class="g-validating" id="gValidating" hidden><span class="g-spinner"></span> Actualizando tus tickets...</div>
         <div class="g-done" id="gDone" hidden>
           <div class="g-status" role="status" aria-live="polite">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
-            <div><strong>Listo, duplicamos tus puntos</strong><small>Ya tenés el doble de chances para el sorteo.</small></div>
+            <div><strong>Listo, duplicamos tus tickets</strong><small>Ya tenés el doble de tickets para el sorteo.</small></div>
           </div>
           <div class="ig-final">
             <h4>Seguí a Rollershow para completar tu participación</h4>
@@ -1163,7 +1163,7 @@ body.done #flowApp{display:none}
     <h2 id="basesTitle">Bases del sorteo</h2>
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
-      <p>Toda participación confirmada tiene al menos una chance. Cada 10 puntos acumulados equivalen a una chance en el sorteo; mientras el total sea menor a 20, se mantiene la chance mínima de participación. Los puntos se otorgan por: foto de cortina instalada (10), video (25), mensaje de voz (30), calificación (5) y opinión escrita de al menos 20 caracteres (5). El puntaje final lo valida Rollershow al revisar el material.</p>
+      <p>Toda participación confirmada tiene al menos un ticket, y cada ticket es una chance en el sorteo. Los tickets se otorgan por: foto de cortina instalada (1 por foto), video (1 por video), mensaje de voz (3), calificación con estrellas (1) y opinión escrita de al menos 20 caracteres (1). El total final lo valida Rollershow al revisar el material.</p>
       <p id="basesPrizeText">Este mes se sortean 3 almohadones y 2 alfombras premium entre 3 ganadores. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
       <p>Para que la participación sea válida al momento del sorteo, la persona debe seguir a <strong>@cortinas.rollershow</strong> en Instagram. Rollershow verificará este requisito antes de entregar el premio. Instagram no patrocina, avala ni administra esta promoción, ni está asociado a ella.</p>
       <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
@@ -1174,12 +1174,12 @@ body.done #flowApp{display:none}
 </dialog>
 
 <!-- ============================================================
-     EXIT POPUP (solo si hay puntos sin confirmar)
+     EXIT POPUP (solo si hay tickets sin confirmar)
 ============================================================ -->
 <dialog id="exitModal" aria-labelledby="exitTitle">
   <div class="modal-in">
     <h2 id="exitTitle">Lo que cargaste ya suma</h2>
-    <strong class="big" id="exitPts">0 puntos</strong>
+    <strong class="big" id="exitPts">0 tickets</strong>
     <p id="exitDrawCopy">Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
     <button class="cta" id="exitConfirm">Ir a confirmar mi participación</button>
     <button class="stay" data-close>Quiero seguir cargando</button>
@@ -1233,10 +1233,9 @@ const PRESUPUESTO = {
   ]
 };
 
-/* Puntaje. OJO(Nico): en producción los puntos se recalculan SIEMPRE server-side
+/* Tickets. OJO(Nico): en producción los tickets se recalculan SIEMPRE server-side
    al recibir el POST; lo del cliente es solo feedback visual. */
-const PUNTOS = { foto: 10, video: 25, audio: 30, estrellas: 5, texto: 5 };
-const PTS_POR_CHANCE = 10;
+const TICKETS = { foto: 1, video: 1, audio: 3, estrellas: 1, texto: 1 };
 
 /* ---------- estado ---------- */
 const state = { archivos: {}, estrellas: 0, audioBlob: null, audioSkipped: false, textoVisible: false, textoOk: false, enviado: false };
@@ -1248,7 +1247,7 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 
 /* ---------- personalización ---------- */
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
-$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, compartí tu Rollershow y participá del sorteo.`;
+$("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, compartí tu cortina y participá del sorteo.`;
 $("#introPrizeHook").textContent = "Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.";
 $("#introPrizeCopy strong").textContent = `Podés ganar ${premiosTexto}.`;
 $("#introDateCopy").innerHTML = `<strong>${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "ganador" : "ganadores"}.</strong> En vivo por Instagram el ${SORTEO.fecha}.`;
@@ -1282,50 +1281,35 @@ function configurarVendedor() {
 configurarVendedor();
 $("#thanksTitle").textContent = `${PRESUPUESTO.cliente.nombre}, ya estás en el sorteo.`;
 
-/* ---------- puntos ---------- */
-/* Cada 10 puntos equivalen a una chance, con un mínimo de 1 al participar. */
-function chancesDe(p) { return p > 0 ? Math.max(1, Math.floor(p / PTS_POR_CHANCE)) : 0; }
-function puntosParaProximaChance(p) {
-  if (p <= 0) return PTS_POR_CHANCE * 2;
-  const nextChanceAt = chancesDe(p) <= 1
-    ? PTS_POR_CHANCE * 2
-    : (chancesDe(p) + 1) * PTS_POR_CHANCE;
-  return Math.max(0, nextChanceAt - p);
+/* ---------- tickets ---------- */
+/* Cada aporte suma su ticket; cada ticket es una chance en el sorteo. */
+function ticketWord(t) { return t === 1 ? "ticket" : "tickets"; }
+function totalTickets() {
+  let t = 0;
+  Object.values(state.archivos).flat().forEach(f => t += f.esVideo ? TICKETS.video : TICKETS.foto);
+  if (state.estrellas > 0) t += TICKETS.estrellas;
+  if (state.audioBlob)     t += TICKETS.audio;
+  if (textoValido())       t += TICKETS.texto;
+  return t;
 }
-function totalPuntos() {
-  let p = 0;
-  Object.values(state.archivos).flat().forEach(f => p += f.esVideo ? PUNTOS.video : PUNTOS.foto);
-  if (state.estrellas > 0) p += PUNTOS.estrellas;
-  if (state.audioBlob)     p += PUNTOS.audio;
-  if (textoValido())       p += PUNTOS.texto;
-  return p;
-}
-function renderPuntos() {
-  const p = totalPuntos(), t = chancesDe(p);
+function renderTickets() {
+  const t = totalTickets();
   const num = $("#ptsNum"), tick = $("#ticketNum");
-  if (num.textContent != p) { num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump"); }
-  num.textContent = p; tick.textContent = t;
-  const missingForNext = puntosParaProximaChance(p);
-  const nextChanceAt = p + missingForNext;
-  const currentFloor = p < PTS_POR_CHANCE * 2 ? 0 : Math.floor(p / PTS_POR_CHANCE) * PTS_POR_CHANCE;
-  const intervalProgress = p === 0 ? 0 : Math.min(1, (p - currentFloor) / (nextChanceAt - currentFloor));
-  $("#meterFill").style.width = `${intervalProgress * 100}%`;
-  $("#meterLabel").textContent = p === 0
-    ? "Al confirmar ya tenés 1 chance"
-    : `Ya tenés ${t} ${t === 1 ? "chance" : "chances"}. Te faltan ${missingForNext} puntos para sumar otra`;
-  $("#ctaSub").textContent = p === 0
+  if (num.textContent != t) { num.classList.remove("bump"); void num.offsetWidth; num.classList.add("bump"); }
+  num.textContent = t; tick.textContent = t;
+  $("#meterFill").style.width = `${Math.min(1, t / 8) * 100}%`;
+  $("#meterLabel").textContent = t === 0
+    ? "Al confirmar ya tenés 1 ticket"
+    : `Ya tenés ${t} ${ticketWord(t)}. Cada uno es una chance en el sorteo`;
+  $("#ctaSub").textContent = t === 0
     ? "Con calificar tu experiencia ya participás."
-    : `Con lo que cargaste entrás al sorteo de ${SORTEO.mes} con ${t === 1 ? "1 chance" : t + " chances"}.`;
-  const flowPts = $("#flowPts");
-  flowPts.textContent = p;
+    : `Con lo que cargaste entrás al sorteo de ${SORTEO.mes} con ${t} ${ticketWord(t)}.`;
   $("#flowTickets").textContent = t;
-  $("#flowTicketsLabel").textContent = t === 1 ? "chance" : "chances";
-  $("#confirmPts").textContent = p;
+  $("#flowTicketsLabel").textContent = ticketWord(t);
   $("#confirmTickets").textContent = t;
-  $("#confirmTicketsLabel").textContent = t === 1 ? "chance para ganar" : "chances para ganar";
-  const roomsShown = PRESUPUESTO.items.filter(item => state.archivos[item.id].length > 0).length;
+  $("#confirmTicketsLabel").textContent = t === 1 ? "ticket para el sorteo" : "tickets para el sorteo";
   $("#confirmProof").textContent = t > 0
-    ? "Cada chance participa por separado."
+    ? "Cada ticket es una chance más de ganar."
     : "Con una calificación ya entrás al sorteo.";
   syncConfirmCopy();
 }
@@ -1361,10 +1345,10 @@ function landScore(chanceGained = false) {
   if (chanceGained) score.classList.add("new-chance");
   setTimeout(() => score.classList.remove("gain", "receive-points", "new-chance"), 950);
 }
-function transferPoints(points, origin, previousPoints, delay = 0) {
-  if (!points) return;
+function transferTickets(tickets, origin, previousTickets, delay = 0) {
+  if (!tickets) return;
   document.querySelectorAll(".score-transfer").forEach(item => item.remove());
-  const target = $("#flowPts");
+  const target = $("#flowTickets");
   const fallback = document.querySelector(".flow-step.active .step-content,.flow-step.active .item-stage");
   const source = origin?.isConnected ? origin : fallback;
   if (!target || !source) { landScore(false); return; }
@@ -1372,10 +1356,10 @@ function transferPoints(points, origin, previousPoints, delay = 0) {
   const startX = start.left + start.width / 2, startY = start.top + start.height / 2;
   const endX = end.left + end.width / 2, endY = end.top + end.height / 2;
   const dx = endX - startX, dy = endY - startY;
-  const chanceGained = chancesDe(totalPuntos()) > chancesDe(previousPoints);
+  const chanceGained = totalTickets() > previousTickets;
   const token = document.createElement("div");
   token.className = "score-transfer";
-  token.textContent = `+${points}`;
+  token.innerHTML = `<svg viewBox="0 0 72 44" aria-hidden="true"><path class="ticket-body" d="M7 0h58a7 7 0 0 1 7 7v9.4a5.6 5.6 0 0 0 0 11.2V37a7 7 0 0 1-7 7H7a7 7 0 0 1-7-7v-9.4a5.6 5.6 0 0 0 0-11.2V7a7 7 0 0 1 7-7Z"/><path class="ticket-sheen" d="M7 0h26L21 44H7a7 7 0 0 1-7-7v-9.4a5.6 5.6 0 0 0 0-11.2V7a7 7 0 0 1 7-7Z"/><path class="ticket-perf" d="M55 6v32"/></svg><b>+${tickets}</b>`;
   token.setAttribute("aria-hidden", "true");
   token.style.left = `${startX}px`;
   token.style.top = `${startY}px`;
@@ -1395,13 +1379,9 @@ function transferPoints(points, origin, previousPoints, delay = 0) {
   };
   delay ? setTimeout(launch, delay) : requestAnimationFrame(launch);
 }
-function rewardResult(beforePoints, afterPoints, updated = false) {
-  const beforeChances = chancesDe(beforePoints), afterChances = chancesDe(afterPoints);
-  const gained = Math.max(0, afterChances - beforeChances);
-  if (updated) return `Conservás tus ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
-  if (gained > 0) return `${gained === 1 ? "Una chance más de ganar" : `${gained} chances más de ganar`}. Ya tenés ${afterChances}.`;
-  const missing = puntosParaProximaChance(afterPoints);
-  return missing > 0 ? `Te faltan ${missing} puntos para sumar otra chance.` : `Ya tenés ${afterChances} ${afterChances === 1 ? "chance" : "chances"}.`;
+function rewardResult(beforeTickets, afterTickets, updated = false) {
+  if (updated) return `Conservás tus ${afterTickets} ${ticketWord(afterTickets)}.`;
+  return `Ya tenés ${afterTickets} en total.`;
 }
 function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Acción completada", updated = false, origin = null } = {}) {
   const live = $("#rewardLive");
@@ -1410,37 +1390,34 @@ function celebrateAction(kind, { points = 0, previousPoints = null, detail = "Ac
   const turn = rewardTurns[kind] || 0;
   rewardTurns[kind] = turn + 1;
   const message = choices[turn % choices.length];
-  const afterPoints = totalPuntos();
-  const beforePoints = previousPoints == null ? Math.max(0, afterPoints - points) : previousPoints;
-  const outcome = rewardResult(beforePoints, afterPoints, updated);
-  live.textContent = points ? `${message} Sumaste ${points} puntos. ${outcome}` : `${message} ${outcome}`;
-  transferPoints(points, origin, beforePoints, 120);
+  const afterTickets = totalTickets();
+  const beforeTickets = previousPoints == null ? Math.max(0, afterTickets - points) : previousPoints;
+  const outcome = rewardResult(beforeTickets, afterTickets, updated);
+  live.textContent = points ? `${message} Sumaste ${points} ${ticketWord(points)}. ${outcome}` : `${message} ${outcome}`;
+  transferTickets(points, origin, beforeTickets, 120);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate(18);
 }
 window.celebrateAction = celebrateAction;
 
-function celebrateMedia(step, points, detail, previousPoints) {
+function celebrateMedia(step, tickets, detail, previousTickets) {
   const stage = step.querySelector(".item-stage"), live = $("#rewardLive");
   stage.querySelector(".stage-score-burst")?.remove();
   stage.classList.add("is-rewarding");
   const burst = document.createElement("div");
   burst.className = "stage-score-burst";
-  const afterPoints = totalPuntos();
-  const outcome = rewardResult(previousPoints, afterPoints);
-  const gained = Math.max(0, chancesDe(afterPoints) - chancesDe(previousPoints));
-  const visualOutcome = gained > 0
-    ? `${gained} ${gained === 1 ? "chance" : "chances"} más. Ya tenés ${chancesDe(afterPoints)}`
-    : `${chancesDe(afterPoints)} ${chancesDe(afterPoints) === 1 ? "chance" : "chances"} en total`;
+  const afterTickets = totalTickets();
+  const outcome = rewardResult(previousTickets, afterTickets);
+  const visualOutcome = `Ya tenés ${afterTickets} en total`;
   const kind = detail.startsWith("Video") ? "video" : "photo";
   const choices = REWARD_COPY[kind];
   const turn = rewardTurns[kind] || 0;
   rewardTurns[kind] = turn + 1;
   const message = choices[turn % choices.length];
-  burst.innerHTML = `<strong>+${points}</strong><span>puntos<br>${visualOutcome}</span><em>${message}</em>`;
+  burst.innerHTML = `<strong>+${tickets}</strong><span>${ticketWord(tickets)}<br>${visualOutcome}</span><em>${message}</em>`;
   stage.appendChild(burst);
-  live.textContent = `${detail}. Sumaste ${points} puntos. ${outcome}`;
+  live.textContent = `${detail}. Sumaste ${tickets} ${ticketWord(tickets)}. ${outcome}`;
   playUiSound("upload");
-  transferPoints(points, burst.querySelector("strong"), previousPoints, 460);
+  transferTickets(tickets, burst.querySelector("strong"), previousTickets, 460);
   if (navigator.vibrate && matchMedia("(pointer:coarse)").matches) navigator.vibrate([18,28,22]);
   setTimeout(() => { burst.remove(); stage.classList.remove("is-rewarding"); }, 1600);
 }
@@ -1500,7 +1477,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <div class="upload-zone">
           <div class="upload-decision">
-          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Foto +10 puntos. Video +25.</b></span>
+          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Cada foto o video suma +1 ticket.</b></span>
           <span class="upload-source-actions"><label class="upload-source upload-library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Seleccionar archivos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
           <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
           </div>
@@ -1509,7 +1486,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
-      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Otra foto suma 10 puntos. Otro video suma 25.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
+      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Cada foto o video más suma otro ticket.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
@@ -1561,7 +1538,7 @@ function uploadError(step, message) {
 }
 
 async function addFiles(itemId, fileList, ownerStep = null) {
-  const previousPoints = totalPuntos();
+  const previousPoints = totalTickets();
   let addedPoints = 0, addedVideos = 0, addedPhotos = 0;
   ownerStep?.classList.add("is-processing");
   ownerStep?.setAttribute("aria-busy", "true");
@@ -1585,7 +1562,7 @@ async function addFiles(itemId, fileList, ownerStep = null) {
     };
     state.archivos[itemId].push(entry);
     await persistMediaEntry(itemId, entry);
-    addedPoints += esVideo ? PUNTOS.video : PUNTOS.foto;
+    addedPoints += esVideo ? TICKETS.video : TICKETS.foto;
     esVideo ? addedVideos++ : addedPhotos++;
 
     /* TODO(Nico): además de esta copia local en IndexedDB, subir el archivo
@@ -1598,7 +1575,7 @@ async function addFiles(itemId, fileList, ownerStep = null) {
     ownerStep.classList.add("has-media");
     renderStageMedia(ownerStep, itemId);
   }
-  renderPuntos();
+  renderTickets();
   if (ownerStep && addedPoints) {
     rewardClass(ownerStep, "media-reward");
     const label = addedVideos + addedPhotos === 1 ? (addedVideos ? "Video cargado" : "Foto cargada") : `${addedVideos + addedPhotos} archivos cargados`;
@@ -1629,7 +1606,7 @@ function renderStageMedia(step, itemId) {
     state.archivos[itemId] = files.filter(entry => entry !== active);
     URL.revokeObjectURL(active.url);
     removePersistedMedia(active.id);
-    renderStageMedia(step, itemId); renderPuntos();
+    renderStageMedia(step, itemId); renderTickets();
   });
   stage.appendChild(remove);
 }
@@ -1639,19 +1616,19 @@ const PALABRAS = ["", "Gracias por decirlo", "Queremos mejorar", "Buena", "Muy b
 const starsBox = $("#stars");
 for (let i = 1; i <= 5; i++) {
   const b = document.createElement("button");
-  b.type = "button"; b.setAttribute("aria-label", `${i}${i === 1 ? " estrella" : " estrellas"} (+${PUNTOS.estrellas} puntos)`);
+  b.type = "button"; b.setAttribute("aria-label", `${i}${i === 1 ? " estrella" : " estrellas"} (+${TICKETS.estrellas} ticket)`);
   b.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>`;
   b.addEventListener("click", () => {
     const firstRating = state.estrellas === 0;
-    const previousPoints = totalPuntos();
+    const previousPoints = totalTickets();
     state.estrellas = i;
     [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < i));
-    $("#starsWord").textContent = `${PALABRAS[i]}. Seleccionaste ${i} ${i === 1 ? "estrella" : "estrellas"} (+${PUNTOS.estrellas} puntos)`;
-    saveLocal(); renderPuntos(); syncExperienceProgress({ revealAudio:firstRating });
+    $("#starsWord").textContent = `${PALABRAS[i]}. Seleccionaste ${i} ${i === 1 ? "estrella" : "estrellas"} (+${TICKETS.estrellas} ticket)`;
+    saveLocal(); renderTickets(); syncExperienceProgress({ revealAudio:firstRating });
     if (firstRating) {
       [...starsBox.children].forEach((star, index) => star.style.setProperty("--star-index", index));
       const step = $(".experience-step"); rewardClass(step, "rating-reward", 850);
-      celebrateAction("rating", { points:PUNTOS.estrellas, previousPoints, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}`, origin:b });
+      celebrateAction("rating", { points:TICKETS.estrellas, previousPoints, detail:`${i} ${i === 1 ? "estrella" : "estrellas"}`, origin:b });
     }
   });
   starsBox.appendChild(b);
@@ -1722,7 +1699,7 @@ function renderAudio(stateName) {
   if (stateName === "idle") {
     audioUI.innerHTML = `<button type="button" class="rec-btn" id="recStart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
-      Grabar un audio (+30 puntos)</button>`;
+      Grabar un audio (+3 tickets)</button>`;
     $("#recStart").addEventListener("click", startRec);
   }
   if (stateName === "recording") {
@@ -1731,7 +1708,7 @@ function renderAudio(stateName) {
       <span class="rec-dot"></span><span class="rec-time" id="recTime">0:00</span>
       <div class="eq" role="img" aria-label="Nivel de tu voz en tiempo real">${bars}</div>
     </div>
-    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar y guardar (+30 puntos)</button>
+    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar y guardar (+3 tickets)</button>
     <p class="rec-helper">Cuando termines, podés escucharla o volver a grabarla.</p>`;
     $("#recStop").addEventListener("click", () => mediaRecorder && mediaRecorder.stop());
   }
@@ -1760,7 +1737,7 @@ function renderAudio(stateName) {
     });
     audioEl.addEventListener("ended", () => { $("#vnFill").style.width = "0%"; $("#vnTime").textContent = fmt(recSeconds); icon(); });
     $("#reRec").addEventListener("click", () => { audioReplacing = true; limpiarAudio(); startRec(); });
-    $("#delRec").addEventListener("click", () => { limpiarAudio(); renderAudio("idle"); renderPuntos(); syncExperienceProgress(); });
+    $("#delRec").addEventListener("click", () => { limpiarAudio(); renderAudio("idle"); renderTickets(); syncExperienceProgress(); });
   }
 }
 function limpiarAudio() {
@@ -1779,20 +1756,20 @@ async function startRec() {
       clearInterval(recTimer);
       stopLiveWave();
       stream.getTracks().forEach(t => t.stop());
-      const previousPoints = totalPuntos();
+      const previousPoints = totalTickets();
       state.audioBlob = new Blob(chunks, { type: mediaRecorder.mimeType });
       state.audioSkipped = false;
       state.textoVisible = true;
-      const afterPoints = totalPuntos();
+      const afterPoints = totalTickets();
       const audioOutcome = rewardResult(previousPoints, afterPoints, audioReplacing);
       renderAudio("recorded");
       const earned = document.createElement("div");
       earned.className = "audio-earned";
-      earned.innerHTML = `<strong>${audioReplacing ? "Tu audio quedó actualizado" : `+${PUNTOS.audio} puntos. ${audioOutcome}`}</strong><span>${audioReplacing ? audioOutcome : "Tu voz ya suma a tu participación."}</span>`;
+      earned.innerHTML = `<strong>${audioReplacing ? "Tu audio quedó actualizado" : `+${TICKETS.audio} tickets. ${audioOutcome}`}</strong><span>${audioReplacing ? audioOutcome : "Tu voz ya suma a tu participación."}</span>`;
       audioUI.appendChild(earned);
-      await persistAudioDraft(); saveLocal(); renderPuntos(); syncExperienceProgress({ revealText:true });
+      await persistAudioDraft(); saveLocal(); renderTickets(); syncExperienceProgress({ revealText:true });
       const step = $(".experience-step"); rewardClass(step, "audio-reward", 900);
-      celebrateAction("audio", { points:audioReplacing ? 0 : PUNTOS.audio, previousPoints, detail:audioReplacing ? "Audio actualizado" : "Audio guardado", updated:audioReplacing, origin:earned });
+      celebrateAction("audio", { points:audioReplacing ? 0 : TICKETS.audio, previousPoints, detail:audioReplacing ? "Audio actualizado" : "Audio guardado", updated:audioReplacing, origin:earned });
       audioReplacing = false;
     };
     mediaRecorder.start();
@@ -1804,7 +1781,7 @@ async function startRec() {
     audioUI.innerHTML = `<p class="audio-err">No pudimos acceder al micrófono. Fijate el permiso del navegador y probá de nuevo.</p>
       <button type="button" class="rec-btn" id="recStart" style="margin-top:10px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
-      Probar de nuevo (+30 puntos)</button>`;
+      Probar de nuevo (+3 tickets)</button>`;
     $("#recStart").addEventListener("click", startRec);
   }
 }
@@ -1814,12 +1791,12 @@ const reviewText = $("#reviewText");
 function textoValido() { return reviewText.value.trim().length >= 20; }
 reviewText.addEventListener("input", () => {
   const wasComplete = state.textoOk;
-  const previousPoints = totalPuntos();
+  const previousPoints = totalTickets();
   state.textoOk = textoValido(); /* con 20 caracteres cuenta, para que "ok" no sume */
-  saveLocal(); renderPuntos();
+  saveLocal(); renderTickets();
   if (!wasComplete && state.textoOk) {
     const step = $(".experience-step"); rewardClass(step, "text-reward", 850);
-    celebrateAction("text", { points:PUNTOS.texto, previousPoints, detail:"Opinión completada", origin:reviewText });
+    celebrateAction("text", { points:TICKETS.texto, previousPoints, detail:"Opinión completada", origin:reviewText });
   }
 });
 
@@ -1920,7 +1897,7 @@ try {
     if (prev.e) {
       state.estrellas = prev.e;
       [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e));
-      $("#starsWord").textContent = `${PALABRAS[prev.e]}. Seleccionaste ${prev.e} ${prev.e === 1 ? "estrella" : "estrellas"} (+${PUNTOS.estrellas} puntos)`;
+      $("#starsWord").textContent = `${PALABRAS[prev.e]}. Seleccionaste ${prev.e} ${prev.e === 1 ? "estrella" : "estrellas"} (+${TICKETS.estrellas} ticket)`;
     }
     if (prev.t) { reviewText.value = prev.t; state.textoOk = textoValido(); }
     state.audioSkipped = Boolean(prev.audioSkipped);
@@ -2040,7 +2017,7 @@ function setupFlow() {
     if (next) goToFlow(flowIndex + 1);
   });
   updateFlowChrome();
-  renderPuntos();
+  renderTickets();
   syncExperienceProgress();
   syncConsentState();
 }
@@ -2049,7 +2026,7 @@ function syncConsentState() {
   syncConfirmCopy(false);
   if (checked) {
     const live = $("#rewardLive");
-    live.textContent = `Autorización confirmada. Tu participación quedó registrada con ${chancesDe(totalPuntos())} ${chancesDe(totalPuntos()) === 1 ? "chance" : "chances"}.`;
+    live.textContent = `Autorización confirmada. Tu participación quedó registrada con ${totalTickets()} ${ticketWord(totalTickets())}.`;
     enviar();
   }
 }
@@ -2232,7 +2209,7 @@ function enviar() {
     setTimeout(() => $("#consentBox").classList.remove("err"), 2500);
     return;
   }
-  if (totalPuntos() === 0 && !state.estrellas) {
+  if (totalTickets() === 0 && !state.estrellas) {
     const ratingIndex = flowSteps.findIndex(step => step.dataset.flowStep === "rating");
     if (ratingIndex >= 0) goToFlow(ratingIndex);
     $("#starsWord").textContent = "Con calificar tu experiencia ya participás";
@@ -2247,7 +2224,7 @@ function enviar() {
        consentimiento   -> true (obligatorio)
        audio            -> blob webm/ogg (state.audioBlob)
        media[<itemId>][] -> archivos por ítem (state.archivos)
-     Respuesta: { puntos, chances } calculados server-side (nunca confiar en el cliente).
+     Respuesta: { tickets } calculados server-side (nunca confiar en el cliente).
      Ejemplo:
        const fd = new FormData();
        fd.append("token", new URLSearchParams(location.search).get("t") || "");
@@ -2262,8 +2239,8 @@ function enviar() {
   state.enviado = true;
   try { localStorage.removeItem(LS_KEY); } catch (_) {}
   clearPersistedDraft();
-  const p = totalPuntos(), t = chancesDe(p);
-  $("#grSub").textContent = `Entraste con ${t} ${t === 1 ? "chance" : "chances"}. Dejá una reseña en Google y duplicá tus puntos.`;
+  const t = totalTickets();
+  $("#grSub").textContent = `Entraste con ${t} ${ticketWord(t)}. Dejá una reseña en Google y los duplicás.`;
   const finaleDelay = matchMedia("(prefers-reduced-motion: reduce)").matches ? .9 : 2.04;
   window.__finaleTiming = { startedAt:performance.now(), videoStarted:false, burst:false, burstDelay:finaleDelay };
   document.body.classList.add("done");
@@ -2271,11 +2248,9 @@ function enviar() {
   window.__finaleTiming.videoStarted = true;
   playUiSound("finale", finaleDelay);
   window.scrollTo({ top: 0 });
-  $("#grTicketsWord").textContent = t === 1 ? "chance" : "chances";
-  $("#grTicketsLabel").textContent = t === 1 ? "activa en el sorteo" : "activas en el sorteo";
-  $("#grPts").textContent = p;
+  $("#grTicketsWord").textContent = ticketWord(t);
+  $("#grTicketsLabel").textContent = "en el sorteo";
   $("#grTickets").textContent = t;
-  $("#grPts").dataset.value = p;
   $("#grTickets").dataset.value = t;
   setTimeout(startFinaleBurst, finaleDelay * 1000);
   setTimeout(() => {
@@ -2334,18 +2309,18 @@ function startCelebration() {
 }
 
 /* ---------- exit popup ----------
-   Armado por engagement: solo si hay puntos y no se envió. En mobile NO se usa
+   Armado por engagement: solo si hay tickets y no se envió. En mobile NO se usa
    blur/visibilitychange (falsos positivos por multitasking): botón Atrás +
    inactividad larga, con guardia de teclado. En desktop, cursor saliendo arriba. */
 let exitShown = false;
 const exitModal = $("#exitModal");
 function tryExit() {
-  if (exitShown || state.enviado || totalPuntos() === 0) return;
+  if (exitShown || state.enviado || totalTickets() === 0) return;
   const ae = document.activeElement;
   if (ae && (ae.tagName === "TEXTAREA" || ae.tagName === "INPUT")) return; /* teclado abierto */
   if (basesModal.open || exitModal.open) return;
   exitShown = true;
-  $("#exitPts").textContent = totalPuntos() + " puntos";
+  $("#exitPts").textContent = `${totalTickets()} ${ticketWord(totalTickets())}`;
   exitModal.showModal();
 }
 /* desktop: cursor hacia la barra del navegador */
@@ -2355,9 +2330,9 @@ document.addEventListener("mouseout", e => {
 /* mobile: trampa de botón Atrás */
 history.pushState({ rs: 1 }, "");
 window.addEventListener("popstate", () => {
-  if (!exitShown && !state.enviado && totalPuntos() > 0) { history.pushState({ rs: 1 }, ""); tryExit(); }
+  if (!exitShown && !state.enviado && totalTickets() > 0) { history.pushState({ rs: 1 }, ""); tryExit(); }
 });
-/* mobile: inactividad de 75s con puntos cargados */
+/* mobile: inactividad de 75s con tickets cargados */
 let idleTimer = null;
 function resetIdle() {
   clearTimeout(idleTimer);
@@ -2366,7 +2341,7 @@ function resetIdle() {
 ["touchstart", "scroll", "keydown", "click"].forEach(ev => addEventListener(ev, resetIdle, { passive: true }));
 resetIdle();
 
-/* ---------- Duplicar chances con reseña de Google ----------
+/* ---------- Duplicar tickets con reseña de Google ----------
    Google no notifica si la reseña se publicó de verdad (no hay webhook de
    Business Profile para esto), así que la confirmación queda auto-reportada
    por el cliente — mismo nivel de confianza que ya le damos a las fotos que
@@ -2386,16 +2361,14 @@ $("#gConfirmBtn").addEventListener("click", () => {
     $("#gValidating").hidden = true;
     $("#gDone").hidden = false;
     document.body.classList.add("google-complete");
-    $("#gTitle").textContent = "Tus puntos ya se duplicaron";
-    const before = parseInt($("#grPts").textContent, 10) || 0;
+    $("#gTitle").textContent = "Tus tickets ya se duplicaron";
+    const before = parseInt($("#grTickets").textContent, 10) || 0;
     const after = before * 2;
-    $("#grTicketsWord").textContent = chancesDe(after) === 1 ? "chance" : "chances";
-    $("#grTicketsLabel").textContent = chancesDe(after) === 1 ? "activa en el sorteo" : "activas en el sorteo";
-    $("#grPts").textContent = after;
-    $("#grTickets").textContent = chancesDe(after);
-    $("#grPts").dataset.value = after;
-    $("#grTickets").dataset.value = chancesDe(after);
-    $("#grSub").textContent = "Tus puntos se duplicaron. Ahora seguinos en Instagram para completar tu participación.";
+    $("#grTicketsWord").textContent = ticketWord(after);
+    $("#grTicketsLabel").textContent = "en el sorteo";
+    $("#grTickets").textContent = after;
+    $("#grTickets").dataset.value = after;
+    $("#grSub").textContent = "Tus tickets se duplicaron. Ahora seguinos en Instagram para completar tu participación.";
     const score = $(".gr-score");
     score.style.animation = "none"; void score.offsetWidth; score.style.animation = "";
     const instagram = $("#igFinalBtn");
@@ -2403,7 +2376,7 @@ $("#gConfirmBtn").addEventListener("click", () => {
   }, 1700);
 });
 
-renderPuntos();
+renderTickets();
 </script>
 </body>
 </html>

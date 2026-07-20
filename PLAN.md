@@ -434,3 +434,16 @@ Con el OK (o correcciones) de este plan, arranco la ejecución del mockup.
 - [x] Sustituir el canvas full-screen por 48 cintas de `transform`/`opacity` compuestas por GPU y mantenerlas en los laterales para proteger la lectura.
 - [x] Recodificar el master desktop de Gracias a H.264 Main `faststart`: conserva 1280×720, 24 fps y 15 s, baja de 8,4 MB a 3,5 MB y mantiene SSIM 0,962 contra el original.
 - [x] Agregar `verify-finale-playback.mjs` a la batería oficial para medir cadencia, drops y pausas con toda la escena activa.
+
+## 51. Sistema de tickets y copy de portada — 2026-07-20
+
+Pedido directo de Agus (audio): simplificar puntos+chances en un único sistema de tickets con ícono, y cambiar el titular de portada.
+
+- [x] Reemplazar `PUNTOS`/`PTS_POR_CHANCE` por `TICKETS = { foto:1, video:1, audio:3, estrellas:1, texto:1 }`. Cada ticket es una chance directa; sin conversiones intermedias. El server debe recalcular tickets (TODO(Nico) actualizado).
+- [x] La recompensa voladora ahora es un ticket rojo institucional (SVG con muescas laterales, brillo y perforado punteado) con `+1`/`+3`, que nace en la acción y aterriza en el contador del header, ahora con ícono de ticket + total + palabra.
+- [x] Contador, confirmación (número monumental de tickets, sin segundo contador de puntos), Gracias (un solo número con ícono de ticket), bases, exit popup, mecánica legacy y todo el copy de recompensas (`+1 ticket`, `+3 tickets`, `duplicá tus tickets`) migrados.
+- [x] Portada: `«{Nombre}, compartí tu cortina y participá del sorteo.»` reemplaza a `compartí tu Rollershow` (pedido de Agus).
+- [x] Barrido de repeticiones de copy ("ticket... ticket" en burst y Gracias) y revisión de legibilidad sobre los fondos actuales en capturas 390/1280 de portada, ambiente, confirmación y Gracias.
+- [x] `verify-reviews.mjs` migrado a la aritmética de tickets (1+1+1, audio 3, duplicación 6→12) y a los nuevos textos; batería completa verde en local y contra Pages.
+
+Nota anotada (no ejecutada): el video vale 1 ticket igual que la foto porque Agus pidió "todo lo demás deja un ticket"; si se quiere volver a incentivar video por sobre foto, subirlo a 2 tickets es un cambio de una línea en `TICKETS`.

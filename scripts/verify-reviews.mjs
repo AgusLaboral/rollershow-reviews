@@ -102,7 +102,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu rollershow') ||
+  if (initial.prizeConfig !== '3 almohadones y 2 alfombras premium' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu cortina') ||
       !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') || !initial.introPrize?.includes('Podés ganar') ||
       !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
   if (initial.introType.families > 2 || !initial.introType.bodySame || initial.introType.prizeColor === initial.introType.ctaColor) {
@@ -113,11 +113,11 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.includes('participación') ||
-      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmar mi participación') || !initial.copy.google?.includes('Duplicá tus puntos')) {
+      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmar mi participación') || !initial.copy.google?.includes('Duplicá tus tickets')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
-  if (!initial.copy.ratingAction?.includes('+5 puntos') || !initial.copy.textAction?.includes('+5 puntos') ||
-      !initial.copy.googleAction?.includes('duplicar mis puntos')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
+  if (!initial.copy.ratingAction?.includes('+1 ticket') || !initial.copy.textAction?.includes('+1 ticket') ||
+      !initial.copy.googleAction?.includes('duplicar mis tickets')) fails.push(`${vp.w}px: una acción no anticipa su impacto ${JSON.stringify(initial.copy)}`);
   if (initial.introGeometry.copyTop > initial.introGeometry.viewport * .46 || initial.introGeometry.ctaBottom > initial.introGeometry.viewport - 12 ||
       initial.introGeometry.scroll > 2 || initial.introGeometry.copyTop - initial.introGeometry.logoBottom > initial.introGeometry.viewport * .42) {
     fails.push(`${vp.w}px: portada mobile desbalanceada o CTA cortado ${JSON.stringify(initial.introGeometry)}`);
@@ -142,8 +142,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
     fails.push(`${vp.w}px: placeholders sin resolución fuente o módulo fragmentado ${JSON.stringify(environments)}`);
   }
-  if (environments.some(item => !item.uploadReward?.includes('Foto +10 puntos') || !item.uploadReward?.includes('Video +25'))) {
-    fails.push(`${vp.w}px: el CTA de carga no anticipa foto +10 y video +25 ${JSON.stringify(environments)}`);
+  if (environments.some(item => !item.uploadReward?.includes('+1 ticket'))) {
+    fails.push(`${vp.w}px: el CTA de carga no anticipa el ticket que suma ${JSON.stringify(environments)}`);
   }
   if (environments.some(item => item.uploadTitle !== 'Subí fotos o videos' || item.gallery.accept !== 'image/*,video/*' || !item.gallery.multiple ||
       item.camera.accept !== 'image/*' || item.camera.capture !== 'environment')) {
@@ -217,25 +217,25 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
           sharedAxis: Math.abs(center(primary) - center(secondary)) < 2, stacked: secondary.top >= primary.bottom - 1 };
       })(),
     }));
-    if (photoReward.points !== '+10' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
-        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+10' || !photoReward.transferAnimated ||
+    if (photoReward.points !== '+1' || !photoReward.live?.includes('Foto cargada') || photoReward.genericCount !== 0 || !photoReward.local ||
+        !photoReward.replacement || photoReward.separatePreview || !photoReward.placeholderHidden || !photoReward.remove || !photoReward.addMore || photoReward.randomVisuals !== 0 || photoReward.bannedSeparators || photoReward.transfer !== '+1' || !photoReward.transferAnimated ||
         !photoReward.actionTray.attached || !photoReward.actionTray.sameLeft || !photoReward.actionTray.sameRight || !photoReward.actionTray.sharedAxis || !photoReward.actionTray.stacked ||
         photoReward.sound?.kind !== 'upload' || !photoReward.sound.played || photoReward.sound.plays !== 1 || photoReward.sound.volume > .06 || photoReward.sound.duration > .3 || photoReward.sound.voices !== 3 || photoReward.sound.error) {
       fails.push(`foto: recompensa incompleta ${JSON.stringify(photoReward)}`);
     }
     await page.screenshot({ path: `${OUT}/canonical-390-photo-reward.png` });
     await page.waitForTimeout(180);
-    let pts = await page.textContent('#flowPts');
-    if (pts !== '10') fails.push(`foto: esperaba 10 puntos, hay ${pts}`);
+    let pts = await page.textContent('#flowTickets');
+    if (pts !== '1') fails.push(`foto: esperaba 1 ticket, hay ${pts}`);
     const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
-    if (!addMoreCopy.includes('Otra foto suma 10 puntos') || !addMoreCopy.includes('Otro video suma 25')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
+    if (!addMoreCopy.includes('suma otro ticket')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
     await page.locator('.flow-step.active .upload-more-action .upload-library input[type=file]').setInputFiles(testImage);
-    await page.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '20');
-    if (await page.textContent('#flowPts') !== '20') fails.push('segunda foto: no suma puntos');
+    await page.waitForFunction(() => document.querySelector('#flowTickets')?.textContent === '2');
+    if (await page.textContent('#flowTickets') !== '2') fails.push('segunda foto: no suma tickets');
     await page.click('.flow-step.active .stage-remove');
-    if (await page.textContent('#flowPts') !== '10' || !(await page.isVisible('.flow-step.active .stage-user-media'))) fails.push('quitar la foto activa no recupera la anterior');
+    if (await page.textContent('#flowTickets') !== '1' || !(await page.isVisible('.flow-step.active .stage-user-media'))) fails.push('quitar la foto activa no recupera la anterior');
     await page.click('.flow-step.active .stage-remove');
-    const emptyStage = await page.evaluate(() => ({ points:document.querySelector('#flowPts')?.textContent, media:!!document.querySelector('.flow-step.active .stage-user-media'), hasMedia:document.querySelector('.flow-step.active')?.classList.contains('has-media') }));
+    const emptyStage = await page.evaluate(() => ({ points:document.querySelector('#flowTickets')?.textContent, media:!!document.querySelector('.flow-step.active .stage-user-media'), hasMedia:document.querySelector('.flow-step.active')?.classList.contains('has-media') }));
     if (emptyStage.points !== '0' || emptyStage.media || emptyStage.hasMedia) fails.push(`quitar la última foto no recupera el placeholder ${JSON.stringify(emptyStage)}`);
     await page.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForTimeout(80);
@@ -251,9 +251,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       audioVisible: getComputedStyle(document.querySelector('#experienceAudio')).display !== 'none',
       textHidden: getComputedStyle(document.querySelector('#experienceText')).display === 'none',
     }));
-    if (!ratingReward.live?.includes('5 puntos') || ratingReward.randomVisuals !== 0 || !ratingReward.local || ratingReward.sameStep !== 'experience' || !ratingReward.audioVisible || !ratingReward.textHidden) fails.push(`estrellas: audio no se revela en contexto ${JSON.stringify(ratingReward)}`);
-    pts = await page.textContent('#flowPts');
-    if (pts !== '15') fails.push(`estrellas: esperaba 15 puntos, hay ${pts}`);
+    if (!ratingReward.live?.includes('1 ticket') || ratingReward.randomVisuals !== 0 || !ratingReward.local || ratingReward.sameStep !== 'experience' || !ratingReward.audioVisible || !ratingReward.textHidden) fails.push(`estrellas: audio no se revela en contexto ${JSON.stringify(ratingReward)}`);
+    pts = await page.textContent('#flowTickets');
+    if (pts !== '2') fails.push(`estrellas: esperaba 2 tickets, hay ${pts}`);
     await page.evaluate(() => renderAudio('recording'));
     const mobileRecording = await page.evaluate(() => {
       const stop = document.querySelector('#recStop');
@@ -295,9 +295,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       local: document.querySelector('.experience-step')?.classList.contains('text-reward'),
       sameStep: document.querySelector('.flow-step.active')?.dataset.flowStep,
     }));
-    if (!textReward.live?.includes('5 puntos') || textReward.randomVisuals !== 0 || !textReward.local || textReward.sameStep !== 'experience') fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
-    pts = await page.textContent('#flowPts');
-    if (pts !== '20') fails.push(`texto: esperaba 20 puntos, hay ${pts}`);
+    if (!textReward.live?.includes('1 ticket') || textReward.randomVisuals !== 0 || !textReward.local || textReward.sameStep !== 'experience') fails.push(`texto: recompensa incompleta ${JSON.stringify(textReward)}`);
+    pts = await page.textContent('#flowTickets');
+    if (pts !== '3') fails.push(`texto: esperaba 3 tickets, hay ${pts}`);
     await page.click('#experienceNext'); await waitCurtain(page);
 
     const confirmBefore = await page.evaluate(() => ({
@@ -321,7 +321,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       },
     }));
     if (confirmBefore.authorized || confirmBefore.redundantSubmit || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
-        confirmBefore.proof !== 'Cada chance participa por separado.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
+        confirmBefore.proof !== 'Cada ticket es una chance más de ganar.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 almohadones y 2 alfombras premium') ||
         confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.headerBackground !== 'rgba(0, 0, 0, 0)' || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
@@ -350,10 +350,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     await page.waitForTimeout(2600);
     if (!(await page.evaluate(() => document.body.classList.contains('done')))) fails.push('no llegó a gracias');
     if (await page.isVisible('body > .hero') || await page.isVisible('body > .mecanica-sec')) fails.push('la landing larga reaparece antes del agradecimiento');
-    if (await page.textContent('#grPts') !== '20') fails.push('gracias no muestra 20 puntos');
+    if (await page.textContent('#grTickets') !== '3') fails.push('gracias no muestra 3 tickets');
     const celebration = await page.evaluate(() => {
       const chance = document.querySelector('.gr-chances strong');
-      const points = document.querySelector('.gr-points strong');
       const chanceSurface = getComputedStyle(document.querySelector('.gr-chances'));
       const layer = document.querySelector('#celebrationLayer');
       const curtain = document.querySelector('.gr-curtain-reveal i');
@@ -362,9 +361,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         title: document.querySelector('#thanksTitle')?.textContent,
         sub: document.querySelector('#grSub')?.textContent,
         chanceSize: parseFloat(getComputedStyle(chance).fontSize),
-        pointsSize: parseFloat(getComputedStyle(points).fontSize),
         chanceColor: getComputedStyle(chance).color,
-        pointsColor: getComputedStyle(points).color,
+        ticketIcon: Boolean(document.querySelector('.gr-chances .gr-ticket-icon')),
+        oldPoints: Boolean(document.querySelector('.gr-points')),
         surface: chanceSurface.backgroundColor,
         border: chanceSurface.borderTopWidth,
         celebrationWidth: layer.clientWidth,
@@ -394,8 +393,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       };
     });
     const curtainAlpha = Number(celebration.curtainColor.match(/[\d.]+(?=\))/)?.[0] || 1);
-    if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('duplicá tus puntos') || celebration.chanceSize < 64 || celebration.pointsSize < 64 ||
-        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.celebrationWidth < 390 || celebration.chanceColor !== celebration.pointsColor ||
+    if (!celebration.title?.includes('ya estás en el sorteo') || !celebration.sub?.includes('los duplicás') || celebration.chanceSize < 64 ||
+        !celebration.ticketIcon || celebration.oldPoints ||
+        celebration.surface !== 'rgba(0, 0, 0, 0)' || celebration.border !== '0px' || celebration.celebrationWidth < 390 ||
         celebration.particles < 18 || celebration.particles > 64 || !celebration.running || celebration.numberMotion !== 'none' || celebration.oldConfetti !== 0 ||
         !celebration.curtainColor.startsWith('rgba') || curtainAlpha < .6 || curtainAlpha > .8 || !celebration.curtainTexture.includes('repeating-linear-gradient') ||
         !celebration.curtainFiber.includes('data:image/svg+xml') || celebration.curtainBlur !== 'none' || celebration.videoTime <= .2 ||
@@ -455,10 +455,10 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
     if ((await page.textContent('#gConfirmBtn'))?.trim() !== 'Listo, ya la publiqué') fails.push('la vuelta de Google no pide confirmación clara');
-    if (!((await page.textContent('#gValidating')) || '').includes('Actualizando tus puntos')) fails.push('Google no comunica con claridad qué está haciendo');
+    if (!((await page.textContent('#gValidating')) || '').includes('Actualizando tus tickets')) fails.push('Google no comunica con claridad qué está haciendo');
     await page.click('#gConfirmBtn'); await page.waitForTimeout(2900);
     if (!(await page.isVisible('#gDone'))) fails.push('reseña de Google no termina');
-    if (await page.textContent('#grPts') !== '40') fails.push('reseña de Google no duplica puntos');
+    if (await page.textContent('#grTickets') !== '6') fails.push('reseña de Google no duplica tickets');
     const googleDone = await page.evaluate(() => ({
       icon: Math.round(document.querySelector('.g-status>svg').getBoundingClientRect().width),
       status: document.querySelector('#gDone strong')?.textContent,
@@ -476,7 +476,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       orbitB: getComputedStyle(document.querySelector('#gBlock'),'::after').display,
       divider: getComputedStyle(document.querySelector('.gr-score'),'::after').display,
     }));
-    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus puntos') || googleDone.title !== 'Tus puntos ya se duplicaron' ||
+    if (googleDone.icon < 44 || !googleDone.status?.includes('duplicamos tus tickets') || googleDone.title !== 'Tus tickets ya se duplicaron' ||
         !googleDone.instagramCopy?.includes('ver si gané') || !googleDone.instagramHref?.includes('instagram.com/cortinas.rollershow') ||
         !googleDone.instagramFocused || googleDone.instagramWidth < googleDone.blockWidth - 2 || !googleDone.requirement?.includes('31 de julio') ||
         !googleDone.sub?.includes('seguinos en Instagram') ||
@@ -490,9 +490,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     await p2.goto(URL, { waitUntil: 'domcontentloaded' });
     await p2.click('#startFlow'); await waitCurtain(p2);
     await p2.locator('.flow-step.active .item-task .upload-library input[type=file]').setInputFiles(testImage);
-    await p2.waitForFunction(() => document.querySelector('#flowPts')?.textContent === '10');
+    await p2.waitForFunction(() => document.querySelector('#flowTickets')?.textContent === '1');
     await p2.goBack(); await p2.waitForTimeout(500);
-    if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con puntos cargados');
+    if (!(await p2.evaluate(() => document.getElementById('exitModal').open))) fails.push('exit popup no aparece con tickets cargados');
     await p2.evaluate(async () => { localStorage.removeItem(LS_KEY); await clearPersistedDraft(); });
 
     const p3 = await ctx.newPage();
@@ -529,12 +529,12 @@ const compression = await cpage.evaluate(async () => {
     type:entry.file.type,
     compressed:entry.compressed,
     busy:step.hasAttribute('aria-busy'),
-    points:document.querySelector('#flowPts').textContent,
+    points:document.querySelector('#flowTickets').textContent,
     preview:!!step.querySelector('.stage-user-media'),
   };
 });
 if (!compression.compressed || compression.width !== 1600 || compression.height !== 1200 || compression.type !== 'image/jpeg' ||
-    compression.resultBytes >= compression.originalBytes || compression.busy || compression.points !== '10' || !compression.preview) {
+    compression.resultBytes >= compression.originalBytes || compression.busy || compression.points !== '1' || !compression.preview) {
   fails.push(`compresión: foto mobile no se prepara antes de usar ${JSON.stringify(compression)}`);
 }
 await cctx.close();
@@ -542,9 +542,9 @@ await cctx.close();
 const dctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, permissions:['microphone'] });
 const dpage = await dctx.newPage();
 await dpage.goto(URL, { waitUntil: 'domcontentloaded' });
-await dpage.evaluate(() => window.celebrateAction('audio', { points:30, origin:document.querySelector('#startFlow'), detail:'Audio guardado' }));
+await dpage.evaluate(() => window.celebrateAction('audio', { points:3, origin:document.querySelector('#startFlow'), detail:'Audio guardado' }));
 const audioReward = await dpage.evaluate(() => ({ randomVisuals:document.querySelectorAll('.reward-moment,.reward-flight').length, live:document.querySelector('#rewardLive')?.textContent, transfer:document.querySelector('.score-transfer')?.textContent }));
-if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('30 puntos') || audioReward.transfer !== '+30') fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
+if (audioReward.randomVisuals !== 0 || !audioReward.live?.includes('3 tickets') || audioReward.transfer !== '+3') fails.push(`audio: recompensa invocable y accesible incompleta ${JSON.stringify(audioReward)}`);
 await dpage.waitForTimeout(950);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-intro.png` });
 const desktopIntro = await dpage.evaluate(() => {
@@ -602,7 +602,7 @@ await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
 for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
 await dpage.locator('#stars button').nth(4).click();
-if (!((await dpage.textContent('#recStart')) || '').includes('+30 puntos')) fails.push('grabar audio no recuerda que suma 30 puntos');
+if (!((await dpage.textContent('#recStart')) || '').includes('+3 tickets')) fails.push('grabar audio no recuerda que suma 3 tickets');
 await dpage.click('#recStart');
 await dpage.waitForTimeout(450);
 const recordingState = await dpage.evaluate(() => {
@@ -622,7 +622,7 @@ const recordingState = await dpage.evaluate(() => {
     stopColor: getComputedStyle(stop).backgroundColor,
   };
 });
-if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+30 puntos)' || recordingState.stopWidth < recordingState.contentWidth - 40 ||
+if (!recordingState.recording || recordingState.stopCopy !== 'Terminar y guardar (+3 tickets)' || recordingState.stopWidth < recordingState.contentWidth - 40 ||
     recordingState.skipVisible || recordingState.activeStep !== 'experience' || !recordingState.liveAnalyser || !recordingState.liveBars || recordingState.simulatedCss ||
     recordingState.stopColor !== 'rgb(20, 122, 58)') fails.push(`audio grabando: jerarquía, color u onda real incorrecta ${JSON.stringify(recordingState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-recording.png` });
@@ -643,7 +643,7 @@ const reviewState = await dpage.evaluate(() => {
   continueVisible: getComputedStyle(document.querySelector('#experienceNext')).display !== 'none',
   skipVisible: getComputedStyle(document.querySelector('.step-audio-skip')).display !== 'none',
   earned: document.querySelector('.audio-earned')?.innerText,
-  points: document.querySelector('#flowPts')?.textContent,
+  points: document.querySelector('#flowTickets')?.textContent,
   transfer: document.querySelector('.score-transfer')?.textContent,
   ctaFocused: document.activeElement === cta,
   ctaHighlighted: cta.classList.contains('handoff-focus'),
@@ -654,7 +654,7 @@ const reviewState = await dpage.evaluate(() => {
   });
 });
 if (!reviewState.recorded || reviewState.recording || !reviewState.player || !reviewState.rerecord || !reviewState.remove ||
-    !reviewState.textVisible || !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+30 puntos') || reviewState.points !== '45' || reviewState.transfer !== '+30' ||
+    !reviewState.textVisible || !reviewState.continueVisible || reviewState.skipVisible || !reviewState.earned?.includes('+3 tickets') || reviewState.points !== '5' || reviewState.transfer !== '+3' ||
     !reviewState.ctaFocused || !reviewState.ctaHighlighted || !reviewState.ctaVisible || reviewState.ctaWidth > 300 || !reviewState.ctaBeforeText || reviewState.ctaCopy !== 'Continuar →') fails.push(`audio detenido: opinión, foco o recompensa incompleta ${JSON.stringify(reviewState)}`);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-audio-review.png` });
 await dpage.setViewportSize({ width:390, height:700 });
@@ -682,18 +682,17 @@ const desktopThanksHierarchy = await dpage.evaluate(() => {
   const google = document.querySelector('#gBlock').getBoundingClientRect();
   const meta = document.querySelector('.gr-meta').getBoundingClientRect();
   const chances = document.querySelector('.gr-chances strong').getBoundingClientRect();
-  const points = document.querySelector('.gr-points strong').getBoundingClientRect();
   return {
     sharedAxis: Math.max(Math.abs(copy.left-score.left),Math.abs(copy.left-lower.left)) < 2,
     boundedMeasure: copy.width <= 682 && score.width <= 682 && lower.width <= 682,
-    scoreGrouped: points.left > chances.right && points.right <= score.right + 1,
-    chanceDominates: chances.height > points.height * 1.25,
+    singleMeasure: !document.querySelector('.gr-points'),
+    chanceDominates: chances.height > 60,
     googleBelowScore: google.top >= score.bottom - 1,
     metaBelowGoogle: meta.top >= google.bottom - 1,
     lowerDirection: getComputedStyle(document.querySelector('.gr-lower')).flexDirection,
   };
 });
-if (!desktopThanksHierarchy.sharedAxis || !desktopThanksHierarchy.boundedMeasure || !desktopThanksHierarchy.scoreGrouped || !desktopThanksHierarchy.chanceDominates ||
+if (!desktopThanksHierarchy.sharedAxis || !desktopThanksHierarchy.boundedMeasure || !desktopThanksHierarchy.singleMeasure || !desktopThanksHierarchy.chanceDominates ||
     !desktopThanksHierarchy.googleBelowScore || !desktopThanksHierarchy.metaBelowGoogle || desktopThanksHierarchy.lowerDirection !== 'column') {
   fails.push(`gracias desktop: la lectura no conserva un único eje narrativo ${JSON.stringify(desktopThanksHierarchy)}`);
 }
@@ -703,9 +702,8 @@ await dpage.evaluate(() => {
   document.querySelector('#gConfirmStep').hidden=true;
   document.querySelector('#gDone').hidden=false;
   document.body.classList.add('google-complete');
-  document.querySelector('#gTitle').textContent='Tus puntos ya se duplicaron';
-  document.querySelector('#grTickets').textContent='17'; document.querySelector('#grTickets').dataset.value='17';
-  document.querySelector('#grPts').textContent='170'; document.querySelector('#grPts').dataset.value='170';
+  document.querySelector('#gTitle').textContent='Tus tickets ya se duplicaron';
+  document.querySelector('#grTickets').textContent='12'; document.querySelector('#grTickets').dataset.value='12';
 });
 await dpage.waitForTimeout(700);
 await dpage.screenshot({ path: `${OUT}/canonical-1280-google-done.png`, fullPage:true });
@@ -740,17 +738,17 @@ const restoredDraft = await persistPage.evaluate(() => ({
   audioPlayer:!!document.querySelector('.experience-step .voice-note'),
   text:document.querySelector('#reviewText')?.value,
   textVisible:document.querySelector('.experience-step')?.classList.contains('show-text'),
-  points:document.querySelector('#flowPts')?.textContent,
+  points:document.querySelector('#flowTickets')?.textContent,
 }));
 if (restoredDraft.activeStep !== 'experience' || restoredDraft.photoCount !== 1 || !restoredDraft.photoPreview ||
     restoredDraft.stars !== 5 || !restoredDraft.audioBlob || !restoredDraft.audioPlayer ||
-    restoredDraft.text !== 'Excelente atenciÃ³n y muy buen resultado final.' || !restoredDraft.textVisible || restoredDraft.points !== '50') {
+    restoredDraft.text !== 'Excelente atenciÃ³n y muy buen resultado final.' || !restoredDraft.textVisible || restoredDraft.points !== '6') {
   fails.push(`persistencia: el borrador no se reconstruyÃ³ completo ${JSON.stringify(restoredDraft)}`);
 }
 await persistPage.evaluate(async () => { localStorage.removeItem(LS_KEY); await clearPersistedDraft(); });
 await persistCtx.close();
 
-// Regresión: calificar sin escribir comentario suma sólo los 5 puntos de las estrellas.
+// Regresión: calificar sin escribir comentario suma sólo el ticket de las estrellas.
 const noTextCtx = await browser.newContext({ viewport:{ width:390,height:844 }, isMobile:true, hasTouch:true, deviceScaleFactor:2 });
 const noTextPage = await noTextCtx.newPage();
 const noTextUrl = new globalThis.URL(URL); noTextUrl.searchParams.set('t', `sin-comentario-${Date.now()}`);
@@ -760,14 +758,14 @@ await noTextPage.click('#startFlow'); await waitCurtain(noTextPage);
 for (let index=0; index<4; index++) { await noTextPage.click('.flow-step.active .stage-skip'); await waitCurtain(noTextPage); }
 await noTextPage.locator('#stars button').nth(4).click();
 await noTextPage.click('#audioSkip'); await noTextPage.waitForTimeout(520);
-const noTextBefore = await noTextPage.evaluate(() => ({ text:reviewText.value,valid:textoValido(),flag:state.textoOk,points:totalPuntos(),shown:document.querySelector('#flowPts')?.textContent }));
+const noTextBefore = await noTextPage.evaluate(() => ({ text:reviewText.value,valid:textoValido(),flag:state.textoOk,points:totalTickets(),shown:document.querySelector('#flowTickets')?.textContent }));
 await noTextPage.click('#experienceNext'); await waitCurtain(noTextPage);
-const noTextConfirm = await noTextPage.evaluate(() => ({ points:document.querySelector('#confirmPts')?.textContent,chances:document.querySelector('#confirmTickets')?.textContent }));
+const noTextConfirm = await noTextPage.evaluate(() => ({ chances:document.querySelector('#confirmTickets')?.textContent }));
 await noTextPage.click('#confirmParticipation'); await noTextPage.waitForTimeout(120);
-const noTextThanks = await noTextPage.textContent('#grPts');
-if (noTextBefore.text !== '' || noTextBefore.valid || noTextBefore.flag || noTextBefore.points !== 5 || noTextBefore.shown !== '5' ||
-    noTextConfirm.points !== '5' || noTextConfirm.chances !== '1' || noTextThanks !== '5') {
-  fails.push(`sin comentario: se acreditaron puntos que no corresponden ${JSON.stringify({ noTextBefore,noTextConfirm,noTextThanks })}`);
+const noTextThanks = await noTextPage.textContent('#grTickets');
+if (noTextBefore.text !== '' || noTextBefore.valid || noTextBefore.flag || noTextBefore.points !== 1 || noTextBefore.shown !== '1' ||
+    noTextConfirm.chances !== '1' || noTextThanks !== '1') {
+  fails.push(`sin comentario: se acreditaron tickets que no corresponden ${JSON.stringify({ noTextBefore,noTextConfirm,noTextThanks })}`);
 }
 await noTextCtx.close();
 
@@ -785,7 +783,7 @@ const keyA = await scopePage.evaluate(() => LS_KEY);
 const scopeB = new globalThis.URL(URL); scopeB.searchParams.set('t','participante-b');
 await scopePage.goto(scopeB.href, { waitUntil:'domcontentloaded' });
 await scopePage.evaluate(() => window.__draftReady);
-const isolatedDraft = await scopePage.evaluate(() => ({ key:LS_KEY,legacy:localStorage.getItem('rs-experiencia') !== null,text:reviewText.value,stars:state.estrellas,points:totalPuntos(),active:document.querySelector('.flow-step.active')?.dataset.flowStep }));
+const isolatedDraft = await scopePage.evaluate(() => ({ key:LS_KEY,legacy:localStorage.getItem('rs-experiencia') !== null,text:reviewText.value,stars:state.estrellas,points:totalTickets(),active:document.querySelector('.flow-step.active')?.dataset.flowStep }));
 if (isolatedDraft.key === keyA || !isolatedDraft.legacy || isolatedDraft.text !== '' || isolatedDraft.stars !== 0 || isolatedDraft.points !== 0 || isolatedDraft.active !== 'intro') {
   fails.push(`persistencia: un participante heredó el borrador de otro ${JSON.stringify({ keyA,isolatedDraft })}`);
 }
@@ -794,4 +792,4 @@ await scopeCtx.close();
 
 await browser.close();
 if (fails.length) { console.error('FALLAS:\n' + fails.join('\n')); process.exit(1); }
-console.log('OK: multistep, recompensas foto/estrellas/audio/texto, puntos, consentimiento, gracias, Google, exit y bases');
+console.log('OK: multistep, recompensas foto/estrellas/audio/texto, tickets, consentimiento, gracias, Google, exit y bases');
