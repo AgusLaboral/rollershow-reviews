@@ -222,10 +222,6 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 #gracias h1{font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,6.5vw,2.4rem);letter-spacing:-.01em}
 #gracias .gr-sub{color:var(--fg-soft);margin-top:10px;max-width:42ch;margin-inline:auto}
 .gr-score{display:flex;justify-content:center;gap:12px;margin-top:26px;flex-wrap:wrap}
-.gr-score div{background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:16px 22px;min-width:130px}
-.gr-score strong{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent-deep);display:block}
-.gr-score span{font-size:.8rem;font-weight:600;color:var(--fg-mute)}
 
 /* ---------- Duplicar tickets con reseña de Google ---------- */
 .g-block{margin-top:34px;padding-top:30px;border-top:1px solid var(--border)}
@@ -297,19 +293,28 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 #gracias .gr-sub{color:rgba(255,249,242,.72);margin:12px 0 0;max-width:48ch;font-size:clamp(.95rem,1.35vw,1.16rem)}
 .gr-score{position:relative;display:grid;grid-template-columns:minmax(0,1fr);align-items:end;width:min(100%,680px);margin-top:clamp(18px,2.8dvh,30px);padding:0 0 clamp(10px,1.8dvh,18px);perspective:900px}
 .gr-score::after{display:none}
-.gr-score>div{position:relative;min-width:0;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:0;transform:translate3d(0,90px,-180px) rotateX(18deg);animation:grMonumentIn .8s cubic-bezier(.16,1,.3,1) forwards}
-.gr-score .gr-chances{animation-delay:.34s}
+.gr-score>div{position:relative;min-width:0;background:none;border:0;border-radius:0;box-shadow:none;padding:0;opacity:0;transform:translate3d(0,90px,-180px) rotateX(18deg);
+  animation:grMonumentIn .8s cubic-bezier(.16,1,.3,1) .34s forwards,grTicketFloat 7.5s ease-in-out 1.8s infinite alternate}
 @keyframes grMonumentIn{35%{opacity:1;transform:translate3d(0,-10px,24px) rotateX(-3deg)}100%{opacity:1;transform:none}}
-.gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.68;letter-spacing:-.09em;display:block;color:#FFF8EE;text-shadow:0 18px 48px rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
-.gr-score strong{position:relative;width:max-content;transform-style:preserve-3d}
-.gr-score strong::before,.gr-score strong::after{content:attr(data-value);position:absolute;inset:0;pointer-events:none;z-index:-1}
-.gr-score strong::before{color:#160E0B;transform:translate3d(3px,4px,-24px);filter:blur(1px);opacity:.3;text-shadow:none}
-.gr-score strong::after{display:none}
-.gr-chances strong{font-size:clamp(6.6rem,10vw,8.6rem);color:#FFF8EE}
-.gr-ticket-icon{width:clamp(30px,3.4vw,42px);height:auto;flex:none;color:#FFF8EE;filter:drop-shadow(0 10px 26px rgba(0,0,0,.35));align-self:center}
-.gr-score span{display:flex;align-items:baseline;gap:9px;margin-top:12px;color:rgba(255,249,242,.7);font-size:clamp(.84rem,1.1vw,1rem);font-weight:600}
-.gr-score span b{font-family:var(--font-display);color:#FFF9F2;font-size:clamp(1.35rem,2.35vw,2rem);line-height:1}
-.gr-score span em{font-style:normal}
+@keyframes grTicketFloat{0%{opacity:1;transform:rotate(-.65deg) translateY(0)}100%{opacity:1;transform:rotate(.5deg) translateY(-7px)}}
+/* La placa final ES un ticket: cuerpo SVG con muescas y perforado, número protagonista y talón con el ícono. */
+.gr-chances{position:relative;display:grid;grid-template-columns:1fr 26.5%;align-items:center;min-height:clamp(150px,21dvh,220px);padding:clamp(18px,2.6dvh,30px) 0;filter:drop-shadow(0 28px 60px rgba(0,0,0,.44))}
+.gr-plaque-shape{position:absolute;inset:0;width:100%;height:100%}
+.gr-plaque-body{fill:#FFF8EE}
+.gr-plaque-perf{stroke:rgba(151,41,15,.34);stroke-width:2;stroke-dasharray:2.5 7.5;stroke-linecap:round;fill:none}
+.gr-plaque-sheen{position:absolute;inset:0;overflow:hidden;border-radius:22px;pointer-events:none}
+.gr-plaque-sheen::before{content:"";position:absolute;top:-40%;bottom:-40%;left:0;width:34%;
+  background:linear-gradient(100deg,transparent,rgba(210,69,30,.1) 45%,rgba(255,255,255,.55) 52%,rgba(210,69,30,.08) 60%,transparent);
+  transform:translateX(-140%);animation:grPlaqueSheen 5.6s cubic-bezier(.45,0,.55,1) 2.6s infinite}
+@keyframes grPlaqueSheen{0%{transform:translateX(-140%)}56%,100%{transform:translateX(680%)}}
+.gr-plaque-main{position:relative;display:flex;align-items:center;gap:clamp(14px,2vw,24px);padding-left:clamp(22px,3.4vw,40px);min-width:0}
+.gr-score strong{font-family:var(--font-display);font-weight:900;line-height:.72;letter-spacing:-.07em;display:block;color:var(--cta-deep);font-variant-numeric:tabular-nums}
+.gr-chances strong{font-size:clamp(5.4rem,9vw,7.6rem)}
+.gr-score span{display:block;min-width:0;color:rgba(66,40,28,.78);font-size:clamp(.8rem,1.05vw,.95rem);font-weight:600}
+.gr-score span b{display:block;font-family:var(--font-display);color:#2E2019;font-size:clamp(1.5rem,2.6vw,2.2rem);line-height:1}
+.gr-score span em{font-style:normal;display:block;margin-top:4px}
+.gr-plaque-stub{position:relative;display:grid;place-items:center}
+.gr-plaque-stub .gr-ticket-icon{width:clamp(44px,5vw,62px);height:auto;color:var(--cta);transform:rotate(-8deg)}
 .gr-lower{display:flex;flex-direction:column;align-items:flex-start;gap:20px;width:min(100%,680px);margin-top:clamp(14px,2.4dvh,24px)}
 .gr-meta{display:block;width:100%;text-align:left;color:rgba(255,249,242,.66);font-size:.86rem;opacity:0;animation:grCopyIn .9s cubic-bezier(.16,1,.3,1) 2s forwards}
 .gr-meta b{color:#FFF9F2}.gr-meta .gr-fecha{max-width:430px;margin:0}.gr-meta .gr-ig{margin-top:8px}
@@ -337,9 +342,9 @@ body.done>.hero,body.done>.mecanica-sec,body.done>.chancebar,body.done>#app{disp
 @keyframes gCheckIn{0%{transform:scale(.55) rotate(-12deg);opacity:0;stroke-dashoffset:30}100%{transform:none;opacity:1;stroke-dashoffset:0}}
 .gr-fecha{font-size:.95rem;color:inherit}.gr-fecha b{color:inherit}.gr-ig{display:inline-flex;align-items:center;gap:10px;color:#F5EFE6;background:none;border-radius:0;border-bottom:1px solid rgba(245,239,230,.38);text-decoration:none;font-weight:700;padding:10px 0;box-shadow:none}
 body.done footer{background:#130F0D;border-color:rgba(255,249,242,.12);color:rgba(255,249,242,.48)}body.done footer a{color:rgba(255,249,242,.58)}
-@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances strong{font-size:clamp(4rem,20vw,5.35rem);line-height:.72}.gr-ticket-icon{width:22px;margin-right:2px}.gr-score span{display:block;margin-top:6px;font-size:.7rem;line-height:1.2}.gr-score span b{display:inline-block;vertical-align:middle;font-size:clamp(1rem,5vw,1.25rem)}.gr-score span .gr-ticket-icon{display:inline-block;vertical-align:middle}.gr-score span em{display:block;margin-top:3px}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:14px;margin-bottom:7px;padding:11px 14px;font-size:.8rem;border-radius:14px}.g-cta.google-focus{outline-offset:4px}}
-@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:12px;margin-bottom:6px;padding:9px 12px}}
-@media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
+@media(max-width:699px){#gracias>.thanks-ambient-video{object-position:center 62%}#gracias>.thanks-ambient-video.is-ready{opacity:.68}.gr-radiance{display:none}#gracias>.wrap{height:100dvh;min-height:560px;padding:clamp(18px,2.8dvh,24px) 20px 16px;grid-template-rows:auto auto auto;align-content:start}#gracias h1{font-size:clamp(2.35rem,10.8vw,3.25rem);line-height:.9}#gracias .gr-sub{margin-top:7px;font-size:.84rem;line-height:1.32}.gr-score{grid-template-columns:1fr;margin-top:clamp(10px,1.7dvh,15px);padding:0}.gr-chances{min-height:clamp(118px,17dvh,150px);padding:14px 0;grid-template-columns:1fr 25%}.gr-chances strong{font-size:clamp(4rem,19vw,4.75rem);line-height:.72}.gr-plaque-main{padding-left:18px;gap:12px}.gr-score span{font-size:.66rem;line-height:1.2}.gr-score span b{font-size:clamp(1.1rem,5.4vw,1.35rem)}.gr-score span em{margin-top:2px}.gr-plaque-stub .gr-ticket-icon{width:34px}.gr-lower{display:flex;flex-direction:column;gap:10px;margin-top:clamp(12px,1.8dvh,16px)}.g-block{order:1;width:100%}.gr-meta{order:2;width:100%;font-size:.72rem;line-height:1.35;display:block}.gr-meta .gr-fecha{max-width:none}.gr-meta .gr-ig{margin-top:6px;padding:5px 0;font-size:.69rem}.g-block h3{font-size:clamp(1.25rem,5.8vw,1.55rem)}.g-block p{margin-top:4px;font-size:.73rem;line-height:1.3}.g-cta{width:100%;min-height:48px;margin-top:14px;margin-bottom:7px;padding:11px 14px;font-size:.8rem;border-radius:14px}.g-cta.google-focus{outline-offset:4px}}
+@media(max-height:700px){#gracias>.wrap{padding-top:14px;padding-bottom:10px}#gracias h1{font-size:clamp(2rem,9.2vw,2.65rem)}#gracias .gr-sub{font-size:.76rem}.gr-score{margin-top:8px}.gr-chances{min-height:106px;padding:12px 0}.gr-chances strong{font-size:clamp(3.55rem,18vw,4.6rem)}.gr-lower{margin-top:9px;gap:8px}.gr-meta{font-size:.65rem}.g-block h3{font-size:1.18rem}.g-block p{font-size:.67rem}.g-cta{min-height:44px;margin-top:12px;margin-bottom:6px;padding:9px 12px}}
+@media(prefers-reduced-motion:reduce){.gr-curtain-reveal i{animation-duration:.55s}.gr-copy,.gr-score>div,.g-block,.gr-meta{animation-duration:.25s;transform:none}.gr-score>div{animation:grMonumentIn .25s ease-out .1s forwards}.gr-plaque-sheen::before{animation:none}.gr-radiance,.g-block::before,.g-block::after,#gracias::before{animation:none}.g-cta.google-focus{animation:googleFocusReduced 1.8s ease-in-out infinite}@keyframes googleFocusReduced{50%{box-shadow:0 18px 54px -10px rgba(210,69,30,.94);outline-color:#F3A13D}}}
 
 /* ---------- Footer ---------- */
 footer{border-top:1px solid var(--border);padding:26px 0 34px;color:var(--fg-mute);font-size:.8rem}
@@ -1099,7 +1104,18 @@ body.done #flowApp{display:none}
       <p class="gr-sub" id="grSub">Dejá una reseña en Google y duplicá tus tickets.</p>
     </div>
     <div class="gr-score" aria-live="polite">
-      <div class="gr-chances"><strong id="grTickets">0</strong><span><svg class="gr-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg><b id="grTicketsWord">tickets</b><em id="grTicketsLabel">en el sorteo</em></span></div>
+      <div class="gr-chances">
+        <svg class="gr-plaque-shape" viewBox="0 0 680 220" preserveAspectRatio="none" aria-hidden="true">
+          <path class="gr-plaque-body" d="M22 0h465a13 13 0 0 0 26 0h145a22 22 0 0 1 22 22v176a22 22 0 0 1-22 22H513a13 13 0 0 0-26 0H22a22 22 0 0 1-22-22V22A22 22 0 0 1 22 0Z"/>
+          <path class="gr-plaque-perf" d="M500 18v184"/>
+        </svg>
+        <i class="gr-plaque-sheen" aria-hidden="true"></i>
+        <div class="gr-plaque-main">
+          <strong id="grTickets" data-value="0">0</strong>
+          <span><b id="grTicketsWord">tickets</b><em id="grTicketsLabel">en el sorteo</em></span>
+        </div>
+        <div class="gr-plaque-stub" aria-hidden="true"><svg class="gr-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg></div>
+      </div>
     </div>
 
     <!-- Google no avisa si alguien realmente publicó la reseña (no hay webhook
