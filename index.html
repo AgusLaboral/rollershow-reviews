@@ -636,11 +636,12 @@ body{min-height:100vh;min-height:100dvh}
 .item-step.has-media .item-stage{border-radius:20px 20px 0 0;box-shadow:none}
 .item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68);align-items:center;gap:6px}
 .upload-more-action{display:none;position:relative;align-items:center;justify-content:center;text-decoration:none;line-height:1.25}
-.item-step.has-media .upload-more-action{display:flex;width:min(100%,640px);flex-direction:column;gap:3px;justify-content:center;text-align:center}
-.upload-more-label{font-weight:700}
-.upload-more-points{font-size:.72rem;font-weight:600;color:var(--fg-mute);text-decoration:none}
-.upload-more-action .upload-source-actions{justify-content:center;margin-top:3px}
-.upload-more-action .upload-source{min-height:32px;color:var(--fg-soft);font-size:.72rem;text-decoration-color:var(--border-strong)}
+.item-step.has-media .upload-more-action{display:flex;width:min(100%,640px);flex-direction:column;gap:4px;justify-content:center;text-align:center}
+.upload-more-label{font-family:var(--font-display);font-size:.94rem;font-weight:800;color:var(--cta-deep);text-decoration:none}
+.upload-more-label .ticket-inline{width:1.2em;height:1.2em;margin-right:.32em;color:var(--cta)}
+.upload-more-points{font-size:.76rem;font-weight:600;color:var(--fg-soft);text-decoration:none}
+.upload-more-action .upload-source-actions{justify-content:center;margin-top:5px}
+.upload-more-action .upload-source{min-height:44px;color:var(--fg-soft);font-size:.76rem;text-decoration-color:var(--border-strong)}
 
 /* Experiencia: estrellas, audio y texto se revelan en la misma conversación. */
 .focus-panel{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:18px;padding:20px 18px;box-shadow:0 16px 42px -34px rgba(28,24,22,.45)}
@@ -1472,7 +1473,6 @@ function detalleCortina(item) {
 PRESUPUESTO.items.forEach((item, index) => {
   const next = PRESUPUESTO.items[index + 1];
   const ambiente = textoAmbiente(item, index);
-  const sujetoCortina = cantidadCortinasEnAmbiente(item) > 1 ? "estas cortinas" : "esta cortina";
   const indicacionCortina = cantidadCortinasEnAmbiente(item) > 1
     ? "Estas cortinas, completas y con luz de día"
     : "Esta cortina, completa y con luz de día";
@@ -1498,7 +1498,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <div class="upload-zone">
           <div class="upload-decision">
-          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Cada foto o video suma ${TICKET_ICON}+1 ticket.</b></span>
+          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina}. Subí las que quieras: <b class="upload-value">${TICKET_ICON}cada una suma +1 ticket.</b></span>
           <span class="upload-source-actions"><label class="upload-source upload-library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Seleccionar archivos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
           <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
           </div>
@@ -1507,7 +1507,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
-      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Cada archivo nuevo suma ${TICKET_ICON}+1 ticket.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
+      <div class="step-secondary upload-more-action"><span class="upload-more-label">${TICKET_ICON}Sumá otra foto o video: +1 ticket</span><span class="upload-more-points">Otro ángulo, un detalle o un video: todo cuenta</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);

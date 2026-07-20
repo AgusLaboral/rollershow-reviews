@@ -456,3 +456,14 @@ Pedido de Agus: placa de cierre más grande, animada lento, con el ticket como e
 - [x] Animación lenta y persistente: entrada monumental existente + flotación de 7,5 s alternada (rotación sutil y elevación) + un brillo que recorre la placa cada 5,6 s. En reduced motion queda sólo la entrada.
 - [x] Se eliminó la regla legacy `.gr-score div` (cards blancas del diseño viejo) que pintaba cajas internas y desbordaba el talón en mobile.
 - [x] Verificado en local y contra Pages con la batería completa.
+
+## 53. Copy y peso visual de "sumá otra foto o video" — 2026-07-20
+
+Pedido de Agus: mejorar drásticamente el copy de agregar más contenido por ambiente (subir varias fotos/un video ayuda mucho) y que no quede tan relegado a segundo plano. Aplica a la única plantilla que genera el paso de cada ambiente, así que cubre los 4 ambientes automáticamente.
+
+- [x] Prompt inicial (antes de subir nada): `"{indicación}. Subí las que quieras: 🎟 cada una suma +1 ticket."` — invita a subir varias desde el arranque, no sólo tras la primera carga.
+- [x] Bloque "seguí sumando" (tras la primera carga): copy nuevo `"🎟 Sumá otra foto o video: +1 ticket"` + línea de guía concreta `"Otro ángulo, un detalle o un video: todo cuenta"`. Reemplaza el genérico "Seguí sumando con esta cortina / Cada archivo nuevo suma...".
+- [x] Peso visual: el label pasa de `fg-mute` chico a `cta-deep` bold con fuente display y el ícono de ticket inline a 1.2em; sigue siendo una acción secundaria (sin caja ni fill) para no romper la regla de "una sola primaria por pantalla", pero ya no lee como link muerto.
+- [x] Tap targets de "Elegir otro archivo" / "Sacar otra foto" subidos a 44px de alto (antes 32px, por debajo del mínimo táctil del proyecto).
+- [x] Limpieza: `sujetoCortina` (variable y su único uso) quedó sin consumidores tras el copy nuevo; se eliminó junto con nada más tocarla.
+- [x] Batería completa (reviews, alignment, motion, edge-layout, accessibility, performance) verde en local.
