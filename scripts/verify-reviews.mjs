@@ -228,7 +228,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     let pts = await page.textContent('#flowTickets');
     if (pts !== '1') fails.push(`foto: esperaba 1 ticket, hay ${pts}`);
     const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
-    if (!addMoreCopy.includes('suma otro ticket')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
+    if (!addMoreCopy.includes('+1 ticket')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
     await page.locator('.flow-step.active .upload-more-action .upload-library input[type=file]').setInputFiles(testImage);
     await page.waitForFunction(() => document.querySelector('#flowTickets')?.textContent === '2');
     if (await page.textContent('#flowTickets') !== '2') fails.push('segunda foto: no suma tickets');

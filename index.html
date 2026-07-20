@@ -439,7 +439,8 @@ body{min-height:100vh;min-height:100dvh}
 .flow-score strong{display:inline-block;font-family:var(--font-display);font-size:.84rem;color:var(--accent-deep);transform-origin:center}
 .flow-score .score-tickets{display:inline-flex;align-items:center;gap:6px}
 .flow-score .score-tickets strong{font-size:1.2rem;line-height:1;color:var(--cta-deep)}
-.score-ticket-icon{width:19px;height:19px;flex:none;color:var(--cta-deep)}
+.score-ticket-icon{width:24px;height:24px;flex:none;color:var(--cta-deep)}
+.ticket-inline{display:inline-block;width:1.18em;height:1.18em;vertical-align:-.22em;margin-right:.3em;flex:none}
 .flow-score.gain{color:var(--cta)}
 .flow-score.gain .score-tickets strong{animation:chanceLand .72s cubic-bezier(.2,1.7,.35,1) both}
 .flow-score.gain .score-ticket-icon{animation:ticketTilt .72s cubic-bezier(.2,1.7,.35,1) both}
@@ -455,13 +456,13 @@ body{min-height:100vh;min-height:100dvh}
 
 /* La recompensa es un ticket: nace en la acción y aterriza en el contador estable. */
 .score-transfer{position:fixed;z-index:80;left:0;top:0;pointer-events:none;display:grid;place-items:center;
-  width:72px;height:44px;margin:-22px 0 0 -36px;color:#fff;font-family:var(--font-display);font-size:1.3rem;font-weight:800;
-  filter:drop-shadow(0 12px 26px rgba(151,41,15,.42));will-change:transform,opacity}
+  width:96px;height:59px;margin:-30px 0 0 -48px;color:#fff;font-family:var(--font-display);font-size:1.7rem;font-weight:800;
+  filter:drop-shadow(0 14px 30px rgba(151,41,15,.46));will-change:transform,opacity}
 .score-transfer>svg{position:absolute;inset:0;width:100%;height:100%}
 .score-transfer .ticket-body{fill:var(--cta)}
 .score-transfer .ticket-sheen{fill:rgba(255,255,255,.16)}
 .score-transfer .ticket-perf{stroke:rgba(255,244,235,.62);stroke-width:1.6;stroke-dasharray:2.4 3.4;fill:none}
-.score-transfer b{position:relative;padding-right:14px;letter-spacing:-.02em;text-shadow:0 1px 2px rgba(105,25,9,.5)}
+.score-transfer b{position:relative;padding-right:18px;letter-spacing:-.02em;text-shadow:0 1px 2px rgba(105,25,9,.5)}
 
 /* Gesto de marca: sólo aparece el paño durante el cambio, desde el borde superior de la app. */
 .roller-wipe{position:absolute;z-index:40;inset:0;overflow:hidden;pointer-events:none;visibility:hidden}
@@ -703,6 +704,7 @@ body{min-height:100vh;min-height:100dvh}
 .confirm-chances{display:flex;align-items:flex-end;gap:12px}
 .confirm-chances strong{font-family:var(--font-display);font-size:clamp(4.8rem,18vw,8.2rem);font-weight:800;line-height:.72;letter-spacing:-.075em;color:var(--cta-deep);font-variant-numeric:tabular-nums}
 .confirm-chances span{font-family:var(--font-display);font-size:1.05rem;font-weight:800;line-height:1.05;max-width:11ch;padding-bottom:4px}
+.confirm-ticket-icon{display:block;width:30px;height:30px;margin-bottom:6px;color:var(--cta-deep)}
 .confirm-proof{margin-top:12px;max-width:36ch;font-weight:700;font-size:.9rem;color:var(--fg-soft)}
 .confirm-prize-reminder{margin-top:8px;max-width:40ch;color:var(--fg-mute);font-size:.8rem}
 .confirm-prize-reminder strong{color:var(--accent-deep)}
@@ -894,13 +896,13 @@ body.done #flowApp{display:none}
       <div class="step-inner">
        <div class="step-content">
         <h2 class="step-title">¿Cómo fue tu experiencia?</h2>
-        <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma 1 ticket para el sorteo.</span></p>
+        <p class="step-copy"><strong>Elegí de 1 a 5 estrellas.</strong><span>Calificar suma <svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>1 ticket para el sorteo.</span></p>
         <div class="focus-panel">
           <div class="rating-seller" id="flowSeller"><img id="flowVendFoto" src="" alt="" /><div><strong id="flowVendNombre"></strong><span>Te acompañó en tu compra</span></div></div>
           <div id="flowStarsMount"></div>
           <div class="experience-audio" id="experienceAudio">
             <div class="experience-divider"></div>
-            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Con 20 a 45 segundos alcanza y sumás 3 tickets. Tu navegador te va a pedir permiso para usar el micrófono.</span></div>
+            <div class="experience-prompt"><strong>¿Querés contarlo con tu voz?</strong><span>Con 20 a 45 segundos alcanza y sumás <svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>3 tickets. Tu navegador te va a pedir permiso para usar el micrófono.</span></div>
             <div id="flowAudioMount"></div>
             <button class="step-secondary step-audio-skip" id="audioSkip" type="button">Seguir sin audio</button>
           </div>
@@ -909,7 +911,7 @@ body.done #flowApp{display:none}
           </div>
           <div class="experience-text" id="experienceText">
             <div class="experience-divider"></div>
-            <label class="text-reward-label" for="reviewText">¿Querés agregar una frase? (+1 ticket)</label>
+            <label class="text-reward-label" for="reviewText">¿Querés agregar una frase? (<svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>+1 ticket)</label>
             <div id="flowTextMount"></div>
           </div>
         </div>
@@ -931,7 +933,7 @@ body.done #flowApp{display:none}
           <h2 class="step-title" id="confirmTitle">Mostraste tu casa.</h2>
           <p class="step-copy" id="confirmIntro">Para participar, autorizá el uso de lo que compartiste.</p>
           <div class="confirm-score" aria-live="polite">
-            <div class="confirm-chances"><strong id="confirmTickets">0</strong><span id="confirmTicketsLabel">tickets para el sorteo</span></div>
+            <div class="confirm-chances"><strong id="confirmTickets">0</strong><span><svg class="confirm-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg><b id="confirmTicketsLabel">tickets para el sorteo</b></span></div>
             <p class="confirm-proof" id="confirmProof"></p>
             <p class="confirm-prize-reminder" id="confirmPrizeReminder">En julio sorteamos <strong>3 almohadones y 2 alfombras premium.</strong></p>
           </div>
@@ -1047,7 +1049,7 @@ body.done #flowApp{display:none}
           <div class="stars" id="stars" role="radiogroup" aria-label="Calificación">
             <!-- estrellas SVG propias, generadas por JS -->
           </div>
-          <div class="stars-word" id="starsWord">Elegir una calificación (+1 ticket)</div>
+          <div class="stars-word" id="starsWord">Elegir una calificación (<svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>+1 ticket)</div>
         </div>
 
         <div class="exp-row">
@@ -1179,7 +1181,7 @@ body.done #flowApp{display:none}
 <dialog id="exitModal" aria-labelledby="exitTitle">
   <div class="modal-in">
     <h2 id="exitTitle">Lo que cargaste ya suma</h2>
-    <strong class="big" id="exitPts">0 tickets</strong>
+    <strong class="big" id="exitPts"><svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>0 tickets</strong>
     <p id="exitDrawCopy">Te falta confirmar para entrar al sorteo del 31 de julio con todo lo que ya sumaste.</p>
     <button class="cta" id="exitConfirm">Ir a confirmar mi participación</button>
     <button class="stay" data-close>Quiero seguir cargando</button>
@@ -1236,6 +1238,8 @@ const PRESUPUESTO = {
 /* Tickets. OJO(Nico): en producción los tickets se recalculan SIEMPRE server-side
    al recibir el POST; lo del cliente es solo feedback visual. */
 const TICKETS = { foto: 1, video: 1, audio: 3, estrellas: 1, texto: 1 };
+/* Toda mención de tickets en el copy va acompañada del ícono, pedido por Agus. */
+const TICKET_ICON = `<svg class="ticket-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg>`;
 
 /* ---------- estado ---------- */
 const state = { archivos: {}, estrellas: 0, audioBlob: null, audioSkipped: false, textoVisible: false, textoOk: false, enviado: false };
@@ -1365,7 +1369,8 @@ function transferTickets(tickets, origin, previousTickets, delay = 0) {
   token.style.top = `${startY}px`;
   $("#flowApp").appendChild(token);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const duration = reduced ? 720 : 1080;
+  /* Lento a propósito: el recorrido tiene que leerse, no sólo ocurrir. */
+  const duration = reduced ? 1050 : 1650;
   const launch = () => {
     const animation = token.animate([
       { transform:"translate3d(0,0,0) scale(.72) rotateX(12deg)", opacity:0, offset:0 },
@@ -1413,7 +1418,7 @@ function celebrateMedia(step, tickets, detail, previousTickets) {
   const turn = rewardTurns[kind] || 0;
   rewardTurns[kind] = turn + 1;
   const message = choices[turn % choices.length];
-  burst.innerHTML = `<strong>+${tickets}</strong><span>${ticketWord(tickets)}<br>${visualOutcome}</span><em>${message}</em>`;
+  burst.innerHTML = `<strong>+${tickets}</strong><span>${TICKET_ICON}${ticketWord(tickets)}<br>${visualOutcome}</span><em>${message}</em>`;
   stage.appendChild(burst);
   live.textContent = `${detail}. Sumaste ${tickets} ${ticketWord(tickets)}. ${outcome}`;
   playUiSound("upload");
@@ -1477,7 +1482,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <div class="item-task">
         <div class="upload-zone">
           <div class="upload-decision">
-          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Cada foto o video suma +1 ticket.</b></span>
+          <span class="upload-prompt"><span><strong>Subí fotos o videos</strong><span class="upload-meta">${indicacionCortina} <b class="upload-value">Cada foto o video suma ${TICKET_ICON}+1 ticket.</b></span>
           <span class="upload-source-actions"><label class="upload-source upload-library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Seleccionar archivos<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Sacar una foto<input type="file" accept="image/*" capture="environment" /></label></span></span></span>
           <button class="step-secondary step-skip stage-skip" data-flow-next type="button">Seguir sin foto ni video</button>
           </div>
@@ -1486,7 +1491,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
-      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Cada foto o video más suma otro ticket.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
+      <div class="step-secondary upload-more-action"><span class="upload-more-label">Seguí sumando con ${sujetoCortina}</span><span class="upload-more-points">Cada archivo nuevo suma ${TICKET_ICON}+1 ticket.</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
@@ -1623,7 +1628,7 @@ for (let i = 1; i <= 5; i++) {
     const previousPoints = totalTickets();
     state.estrellas = i;
     [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < i));
-    $("#starsWord").textContent = `${PALABRAS[i]}. Seleccionaste ${i} ${i === 1 ? "estrella" : "estrellas"} (+${TICKETS.estrellas} ticket)`;
+    $("#starsWord").innerHTML = `${PALABRAS[i]}. Seleccionaste ${i} ${i === 1 ? "estrella" : "estrellas"} (${TICKET_ICON}+${TICKETS.estrellas} ticket)`;
     saveLocal(); renderTickets(); syncExperienceProgress({ revealAudio:firstRating });
     if (firstRating) {
       [...starsBox.children].forEach((star, index) => star.style.setProperty("--star-index", index));
@@ -1699,7 +1704,7 @@ function renderAudio(stateName) {
   if (stateName === "idle") {
     audioUI.innerHTML = `<button type="button" class="rec-btn" id="recStart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
-      Grabar un audio (+3 tickets)</button>`;
+      Grabar un audio (${TICKET_ICON}+3 tickets)</button>`;
     $("#recStart").addEventListener("click", startRec);
   }
   if (stateName === "recording") {
@@ -1708,7 +1713,7 @@ function renderAudio(stateName) {
       <span class="rec-dot"></span><span class="rec-time" id="recTime">0:00</span>
       <div class="eq" role="img" aria-label="Nivel de tu voz en tiempo real">${bars}</div>
     </div>
-    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar y guardar (+3 tickets)</button>
+    <button type="button" class="rec-stop" id="recStop"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>Terminar y guardar (${TICKET_ICON}+3 tickets)</button>
     <p class="rec-helper">Cuando termines, podés escucharla o volver a grabarla.</p>`;
     $("#recStop").addEventListener("click", () => mediaRecorder && mediaRecorder.stop());
   }
@@ -1765,7 +1770,7 @@ async function startRec() {
       renderAudio("recorded");
       const earned = document.createElement("div");
       earned.className = "audio-earned";
-      earned.innerHTML = `<strong>${audioReplacing ? "Tu audio quedó actualizado" : `+${TICKETS.audio} tickets. ${audioOutcome}`}</strong><span>${audioReplacing ? audioOutcome : "Tu voz ya suma a tu participación."}</span>`;
+      earned.innerHTML = `<strong>${audioReplacing ? "Tu audio quedó actualizado" : `${TICKET_ICON}+${TICKETS.audio} tickets. ${audioOutcome}`}</strong><span>${audioReplacing ? audioOutcome : "Tu voz ya suma a tu participación."}</span>`;
       audioUI.appendChild(earned);
       await persistAudioDraft(); saveLocal(); renderTickets(); syncExperienceProgress({ revealText:true });
       const step = $(".experience-step"); rewardClass(step, "audio-reward", 900);
@@ -1781,7 +1786,7 @@ async function startRec() {
     audioUI.innerHTML = `<p class="audio-err">No pudimos acceder al micrófono. Fijate el permiso del navegador y probá de nuevo.</p>
       <button type="button" class="rec-btn" id="recStart" style="margin-top:10px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5"/></svg>
-      Probar de nuevo (+3 tickets)</button>`;
+      Probar de nuevo (${TICKET_ICON}+3 tickets)</button>`;
     $("#recStart").addEventListener("click", startRec);
   }
 }
@@ -1897,7 +1902,7 @@ try {
     if (prev.e) {
       state.estrellas = prev.e;
       [...starsBox.children].forEach((el, idx) => el.classList.toggle("on", idx < prev.e));
-      $("#starsWord").textContent = `${PALABRAS[prev.e]}. Seleccionaste ${prev.e} ${prev.e === 1 ? "estrella" : "estrellas"} (+${TICKETS.estrellas} ticket)`;
+      $("#starsWord").innerHTML = `${PALABRAS[prev.e]}. Seleccionaste ${prev.e} ${prev.e === 1 ? "estrella" : "estrellas"} (${TICKET_ICON}+${TICKETS.estrellas} ticket)`;
     }
     if (prev.t) { reviewText.value = prev.t; state.textoOk = textoValido(); }
     state.audioSkipped = Boolean(prev.audioSkipped);
@@ -2320,7 +2325,7 @@ function tryExit() {
   if (ae && (ae.tagName === "TEXTAREA" || ae.tagName === "INPUT")) return; /* teclado abierto */
   if (basesModal.open || exitModal.open) return;
   exitShown = true;
-  $("#exitPts").textContent = `${totalTickets()} ${ticketWord(totalTickets())}`;
+  $("#exitPts").innerHTML = `${TICKET_ICON}${totalTickets()} ${ticketWord(totalTickets())}`;
   exitModal.showModal();
 }
 /* desktop: cursor hacia la barra del navegador */
