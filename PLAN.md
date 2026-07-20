@@ -447,3 +447,12 @@ Pedido directo de Agus (audio): simplificar puntos+chances en un único sistema 
 - [x] `verify-reviews.mjs` migrado a la aritmética de tickets (1+1+1, audio 3, duplicación 6→12) y a los nuevos textos; batería completa verde en local y contra Pages.
 
 Nota anotada (no ejecutada): el video vale 1 ticket igual que la foto porque Agus pidió "todo lo demás deja un ticket"; si se quiere volver a incentivar video por sobre foto, subirlo a 2 tickets es un cambio de una línea en `TICKETS`.
+
+## 52. La placa final es un ticket — 2026-07-20
+
+Pedido de Agus: placa de cierre más grande, animada lento, con el ticket como eje central, centrada y alineada.
+
+- [x] `gr-score` ahora es una placa-ticket de 680 px: cuerpo SVG propio (crema `#FFF8EE`, muescas laterales, perforado punteado) con el número en Rojo Teja profundo, `tickets / en el sorteo` y un talón con el ícono de ticket rotado.
+- [x] Animación lenta y persistente: entrada monumental existente + flotación de 7,5 s alternada (rotación sutil y elevación) + un brillo que recorre la placa cada 5,6 s. En reduced motion queda sólo la entrada.
+- [x] Se eliminó la regla legacy `.gr-score div` (cards blancas del diseño viejo) que pintaba cajas internas y desbordaba el talón en mobile.
+- [x] Verificado en local y contra Pages con la batería completa.
