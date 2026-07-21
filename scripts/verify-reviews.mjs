@@ -229,7 +229,31 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     if (pts !== '1') fails.push(`foto: esperaba 1 ticket, hay ${pts}`);
     const addMoreCopy = (await page.textContent('.flow-step.active .upload-more-action')) || '';
     if (!addMoreCopy.includes('+1 ticket')) fails.push(`sumar otro archivo no recuerda su recompensa ${addMoreCopy}`);
-    await page.locator('.flow-step.active .upload-more-action .upload-library input[type=file]').setInputFiles(testImage);
+    // La secundaria es UNA sola superficie clickeable autodescripta: el <label> envuelve
+    // su propio input y no vuelve a partirse en links sueltos ("Elegir otro archivo" /
+    // "Sacar otra foto"), que era lo que la hacía leer como tres piezas desconectadas.
+    const addMoreShape = await page.evaluate(() => {
+      const node = document.querySelector('.item-step.active .upload-more-action');
+      const style = getComputedStyle(node);
+      const primary = document.querySelector('.item-step.active .step-continue');
+      return {
+        isLabel: node.tagName === 'LABEL',
+        ownInputs: node.querySelectorAll(':scope > input[type=file]').length,
+        splitLinks: node.querySelectorAll('.upload-source').length,
+        clickable: style.cursor === 'pointer',
+        bordered: parseFloat(style.borderTopWidth) > 0 && style.borderTopStyle !== 'none',
+        height: Math.round(node.getBoundingClientRect().height),
+        selfDescribed: /Sum[áa] otra foto o video/i.test(node.innerText),
+        // Secundaria de verdad: no puede tener el mismo relleno sólido que la primaria.
+        notFilledLikePrimary: style.backgroundColor !== getComputedStyle(primary).backgroundColor,
+      };
+    });
+    if (!addMoreShape.isLabel || addMoreShape.ownInputs !== 1 || addMoreShape.splitLinks !== 0 ||
+        !addMoreShape.clickable || !addMoreShape.bordered || addMoreShape.height < 44 ||
+        !addMoreShape.selfDescribed || !addMoreShape.notFilledLikePrimary) {
+      fails.push(`sumar otro archivo no es una única superficie secundaria autodescripta ${JSON.stringify(addMoreShape)}`);
+    }
+    await page.locator('.flow-step.active .upload-more-action input[type=file]').setInputFiles(testImage);
     await page.waitForFunction(() => document.querySelector('#flowTickets')?.textContent === '2');
     if (await page.textContent('#flowTickets') !== '2') fails.push('segunda foto: no suma tickets');
     await page.click('.flow-step.active .stage-remove');

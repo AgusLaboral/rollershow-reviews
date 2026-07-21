@@ -635,13 +635,22 @@ body{min-height:100vh;min-height:100dvh}
 .item-step.has-media .step-skip{display:none}
 .item-step.has-media .item-stage{border-radius:20px 20px 0 0;box-shadow:none}
 .item-step.has-media .step-actions{margin-top:0;padding:12px 14px;background:rgba(242,236,227,.96);border:1px solid var(--border);border-top:0;border-radius:0 0 18px 18px;box-shadow:0 24px 54px -38px rgba(28,24,22,.68);align-items:center;gap:6px}
-.upload-more-action{display:none;position:relative;align-items:center;justify-content:center;text-decoration:none;line-height:1.25}
-.item-step.has-media .upload-more-action{display:flex;width:min(100%,640px);flex-direction:column;gap:4px;justify-content:center;text-align:center}
-.upload-more-label{font-family:var(--font-display);font-size:.94rem;font-weight:800;color:var(--cta-deep);text-decoration:none}
-.upload-more-label .ticket-inline{width:1.2em;height:1.2em;margin-right:.32em;color:var(--cta)}
-.upload-more-points{font-size:.76rem;font-weight:600;color:var(--fg-soft);text-decoration:none}
-.upload-more-action .upload-source-actions{justify-content:center;margin-top:5px}
-.upload-more-action .upload-source{min-height:44px;color:var(--fg-soft);font-size:.76rem;text-decoration-color:var(--border-strong)}
+/* Secundaria consolidada: toda la pieza es el selector de archivo y se explica sola.
+   Sigue leyéndose como secundaria (contorno, no relleno) para no competir con Continuar. */
+.upload-more-action{display:none}
+.item-step.has-media .upload-more-action{display:flex;position:relative;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  width:min(100%,640px);min-height:62px;padding:11px 18px;cursor:pointer;text-align:center;text-decoration:none;line-height:1.25;
+  border:1.5px solid rgba(198,58,33,.34);border-radius:13px;background:rgba(198,58,33,.05);
+  transition:background .18s,border-color .18s,transform .14s}
+.item-step.has-media .upload-more-action:hover{background:rgba(198,58,33,.1);border-color:rgba(198,58,33,.58)}
+.item-step.has-media .upload-more-action:active{transform:scale(.99)}
+.upload-more-action:has(input:focus-visible){outline:3px solid rgba(198,58,33,.34);outline-offset:3px}
+.upload-more-action input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.upload-more-label{display:flex;align-items:center;justify-content:center;gap:.34em;flex-wrap:wrap;
+  font-family:var(--font-display);font-size:.95rem;font-weight:800;color:var(--cta-deep);text-decoration:none}
+.upload-more-label .ticket-inline{width:1.15em;height:1.15em;margin-right:.34em;color:var(--cta)}
+.upload-more-label b{font-weight:800}
+.upload-more-hint{font-size:.75rem;font-weight:600;color:var(--fg-mute);text-decoration:none}
 
 /* Experiencia: estrellas, audio y texto se revelan en la misma conversación. */
 .focus-panel{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:18px;padding:20px 18px;box-shadow:0 16px 42px -34px rgba(28,24,22,.45)}
@@ -1507,7 +1516,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     </div>
     <div class="step-actions">
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
-      <div class="step-secondary upload-more-action"><span class="upload-more-label">${TICKET_ICON}Sumá otra foto o video: +1 ticket</span><span class="upload-more-points">Otro ángulo, un detalle o un video: todo cuenta</span><span class="upload-source-actions"><label class="upload-source upload-library">Elegir otro archivo<input type="file" accept="image/*,video/*" multiple /></label><label class="upload-source upload-camera">Sacar otra foto<input type="file" accept="image/*" capture="environment" /></label></span></div>
+      <label class="step-secondary upload-more-action"><span class="upload-more-label">${TICKET_ICON}Sumá otra foto o video <b>(+1 ticket)</b></span><span class="upload-more-hint">Otro ángulo, un detalle o cómo filtra la luz</span><input type="file" accept="image/*,video/*" multiple /></label>
     </div>
   </div>`;
   flowItemSteps.appendChild(step);
@@ -2216,7 +2225,7 @@ function playUiSound(kind, delay = 0) {
 }
 
 document.addEventListener("click", event => {
-  const control = event.target.closest("button:not(:disabled), label.upload-source, a.g-cta, a.ig-final-cta");
+  const control = event.target.closest("button:not(:disabled), label.upload-source, label.upload-more-action, a.g-cta, a.ig-final-cta");
   if (control) playUiSound("click");
 }, { capture:true });
 

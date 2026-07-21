@@ -467,3 +467,14 @@ Pedido de Agus: mejorar drásticamente el copy de agregar más contenido por amb
 - [x] Tap targets de "Elegir otro archivo" / "Sacar otra foto" subidos a 44px de alto (antes 32px, por debajo del mínimo táctil del proyecto).
 - [x] Limpieza: `sujetoCortina` (variable y su único uso) quedó sin consumidores tras el copy nuevo; se eliminó junto con nada más tocarla.
 - [x] Batería completa (reviews, alignment, motion, edge-layout, accessibility, performance) verde en local.
+
+## 54. Sumar otro archivo: una sola superficie clickeable — 2026-07-21
+
+Agus marcó que el bloque de "sumar otra foto o video" leía como tres piezas sueltas (título, explicación y dos links) y pidió consolidarlo en un botón secundario autodescripto, sin dejar de ser secundario frente a `Continuar`.
+
+- [x] El bloque pasa de `<div>` con dos `<label>` internos a **un solo `<label>` que envuelve su propio input**: toda la superficie es clickeable, no sólo el texto del link.
+- [x] Copy autodescripto: `Sumá otra foto o video (+1 ticket)` con el ícono de ticket, y debajo, dentro del mismo botón, `Otro ángulo, un detalle o cómo filtra la luz` (ideas concretas y propias del producto en vez del genérico "todo cuenta").
+- [x] Se unifican los dos selectores (galería + cámara) en uno solo. En mobile el picker nativo ya ofrece cámara y galería, así que no se pierde acceso a la cámara y se elimina una decisión de más en una acción secundaria.
+- [x] Jerarquía preservada: contorno y fondo tenue en Rojo Teja, nunca relleno sólido — `Continuar` sigue siendo la única primaria. Alto mínimo 62 px, foco visible propio y clic sonoro (se agregó `label.upload-more-action` al selector de sonido).
+- [x] `verify-reviews.mjs` gana una aserción estructural: exige que sea un `<label>` con exactamente un input propio, cero `.upload-source` sueltos, cursor pointer, borde, autodescripción y fondo distinto al de la primaria. Así no puede volver a partirse en piezas.
+- [x] Batería completa verde en el prototipo y verificación funcional contra la preview publicada del port.
