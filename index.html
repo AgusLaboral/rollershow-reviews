@@ -421,7 +421,7 @@ dialog::backdrop{background:rgba(28,24,22,.35);backdrop-filter:blur(7px);-webkit
 body{min-height:100vh;min-height:100dvh}
 .flow-shell{height:100vh;height:100dvh;min-height:560px;overflow:hidden;background:var(--bg);position:relative;isolation:isolate}
 .flow-head{position:absolute;z-index:30;left:0;right:0;top:0;height:64px;padding:10px 20px;
-  display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;pointer-events:none}
+  display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:12px;pointer-events:none}
 .flow-shell:not([data-current="0"]) .flow-head{background:var(--bg)}
 .flow-shell[data-current="6"] .flow-head{background:transparent}
 .flow-logo{width:148px;max-width:40vw;grid-column:2;justify-self:center;transition:opacity .2s}
@@ -431,8 +431,10 @@ body{min-height:100vh;min-height:100dvh}
 .flow-back svg{width:20px;height:20px}
 .flow-shell[data-current="0"] .flow-back{opacity:0;pointer-events:none;transform:translateX(-8px)}
 .flow-shell[data-current="0"] .flow-logo{opacity:0}
-.flow-progress{min-width:68px;text-align:right;font-size:.74rem;font-weight:700;color:var(--fg-mute);font-variant-numeric:tabular-nums}
-.flow-shell[data-current="0"] .flow-progress{opacity:0}
+/* El "N de M" salía sobrando: el contexto de cortinas ya muestra dónde estás y la
+   barra de avance cubre la progresión. Se conserva sólo como región viva para
+   lector de pantalla, anunciando el nombre real del paso en vez de un número. */
+.flow-progress{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .flow-rail{position:absolute;z-index:29;left:20px;right:20px;top:63px;height:3px;border-radius:99px;
   background:var(--border);overflow:hidden;transition:opacity .2s}
 .flow-rail i{display:block;width:0;height:100%;border-radius:inherit;background:var(--cta);transition:width .35s cubic-bezier(.22,1,.36,1)}
@@ -652,6 +654,50 @@ body{min-height:100vh;min-height:100dvh}
 .upload-more-label b{font-weight:800}
 .upload-more-hint{font-size:.75rem;font-weight:600;color:var(--fg-mute);text-decoration:none}
 
+/* Contexto de avance entre cortinas. Es contexto, no decisión: liviano, apagado y
+   siempre subordinado al CTA. Las completadas van arriba (colapsadas, con su
+   miniatura y sus tickets) y las que faltan abajo, DESPUÉS del CTA, para que
+   nunca le roben el fold a la acción. */
+.item-done-strip,.item-next-list{list-style:none;margin:0;padding:0;display:none;
+  transition:transform .68s cubic-bezier(.16,1,.3,1),opacity .42s ease-out}
+.item-step.has-done .item-done-strip{display:flex;gap:7px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.item-step.has-done .item-done-strip::-webkit-scrollbar{display:none}
+/* Horizontal, igual que la tira de completadas: una fila en vez de una por ítem.
+   En vertical empujaba el CTA fuera del fold en desktop bajo (1165x674). */
+.item-step.has-next .item-next-list{display:flex;gap:7px;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+.item-step.has-next .item-next-list::-webkit-scrollbar{display:none}
+.flow-step.active.entering .item-done-strip{opacity:0;transform:translateY(-8px)}
+.flow-step.active.entering .item-next-list{opacity:0;transform:translateY(8px)}
+
+.item-chip{display:flex;align-items:center;gap:8px;min-height:40px;padding:5px 10px 5px 5px;
+  border:1px solid var(--border);border-radius:11px;background:var(--bg-elev);color:var(--fg-soft);
+  font-size:.76rem;font-weight:700;line-height:1.15;text-align:left;cursor:pointer;
+  transition:border-color .18s,background .18s,opacity .18s,transform .18s}
+.item-chip:hover{border-color:var(--border-strong)}
+.item-chip:active{transform:scale(.98)}
+.item-chip:focus-visible{outline:3px solid rgba(198,58,33,.3);outline-offset:2px}
+.item-chip-thumb{position:relative;flex:none;width:30px;height:30px;display:grid;place-items:center;
+  border-radius:8px;overflow:hidden;background:var(--bg-muted);color:var(--fg-mute)}
+.item-chip-thumb img{width:100%;height:100%;object-fit:cover}
+.item-chip-thumb.is-video svg{width:13px;height:13px}
+.item-chip-thumb.is-empty::after{content:"";width:11px;height:11px;border:1.5px dashed var(--border-strong);border-radius:50%}
+.item-chip-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:16ch}
+.item-chip-tickets{display:inline-flex;align-items:center;gap:.16em;flex:none;
+  font-family:var(--font-display);font-weight:800;color:var(--cta-deep)}
+.item-chip-tickets .ticket-inline{width:1em;height:1em;margin-right:0;color:var(--cta)}
+/* Las que faltan: presentes para que se vea el recorrido, apagadas para no competir. */
+.item-chip-next{opacity:.6;background:transparent;border-style:dashed;white-space:nowrap;padding-left:11px}
+.item-chip-next:hover{opacity:.85}
+.item-chip-next .item-chip-thumb{width:22px;height:22px;border-radius:6px}
+.item-chip-next .item-chip-name{max-width:21ch}
+/* Acento sobre la recién completada, sincronizado con el asentamiento de la cortina. */
+.item-step.just-arrived .item-done-strip li:last-child .item-chip{animation:chipLanded .74s .78s cubic-bezier(.2,1.6,.36,1) both}
+@keyframes chipLanded{0%{transform:scale(.84);border-color:var(--cta);background:rgba(198,58,33,.1)}
+  58%{transform:scale(1.06);border-color:var(--cta)}100%{transform:none}}
+/* En pantallas angostas la completada queda como la pidió Nicolás: sólo fotito y
+   ticket. El nombre sigue disponible para lector de pantalla y en el title. */
+@media(max-width:479px){.item-chip-done .item-chip-name{display:none}}
+
 /* Experiencia: estrellas, audio y texto se revelan en la misma conversación. */
 .focus-panel{margin-top:18px;background:var(--bg-elev);border:1px solid var(--border);border-radius:18px;padding:20px 18px;box-shadow:0 16px 42px -34px rgba(28,24,22,.45)}
 .rating-seller{display:flex;align-items:center;gap:12px;margin-bottom:22px}.rating-seller[hidden]{display:none}.rating-seller img{width:48px;height:48px;border-radius:50%;object-fit:cover}
@@ -833,15 +879,19 @@ body.done #flowApp{display:none}
   .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:12px;align-items:start;align-content:start}
   .item-step.has-media .step-inner{row-gap:0}
   .item-step.has-media .item-heading{margin-bottom:12px}
-  .item-step .item-heading{grid-column:1 / -1;grid-row:1}
-  .item-step .item-stage{grid-column:1 / -1;grid-row:2;height:clamp(280px,46dvh,420px);margin-top:0}
+  /* El grid asigna filas explícitas: el contexto de avance también necesita la suya,
+     si no cae en celdas libres y se recorta contra el ancho automático. */
+  .item-step .item-done-strip{grid-column:1 / -1;grid-row:1;margin-bottom:0}
+  .item-step .item-next-list{grid-column:1 / -1;grid-row:5;margin-top:2px}
+  .item-step .item-heading{grid-column:1 / -1;grid-row:2}
+  .item-step .item-stage{grid-column:1 / -1;grid-row:3;height:clamp(280px,46dvh,420px);margin-top:0}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}
   .item-step .upload-zone{padding:24px;align-items:center;justify-content:flex-end}
   .item-step .upload-zone{background:linear-gradient(90deg,transparent 42%,rgba(22,18,15,.18) 58%,rgba(22,18,15,.82) 100%)}
   .item-step .upload-decision{width:min(28%,280px);margin-left:auto;gap:20px}
   .item-step .upload-prompt{width:100%;margin:0;padding:0}
   .item-step .upload-library{grid-column:1 / -1}
-  .item-step .step-actions{grid-column:8 / -1;grid-row:3;margin-top:2px;padding-top:0}
+  .item-step .step-actions{grid-column:8 / -1;grid-row:4;margin-top:2px;padding-top:0}
   .item-step.has-media .step-actions{grid-column:1 / -1;display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:0;padding:12px 14px}
   .intro-step .step-inner{width:min(calc(100% - 80px),1120px);padding:clamp(60px,10dvh,76px) 0 clamp(20px,4dvh,36px);display:grid;grid-template-columns:minmax(0,.95fr) minmax(300px,1.05fr);column-gap:clamp(20px,3vw,40px);align-items:center}
   .intro-step .intro-logo{left:0}
@@ -1461,10 +1511,20 @@ function rewardClass(step, className, duration = 1000) {
 
 /* ---------- cards de cortinas ---------- */
 const flowItemSteps = $("#flowItemSteps");
-function textoAmbiente(item, index) {
+function ambienteLimpio(item) {
   const ambiente = String(item.ambiente_display || item.ambiente || "").trim();
-  if (ambiente && !/^(s\/?n|sin definir|ambiente)$/i.test(ambiente)) return ambiente;
-  return PRESUPUESTO.items.length === 1 ? "Tu cortina" : `Cortina ${index + 1}`;
+  return ambiente && !/^(s\/?n|sin definir|ambiente)$/i.test(ambiente) ? ambiente : "";
+}
+/* Nicolás: el título nombra producto + lugar ("Blackout en Escritorio"). El ambiente
+   que carga el vendedor no siempre es confiable, así que el producto ancla la
+   identificación. Se saca el prefijo "Roller" porque todos los ítems lo son. */
+function productoCorto(item) {
+  return String(item.producto_display || item.producto || "").trim().replace(/^roller\s+/i, "").trim();
+}
+function textoAmbiente(item, index) {
+  const producto = productoCorto(item), ambiente = ambienteLimpio(item);
+  if (producto && ambiente) return `${producto} en ${ambiente}`;
+  return producto || ambiente || (PRESUPUESTO.items.length === 1 ? "Tu cortina" : `Cortina ${index + 1}`);
 }
 function cantidadCortinasEnAmbiente(item) {
   const ambiente = String(item.ambiente_display || item.ambiente || "").trim().toLocaleLowerCase("es");
@@ -1473,11 +1533,10 @@ function cantidadCortinasEnAmbiente(item) {
     String(candidate.ambiente_display || candidate.ambiente || "").trim().toLocaleLowerCase("es") === ambiente
   ).length;
 }
+/* El producto ya vive en el título: acá queda sólo la tela para no repetirlo. */
 function detalleCortina(item) {
-  const producto = String(item.producto_display || item.producto || "").trim();
   const tela = String(item.tela_display || item.tela || "").trim();
-  if (producto && tela) return `${producto}, tela ${tela}`;
-  return producto || tela || "Mostranos cómo quedó instalada.";
+  return tela ? `Tela ${tela}` : "Mostranos cómo quedó instalada.";
 }
 PRESUPUESTO.items.forEach((item, index) => {
   const next = PRESUPUESTO.items[index + 1];
@@ -1494,6 +1553,7 @@ PRESUPUESTO.items.forEach((item, index) => {
   step.dataset.itemId = item.id;
   step.setAttribute("aria-hidden", "true");
   step.innerHTML = `<div class="step-inner">
+    <ol class="item-done-strip" data-done-strip aria-label="Cortinas que ya mostraste"></ol>
     <header class="item-heading">
       <h2 class="step-title">${ambiente}</h2>
       <p class="item-subtitle">${detalle}</p>
@@ -1501,7 +1561,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     <div class="item-stage">
       <div class="item-visual">
         <article class="curtain-card">
-          <div class="curtain-photo"><img class="reference-media" src="${blurredReference}" width="1024" height="1024" alt="Ejemplo: ${detalle} en ${ambiente}" /></div>
+          <div class="curtain-photo"><img class="reference-media" src="${blurredReference}" width="1024" height="1024" alt="Ejemplo de ${ambiente}" /></div>
         </article>
       </div>
       <div class="item-task">
@@ -1518,6 +1578,7 @@ PRESUPUESTO.items.forEach((item, index) => {
       <button class="step-primary step-continue" data-flow-next type="button">${next ? "Continuar" : "Dar mi opinión"}</button>
       <label class="step-secondary upload-more-action"><span class="upload-more-label">${TICKET_ICON}Sumá otra foto o video <b>(+1 ticket)</b></span><span class="upload-more-hint">Otro ángulo, un detalle o cómo filtra la luz</span><input type="file" accept="image/*,video/*" multiple /></label>
     </div>
+    <ol class="item-next-list" data-next-list aria-label="Cortinas que faltan"></ol>
   </div>`;
   flowItemSteps.appendChild(step);
   step.querySelectorAll("input[type=file]").forEach(input => input.addEventListener("change", async () => {
@@ -1525,6 +1586,84 @@ PRESUPUESTO.items.forEach((item, index) => {
     await addFiles(item.id, input.files, step);
     input.value = "";
   }));
+});
+
+/* Progreso entre cortinas. Nicolás lo pidió después de ver a Cami usarla: al pasar
+   de un ambiente al siguiente parecía que no había pasado nada, porque todas las
+   pantallas se ven igual y daba la sensación de "no se cargó, me abrió la misma".
+   Las ya mostradas se colapsan arriba con su miniatura y sus tickets; las que faltan
+   quedan abajo, DESPUÉS del CTA, para que el contexto nunca le robe el fold a la
+   acción. Son contexto, no decisión: por eso son livianas y mudas. */
+function itemChip(item, index, estado) {
+  const archivos = state.archivos[item.id] || [];
+  const ultima = archivos.at(-1);
+  const nombre = textoAmbiente(item, index);
+  const boton = document.createElement("button");
+  boton.type = "button";
+  boton.className = `item-chip item-chip-${estado}`;
+  boton.dataset.jumpItem = item.id;
+  const resumen = archivos.length
+    ? `${archivos.length} ${archivos.length === 1 ? "archivo" : "archivos"}, ${archivos.length} ${ticketWord(archivos.length)}`
+    : "sin foto todavía";
+  boton.setAttribute("aria-label", `${nombre}: ${resumen}. Volver a esta cortina`);
+  boton.title = nombre;
+  /* La miniatura sólo existe si hay algo que mostrar. En una cortina que todavía no
+     visitaste, un círculo vacío no informa nada y le roba ancho al nombre. */
+  if (ultima || estado === "done") {
+    const miniatura = document.createElement("span");
+    miniatura.className = "item-chip-thumb";
+    if (ultima && !ultima.esVideo) {
+      if (!ultima.url) ultima.url = URL.createObjectURL(ultima.file);
+      const img = document.createElement("img");
+      img.src = ultima.url; img.alt = ""; img.loading = "lazy";
+      miniatura.appendChild(img);
+    } else if (ultima) {
+      miniatura.classList.add("is-video");
+      miniatura.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8c0 .7.8 1.1 1.4.8l9.8-6.4c.5-.4.5-1.2 0-1.6L9.4 4.8c-.6-.4-1.4 0-1.4.8z"/></svg>`;
+    } else {
+      miniatura.classList.add("is-empty");
+    }
+    boton.appendChild(miniatura);
+  }
+  const texto = document.createElement("span");
+  texto.className = "item-chip-name";
+  texto.textContent = nombre;
+  boton.appendChild(texto);
+  if (archivos.length) {
+    const tickets = document.createElement("span");
+    tickets.className = "item-chip-tickets";
+    tickets.innerHTML = `${TICKET_ICON}${archivos.length}`;
+    boton.appendChild(tickets);
+  }
+  const li = document.createElement("li");
+  li.appendChild(boton);
+  return li;
+}
+
+function renderStepProgress(step) {
+  const done = step.querySelector("[data-done-strip]"), pendiente = step.querySelector("[data-next-list]");
+  if (!done || !pendiente) return;
+  const index = PRESUPUESTO.items.findIndex(item => String(item.id) === step.dataset.itemId);
+  done.replaceChildren(); pendiente.replaceChildren();
+  PRESUPUESTO.items.forEach((item, otherIndex) => {
+    if (otherIndex === index) return;
+    const destino = otherIndex < index ? done : pendiente;
+    destino.appendChild(itemChip(item, otherIndex, otherIndex < index ? "done" : "next"));
+  });
+  step.classList.toggle("has-done", done.childElementCount > 0);
+  step.classList.toggle("has-next", pendiente.childElementCount > 0);
+}
+
+function renderAllStepProgress() {
+  document.querySelectorAll(".item-step").forEach(renderStepProgress);
+}
+
+/* Volver a una cortina ya mostrada (o adelantarse a una pendiente) desde el contexto. */
+flowItemSteps.addEventListener("click", event => {
+  const chip = event.target.closest("[data-jump-item]");
+  if (!chip) return;
+  const destino = flowSteps.findIndex(step => step.dataset.itemId === chip.dataset.jumpItem);
+  if (destino >= 0) goToFlow(destino);
 });
 
 const MAX_IMAGE_SIDE = 1600;
@@ -1606,6 +1745,7 @@ async function addFiles(itemId, fileList, ownerStep = null) {
     renderStageMedia(ownerStep, itemId);
   }
   renderTickets();
+  renderAllStepProgress();
   if (ownerStep && addedPoints) {
     rewardClass(ownerStep, "media-reward");
     const label = addedVideos + addedPhotos === 1 ? (addedVideos ? "Video cargado" : "Foto cargada") : `${addedVideos + addedPhotos} archivos cargados`;
@@ -1636,7 +1776,7 @@ function renderStageMedia(step, itemId) {
     state.archivos[itemId] = files.filter(entry => entry !== active);
     URL.revokeObjectURL(active.url);
     removePersistedMedia(active.id);
-    renderStageMedia(step, itemId); renderTickets();
+    renderStageMedia(step, itemId); renderTickets(); renderAllStepProgress();
   });
   stage.appendChild(remove);
 }
@@ -2066,7 +2206,8 @@ function updateFlowChrome() {
   back.disabled = atStart;
   back.setAttribute("aria-hidden", String(atStart));
   const total = flowSteps.length - 1;
-  $("#flowProgress").textContent = flowIndex ? `${flowIndex} de ${total}` : "";
+  const nombrePaso = flowSteps[flowIndex]?.querySelector(".step-title")?.textContent?.trim() || "";
+  $("#flowProgress").textContent = flowIndex && nombrePaso ? nombrePaso : "";
   $("#flowRail").setAttribute("aria-valuemax", total);
   $("#flowRail").setAttribute("aria-valuenow", flowIndex);
   $("#flowRailFill").style.width = `${flowIndex / total * 100}%`;
@@ -2076,6 +2217,17 @@ function goToFlow(target) {
   flowBusy = true;
   const current = flowSteps[flowIndex], next = flowSteps[target], app = $("#flowApp");
   if (current.dataset.flowStep === "experience" && mediaRecorder?.state === "recording") mediaRecorder.stop();
+  /* El contexto del paso que entra se arma antes de revelarlo, para que la cortina
+     no descubra una tira vacía que se llena después. */
+  renderAllStepProgress();
+  /* Al asentarse la cortina, la que acabás de completar aparece con acento en la
+     tira de arriba: esa es la prueba visual de que sí se guardó, que era justo lo
+     que no se entendía. No se anima el colapso del paso saliente porque ocurriría
+     debajo de la cortina, invisible. */
+  if (target > flowIndex && next.classList.contains("item-step")) {
+    next.classList.remove("just-arrived"); void next.offsetWidth; next.classList.add("just-arrived");
+    setTimeout(() => next.classList.remove("just-arrived"), 1900);
+  }
   app.classList.remove("curtain-running");
   void app.offsetWidth;
   app.classList.add("curtain-running");
@@ -2407,6 +2559,7 @@ $("#gConfirmBtn").addEventListener("click", () => {
 });
 
 renderTickets();
+renderAllStepProgress();
 </script>
 </body>
 </html>

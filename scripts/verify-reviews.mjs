@@ -134,9 +134,14 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     camera: (() => { const input=step.querySelector('.upload-camera input'); return {accept:input?.accept,capture:input?.getAttribute('capture')}; })(),
     continueCopy: step.querySelector('.step-continue')?.textContent,
   })));
-  if (environments[0]?.title !== 'Living' || !environments[0]?.src.includes('living') ||
-      environments[1]?.title !== 'Dormitorio' || !environments[1]?.src.includes('bedroom') ||
-      environments[2]?.title !== 'Escritorio' || environments[3]?.title !== 'Home office') {
+  // Nicolás: el título nombra producto + lugar ("Blackout en Escritorio") porque el
+  // ambiente que carga el vendedor no siempre es confiable. Se verifica además que el
+  // producto del título corresponda con la foto (la sunscreen no puede ser blackout).
+  if (environments[0]?.title !== 'Blackout en Living' || !environments[0]?.src.includes('living') ||
+      environments[1]?.title !== 'Blackout en Dormitorio' || !environments[1]?.src.includes('bedroom') ||
+      environments[2]?.title !== 'Sunscreen 5% en Escritorio' || !environments[2]?.src.includes('sunscreen') ||
+      environments[3]?.title !== 'Blackout en Home office' || !environments[3]?.src.includes('office') ||
+      environments.some(item => /^roller/i.test(item.title))) {
     fails.push(`${vp.w}px: fotos y nombres de ambientes no corresponden ${JSON.stringify(environments)}`);
   }
   if (environments.some(item => item.width < 1000 || item.src.includes('thumb') || !item.src.includes('-blurred') || !item.unified || item.structuralNoise)) {
@@ -624,6 +629,33 @@ await dpage.screenshot({ path: `${OUT}/canonical-1280-photo-reward.png` });
 
 // Audio: durante la grabación, detener es la única acción dominante. Detener no avanza.
 await dpage.click('.flow-step.active .step-continue'); await waitCurtain(dpage);
+
+// Contexto de avance en desktop. El grid de 12 columnas asigna filas explícitas: si el
+// contexto no tiene la suya, cae en celdas libres y los chips salen recortados debajo
+// de la superficie (bug real de esta ronda). Se mide orden y ancho útil, no sólo que exista.
+const desktopContexto = await dpage.evaluate(() => {
+  const step = document.querySelector('.item-step.active');
+  const r = sel => step.querySelector(sel)?.getBoundingClientRect();
+  const strip = r('.item-done-strip'), heading = r('.item-heading'), stage = r('.item-stage'), lista = r('.item-next-list');
+  const chips = [...step.querySelectorAll('.item-chip')];
+  return {
+    hechas: step.querySelectorAll('.item-done-strip .item-chip-done').length,
+    pendientes: step.querySelectorAll('.item-next-list .item-chip-next').length,
+    stripArribaDelTitulo: strip.bottom <= heading.top + 1,
+    listaDebajoDeLaSuperficie: lista.top >= stage.bottom - 1,
+    stripAlineadaAlGrid: Math.abs(strip.left - stage.left) < 2,
+    listaAlineadaAlGrid: Math.abs(lista.left - stage.left) < 2,
+    // Ningún chip puede quedar cortado por caer en una columna automática angosta.
+    chipsRecortados: chips.filter(chip => chip.scrollWidth > chip.clientWidth + 1).length,
+    miniaturaVisible: !!step.querySelector('.item-done-strip .item-chip-thumb img'),
+    ticketEnChip: !!step.querySelector('.item-done-strip .item-chip-tickets'),
+  };
+});
+if (desktopContexto.hechas !== 1 || desktopContexto.pendientes !== 2 || !desktopContexto.stripArribaDelTitulo ||
+    !desktopContexto.listaDebajoDeLaSuperficie || !desktopContexto.stripAlineadaAlGrid || !desktopContexto.listaAlineadaAlGrid ||
+    desktopContexto.chipsRecortados !== 0 || !desktopContexto.miniaturaVisible || !desktopContexto.ticketEnChip) {
+  fails.push(`contexto de avance desktop mal ubicado en el grid ${JSON.stringify(desktopContexto)}`);
+}
 for (let i = 0; i < 3; i++) { await dpage.click('.flow-step.active .step-secondary'); await waitCurtain(dpage); }
 await dpage.locator('#stars button').nth(4).click();
 if (!((await dpage.textContent('#recStart')) || '').includes('+3 tickets')) fails.push('grabar audio no recuerda que suma 3 tickets');

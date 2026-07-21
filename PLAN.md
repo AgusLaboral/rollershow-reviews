@@ -478,3 +478,18 @@ Agus marcó que el bloque de "sumar otra foto o video" leía como tres piezas su
 - [x] Jerarquía preservada: contorno y fondo tenue en Rojo Teja, nunca relleno sólido — `Continuar` sigue siendo la única primaria. Alto mínimo 62 px, foco visible propio y clic sonoro (se agregó `label.upload-more-action` al selector de sonido).
 - [x] `verify-reviews.mjs` gana una aserción estructural: exige que sea un `<label>` con exactamente un input propio, cero `.upload-source` sueltos, cursor pointer, borde, autodescripción y fondo distinto al de la primaria. Así no puede volver a partirse en piezas.
 - [x] Batería completa verde en el prototipo y verificación funcional contra la preview publicada del port.
+
+## 55. Progreso visible entre cortinas — 2026-07-21
+
+Feedback de Nicolás tras ver a Cami usar la app: al pasar de un ambiente al siguiente parecía que no había pasado nada ("es como que completaste una y te aparece de vuelta; ah, no se cargó"). Todas las pantallas se ven igual y el contador "N de M" no alcanzaba. Elogió los tickets ("quedó espectacular"), así que esos no se tocaron.
+
+- [x] **Título producto + lugar**: `Blackout en Escritorio` en vez de `Escritorio`. Nicolás: el ambiente que carga el vendedor no siempre es confiable, el producto ancla la identificación. Se saca el prefijo `Roller` (todos lo son) y el subtítulo queda sólo con la tela para no repetir.
+- [x] **Contexto de avance**: las cortinas ya mostradas se colapsan arriba con su miniatura real y sus tickets; las que faltan van abajo en gris. Ambas tiras son horizontales (en vertical, la lista de pendientes empujaba el CTA 21 px fuera del fold en desktop bajo de 1165×674).
+- [x] **Los chips son clickeables**: volver a una cortina ya mostrada para sumarle más contenido, o adelantarse. Sin la miniatura vacía en las pendientes, que no informaba y le robaba ancho al nombre.
+- [x] **Acento causal**: al asentarse la cortina, la recién completada entra con un pulso en la tira. No se anima el colapso del paso saliente porque ocurriría debajo del paño, invisible.
+- [x] **Se retira el contador "N de M"**: con el contexto pasaba a ser el mismo dato dos veces. Se conserva como región viva para lector de pantalla, anunciando el nombre real del paso en vez de un número.
+- [x] **Regla de Agus respetada**: el contexto es contexto, nunca protagonista. Medido en 320/390/1280: el CTA primario siempre dentro del fold, cero scroll en la decisión activa, y la lista de pendientes siempre después del CTA.
+
+**Bug encontrado y corregido en la ronda**: en desktop el grid de 12 columnas asigna filas explícitas; las tiras nuevas caían en celdas libres y salían recortadas debajo de la superficie. Se les asignó fila propia (contexto 1, título 2, superficie 3, acciones 4, pendientes 5) y `verify-reviews.mjs` gana una prueba de ubicación y recorte para que no vuelva.
+
+**Nota de método**: la falla de cuadros del video de Gracias que apareció durante la batería era carga de la máquina (76 procesos de Chrome de Agus abiertos), no una regresión: se comprobó con un A/B contra la versión anterior bajo la misma carga y con tres corridas limpias del test dedicado.
