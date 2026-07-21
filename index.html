@@ -37,6 +37,11 @@ body{
   line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;display:block}
+/* Texto de interfaz no seleccionable: en mobile, arrastrar para scrollear sobre un
+   título o un CTA arranca una selección de texto en vez de mover la pantalla. Lo que
+   la persona escribe y el texto legal de las bases siguen siendo seleccionables. */
+body{-webkit-user-select:none;user-select:none}
+input,textarea,.bases-txt,.bases-txt *{-webkit-user-select:text;user-select:text}
 button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 a{color:var(--accent-deep)}
 /* Las animaciones corren siempre, no se gatean por reduced-motion (regla del proyecto). */
@@ -669,7 +674,7 @@ body{min-height:100vh;min-height:100dvh}
 .flow-step.active.entering .item-done-strip{opacity:0;transform:translateY(-8px)}
 .flow-step.active.entering .item-next-list{opacity:0;transform:translateY(8px)}
 
-.item-chip{display:flex;align-items:center;gap:8px;min-height:40px;padding:5px 10px 5px 5px;
+.item-chip{display:flex;align-items:center;gap:8px;min-height:44px;padding:5px 10px 5px 5px;
   border:1px solid var(--border);border-radius:11px;background:var(--bg-elev);color:var(--fg-soft);
   font-size:.76rem;font-weight:700;line-height:1.15;text-align:left;cursor:pointer;
   transition:border-color .18s,background .18s,opacity .18s,transform .18s}
@@ -782,7 +787,10 @@ body{min-height:100vh;min-height:100dvh}
 .confirm-step .consent-action:focus-visible{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
 .confirm-step .consent-action svg{width:18px;height:18px;flex:none}
 .confirm-step .consent-note{margin:10px auto 0;max-width:46ch;color:var(--fg-mute);font-size:.76rem;line-height:1.4;text-align:center}
-.confirm-step .consent-note a{display:inline-block;min-height:32px;padding:6px 4px;color:var(--accent-deep);font-weight:700;text-underline-offset:3px}
+.confirm-step .consent-note a{position:relative;display:inline-block;min-height:32px;padding:6px 4px;color:var(--accent-deep);font-weight:700;text-underline-offset:3px}
+/* El área táctil llega a 44 px sin estirar la línea: si el link creciera de verdad,
+   abriría un hueco en medio del párrafo de consentimiento. */
+.confirm-step .consent-note a::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
 .experience-step .step-actions,.confirm-step .step-actions{margin-top:20px;padding-top:0}
 
 /* Un único recorrido: la cortina roller es el gesto; escala y desplazamiento sostienen la continuidad. */
@@ -883,6 +891,12 @@ body.done #flowApp{display:none}
      si no cae en celdas libres y se recorta contra el ancho automático. */
   .item-step .item-done-strip{grid-column:1 / -1;grid-row:1;margin-bottom:0}
   .item-step .item-next-list{grid-column:1 / -1;grid-row:5;margin-top:2px}
+  /* En desktop bajo se aprieta el aire del contexto, nunca la foto del producto:
+     el contexto es lo prescindible cuando falta alto. */
+  @media (max-height:760px){
+    .item-step .step-inner{row-gap:7px}
+    .item-step .item-next-list{margin-top:0}
+  }
   .item-step .item-heading{grid-column:1 / -1;grid-row:2}
   .item-step .item-stage{grid-column:1 / -1;grid-row:3;height:clamp(280px,46dvh,420px);margin-top:0}
   .item-step .item-visual,.item-step .item-task{grid-area:stage}

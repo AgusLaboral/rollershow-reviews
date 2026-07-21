@@ -493,3 +493,17 @@ Feedback de Nicolás tras ver a Cami usar la app: al pasar de un ambiente al sig
 **Bug encontrado y corregido en la ronda**: en desktop el grid de 12 columnas asigna filas explícitas; las tiras nuevas caían en celdas libres y salían recortadas debajo de la superficie. Se les asignó fila propia (contexto 1, título 2, superficie 3, acciones 4, pendientes 5) y `verify-reviews.mjs` gana una prueba de ubicación y recorte para que no vuelva.
 
 **Nota de método**: la falla de cuadros del video de Gracias que apareció durante la batería era carga de la máquina (76 procesos de Chrome de Agus abiertos), no una regresión: se comprobó con un A/B contra la versión anterior bajo la misma carga y con tres corridas limpias del test dedicado.
+
+## 56. Auditoría con el criterio de Agus — 2026-07-21
+
+Pase de juicio completo sobre el sitio vivo (portada, 4 cortinas, experiencia, confirmación y Gracias), con evidencia medida, no a ojo.
+
+**Limpio**: cero tells anti-IA en las 8 pantallas (sin middots, em-dashes, estrellas ASCII ni checks decorativos), cero overflow horizontal, y contraste WCAG en regla en todo el recorrido (medido calculando el ratio real contra el fondo efectivo de cada texto).
+
+**Corregido**:
+- [x] **Texto de interfaz seleccionable** — violaba el principio 14 de las reglas de diseño ("títulos, CTAs y labels con `user-select:none`: seleccionar sin querer rompe el scroll táctil"). Nunca se había aplicado en este proyecto. Ahora el chrome no es seleccionable y sí lo siguen siendo el campo de opinión y el texto legal de las bases.
+- [x] **Chips del contexto a 40 px** — por debajo del mínimo táctil de 44 px que fija el propio proyecto. Introducidos en la ronda anterior. Subidos a 44.
+- [x] **`Ver bases del sorteo` a 32 px** — preexistente. Se amplía el área táctil a 44 px con un pseudo-elemento, sin estirar la línea: hacerlo crecer de verdad abría un hueco en medio del párrafo de consentimiento. Verificado que no pisa el CTA de arriba y que el modal sigue abriendo.
+- [x] Los 4 px extra de los chips empujaban el CTA 5 px fuera del fold en desktop bajo (1165×674). Se compensó apretando el aire del contexto, nunca la foto del producto: cuando falta alto, lo prescindible es el contexto.
+
+**Herramienta**: queda `_scratch/auditoria.mjs` (efímero) como pase de barrido; se le corrigieron dos falsos positivos para que sea confiable — ahora entiende que un label cuyo control real es un campo grande no es el target táctil, y que el área táctil puede ampliarse con un pseudo-elemento sin cambiar el rectángulo visible.
