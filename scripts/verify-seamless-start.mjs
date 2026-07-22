@@ -8,7 +8,7 @@ for (const viewport of [{ name:'desktop', width:1440, height:900 }, { name:'mobi
   const page = await browser.newPage({ viewport });
   let videoRequestedAt = 0;
   const navigationStartedAt = Date.now();
-  await page.route('**/rs-reviews-scene-01-*-kling-v001.mp4', async route => {
+  await page.route('**/rs-premio-celebracion-*.mp4', async route => {
     if (!videoRequestedAt) videoRequestedAt = Date.now();
     await new Promise(resolve => setTimeout(resolve, 1200));
     await route.continue();

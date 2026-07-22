@@ -507,3 +507,21 @@ Pase de juicio completo sobre el sitio vivo (portada, 4 cortinas, experiencia, c
 - [x] Los 4 px extra de los chips empujaban el CTA 5 px fuera del fold en desktop bajo (1165×674). Se compensó apretando el aire del contexto, nunca la foto del producto: cuando falta alto, lo prescindible es el contexto.
 
 **Herramienta**: queda `_scratch/auditoria.mjs` (efímero) como pase de barrido; se le corrigieron dos falsos positivos para que sea confiable — ahora entiende que un label cuyo control real es un campo grande no es el target táctil, y que el área táctil puede ampliarse con un pseudo-elemento sin cambiar el rectángulo visible.
+
+## 57. Premios reales y video de fondo del premio — 2026-07-22
+
+Agus consiguió los premios reales (productos Planeta Eco) y mandó fotos. Se reemplazó todo el material representativo por material derivado de los productos verdaderos.
+
+- [x] **Imágenes del premio generadas desde las fotos reales**: `gpt-image-2` vía la API OpenAI de Rollershow (`ROLLERSHOW_OPENAI_API_KEY`), pasando las 5 fotos de Agus como referencia. Se excluyó a mano la manta terracota, que está en las fotos pero no es premio.
+- [x] **Recorte con `rembg`** (segmentación real), usando `remove_lody_model_backgrounds.py` que ya existía en `Documents\Agente de diseño\scripts\`. Muy superior a keying manual: conserva flecos y muselina.
+- [x] **Video de fondo con Kling 2.5 Turbo**, 10 s, movimiento de cámara real con paralaje (no zoom ni ping-pong). Desktop nativo 1280×720@24; mobile recortado a 9:16 y escalado a 720×1280. **Se mantienen los 24 fps nativos**: interpolar a 30 sería inventar cadencia, y ya está registrado que más fps declarados pueden dar menos fluidez real.
+- [x] **Composición**: el fondo es atmósfera (confeti cayendo, producto suave abajo) y el primer plano son los premios reales recortados y nítidos. Si los dos son bodegón nítido, compiten y no se mira ninguno.
+- [x] Se descartó la variante "vitrina" para la portada: preciosa pero oscura, obligaría a invertir todo el texto a blanco. Queda generada en `_scratch/videos-premio/final/` por si se quiere probar.
+- [x] **Premios actualizados en `SORTEO`**: `2 mantas, 4 almohadones, 1 alfombra y 1 pie de cama` reemplaza al viejo `3 almohadones y 2 alfombras premium`, que era falso y quedaba al lado de las fotos reales.
+- [x] Se eliminaron los assets de `scene-01`, ya sin uso (6,1 MB).
+
+**Peso**: el shell mobile bajó de 366 a 300 KB y el video de 1652 a 835 KB. En vivo: 0 cuadros perdidos en mobile, 1/132 en desktop.
+
+**Bug de test corregido**: `verify-reviews.mjs` armaba el texto de premios con su propia regla (`join(' y ')`) en vez de leer el que arma la app (`listaNatural`). Con dos premios coincidía por casualidad; con cuatro se rompió. Ahora lee `premiosTexto` de la app.
+
+**Pendiente de decisión de Agus**: pasar el copy de premios de lista de objetos sueltos a los tres sets por ganador ("1er premio: manta + 2 almohadones..."), que además destraba las Bases (exigen saber qué recibe cada ganador).

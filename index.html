@@ -945,17 +945,17 @@ body.done #flowApp{display:none}
     <section class="flow-step intro-step active" data-flow-step="intro" aria-hidden="false">
       <div class="intro-scene">
         <picture aria-hidden="true">
-          <source media="(max-width:799px)" srcset="img/video/rs-reviews-scene-01-living-wide-mobile.webp" />
-          <img class="intro-base" src="img/video/rs-reviews-scene-01-living-wide-desktop.webp" width="1440" height="810" alt="" fetchpriority="high" />
+          <source media="(max-width:799px)" srcset="img/video/rs-premio-celebracion-mobile-poster.webp" />
+          <img class="intro-base" src="img/video/rs-premio-celebracion-desktop-poster.webp" width="1440" height="810" alt="" fetchpriority="high" />
         </picture>
-        <video class="scene-video" data-scene-video data-seamless-start data-soft-loop data-src-desktop="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" data-src-mobile="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" muted playsinline preload="auto" aria-hidden="true">
-          <source media="(max-width:799px)" src="img/video/rs-reviews-scene-01-mobile-kling-v001.mp4" type="video/mp4" />
-          <source src="img/video/rs-reviews-scene-01-desktop-kling-v001.mp4" type="video/mp4" />
+        <video class="scene-video" data-scene-video data-seamless-start data-soft-loop data-src-desktop="img/video/rs-premio-celebracion-desktop.mp4" data-src-mobile="img/video/rs-premio-celebracion-mobile.mp4" muted playsinline preload="auto" aria-hidden="true">
+          <source media="(max-width:799px)" src="img/video/rs-premio-celebracion-mobile.mp4" type="video/mp4" />
+          <source src="img/video/rs-premio-celebracion-desktop.mp4" type="video/mp4" />
         </video>
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
-        <div class="intro-prize-photo"><img id="introPrizeImage" src="img/hero-premios-sorteo-v3.webp" width="1000" height="666" alt="" /></div>
+        <div class="intro-prize-photo"><img id="introPrizeImage" src="img/premios-reales-cutout.webp" width="1100" height="394" alt="" /></div>
         <div class="intro-copy-block">
           <h1 id="flowHeroTitle">Compartí tu cortina y participá del sorteo.</h1>
           <p class="intro-lead" id="introPrizeHook">Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.</p>
@@ -1290,10 +1290,12 @@ const SORTEO = {
   fecha: "31 de julio",
   ganadores: 3,
   premios: [
-    { cantidad:3, nombre:"almohadones" },
-    { cantidad:2, nombre:"alfombras premium" }
+    { cantidad:2, nombre:"mantas" },
+    { cantidad:4, nombre:"almohadones" },
+    { cantidad:1, nombre:"alfombra" },
+    { cantidad:1, nombre:"pie de cama" }
   ],
-  imagenPremios: "img/hero-premios-sorteo-v3.webp"
+  imagenPremios: "img/premios-reales-cutout.webp"
 };
 
 function listaNatural(partes) {
