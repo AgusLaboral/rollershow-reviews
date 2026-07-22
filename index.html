@@ -562,8 +562,11 @@ body{min-height:100vh;min-height:100dvh}
 .intro-step h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.05rem,9vw,3.25rem);line-height:.98;letter-spacing:-.035em;max-width:14ch}
 .intro-lead,.intro-prize{max-width:43ch;color:var(--fg-soft);font-family:var(--font-body);font-size:.94rem;line-height:1.4}
 .intro-lead{margin-top:14px}
-.intro-prize{margin-top:3px;font-weight:650}
-.intro-prize strong{display:block;color:inherit;font-weight:inherit}
+/* Los tres premios, uno por ganador. Lista editorial, no tabla ni chips: el puesto
+   se distingue por peso y color, no por una etiqueta con fondo. */
+.intro-prize{margin-top:6px;list-style:none;padding:0;display:flex;flex-direction:column;gap:2px}
+.intro-prize li{font-size:.82rem;line-height:1.35;color:var(--fg-soft)}
+.intro-prize b{color:var(--cta-deep);font-weight:800}
 .intro-date{font-size:.78rem;color:var(--fg-mute);line-height:1.4;margin-top:9px}.intro-date strong{color:inherit;font-weight:650}
 .intro-save-note{align-self:flex-start;width:min(100%,270px);color:var(--fg-mute);font-size:.72rem;line-height:1.35;text-align:left}
 
@@ -959,7 +962,7 @@ body.done #flowApp{display:none}
         <div class="intro-copy-block">
           <h1 id="flowHeroTitle">Compartí tu cortina y participá del sorteo.</h1>
           <p class="intro-lead" id="introPrizeHook">Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.</p>
-          <p class="intro-prize" id="introPrizeCopy"><strong>Podés ganar 3 almohadones y 2 alfombras premium.</strong></p>
+          <ul class="intro-prize" id="introPrizeCopy"></ul>
           <p class="intro-date" id="introDateCopy"><strong>3 ganadores.</strong> En vivo por Instagram el 31 de julio.</p>
           <div class="step-actions">
             <button class="step-primary" id="startFlow" type="button">Participar ahora
@@ -1014,7 +1017,7 @@ body.done #flowApp{display:none}
           <div class="confirm-score" aria-live="polite">
             <div class="confirm-chances"><strong id="confirmTickets">0</strong><span><svg class="confirm-ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6Z"/><path d="M15 5v2.4M15 10.6v2.8M15 16.6V19"/></svg><b id="confirmTicketsLabel">tickets para el sorteo</b></span></div>
             <p class="confirm-proof" id="confirmProof"></p>
-            <p class="confirm-prize-reminder" id="confirmPrizeReminder">En julio sorteamos <strong>3 almohadones y 2 alfombras premium.</strong></p>
+            <p class="confirm-prize-reminder" id="confirmPrizeReminder"></p>
           </div>
         </div>
         <div class="confirm-actions">
@@ -1289,11 +1292,12 @@ const SORTEO = {
   mes: "julio",
   fecha: "31 de julio",
   ganadores: 3,
+  /* Un set por ganador. El Decreto 961/2017 exige informar qué recibe cada
+     ganador, así que esta es la forma que además destraba las Bases. */
   premios: [
-    { cantidad:2, nombre:"mantas" },
-    { cantidad:4, nombre:"almohadones" },
-    { cantidad:1, nombre:"alfombra" },
-    { cantidad:1, nombre:"pie de cama" }
+    { puesto:"1er premio", contenido:"manta crudo y beige y dos almohadones con relieve" },
+    { puesto:"2do premio", contenido:"manta beige y dos almohadones crudos" },
+    { puesto:"3er premio", contenido:"alfombra de algodón rústico y pie de cama" }
   ],
   imagenPremios: "img/premios-reales-cutout.webp"
 };
@@ -1302,7 +1306,10 @@ function listaNatural(partes) {
   if (partes.length < 2) return partes[0] || "premios de decoración";
   return `${partes.slice(0,-1).join(", ")} y ${partes.at(-1)}`;
 }
-const premiosTexto = listaNatural(SORTEO.premios.map(premio => `${premio.cantidad} ${premio.nombre}`));
+/* Resumen corto para los lugares donde no entra el detalle, y el detalle por
+   ganador para portada y Bases. */
+const premiosResumen = `${SORTEO.premios.length} ${SORTEO.premios.length === 1 ? "premio" : "premios"} de mantas y almohadones`;
+const premiosDetalle = SORTEO.premios.map(premio => `${premio.puesto}: ${premio.contenido}`).join(". ") + ".";
 const ganadoresTexto = `${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "persona" : "personas"}`;
 
 /* ===========================================================================
@@ -1345,14 +1352,18 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
 $("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, compartí tu cortina y participá del sorteo.`;
 $("#introPrizeHook").textContent = "Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.";
-$("#introPrizeCopy strong").textContent = `Podés ganar ${premiosTexto}.`;
+$("#introPrizeCopy").replaceChildren(...SORTEO.premios.map(premio => {
+  const fila = document.createElement("li");
+  fila.innerHTML = `<b>${premio.puesto}</b> ${premio.contenido}`;
+  return fila;
+}));
 $("#introDateCopy").innerHTML = `<strong>${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "ganador" : "ganadores"}.</strong> En vivo por Instagram el ${SORTEO.fecha}.`;
 $("#introPrizeImage").src = SORTEO.imagenPremios;
-$("#introPrizeImage").alt = `Premios del sorteo: ${premiosTexto}`;
-$("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosTexto}.`;
+$("#introPrizeImage").alt = `Premios del sorteo. ${premiosDetalle}`;
+$("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosResumen}.`;
 $("#instagramRequirement").innerHTML = `Es un requisito del sorteo. Lo hacemos <strong>en vivo el ${SORTEO.fecha}</strong> y anunciamos a ${ganadoresTexto} en <strong>@cortinas.rollershow</strong>.`;
 $("#thanksDrawDate").innerHTML = `Sorteo <b>en vivo el ${SORTEO.fecha}</b> por Instagram. Ahí anunciamos a ${ganadoresTexto}.`;
-$("#basesPrizeText").textContent = `Este mes se sortean ${premiosTexto} entre ${ganadoresTexto}. El sorteo se realiza en vivo el ${SORTEO.fecha}, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Las personas ganadoras serán contactadas por WhatsApp.`;
+$("#basesPrizeText").textContent = `Este mes se sortean ${SORTEO.premios.length} premios entre ${ganadoresTexto}, uno por persona. ${premiosDetalle} El sorteo se realiza en vivo el ${SORTEO.fecha}, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Las personas ganadoras serán contactadas por WhatsApp.`;
 $("#exitDrawCopy").textContent = `Te falta confirmar para entrar al sorteo del ${SORTEO.fecha} con todo lo que ya sumaste.`;
 
 function configurarVendedor() {

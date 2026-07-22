@@ -61,8 +61,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     active: document.querySelector('.flow-step.active')?.dataset.flowStep,
     primaries: document.querySelectorAll('.intro-step.active .step-primary').length,
-    prizes: document.body.innerText.includes('2 mantas, 4 almohadones, 1 alfombra y 1 pie de cama'),
-    prizeConfig: premiosTexto,  // el texto real que arma la app (listaNatural), no una regla paralela
+    prizes: SORTEO.premios.length === 3 && SORTEO.premios.every(p => p.puesto && p.contenido),
+    prizeConfig: premiosDetalle,  // el texto real que arma la app, no una regla paralela
     prizeVisual: getComputedStyle(document.querySelector('.intro-prize-photo')).display !== 'none',
     introTitle: document.querySelector('#flowHeroTitle')?.textContent,
     introHook: document.querySelector('#introPrizeHook')?.textContent,
@@ -102,8 +102,8 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
-  if (initial.prizeConfig !== '2 mantas, 4 almohadones, 1 alfombra y 1 pie de cama' || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu cortina') ||
-      !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') || !initial.introPrize?.includes('Podés ganar') ||
+  if (!initial.prizeConfig?.includes('1er premio:') || !initial.prizeConfig?.includes('3er premio:') || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu cortina') ||
+      !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') || !initial.introPrize?.includes('1er premio') || !initial.introPrize?.includes('3er premio') ||
       !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
   if (initial.introType.families > 2 || !initial.introType.bodySame || initial.introType.prizeColor === initial.introType.ctaColor) {
     fails.push(`${vp.w}px: la portada vuelve a mezclar demasiadas voces tipográficas ${JSON.stringify(initial.introType)}`);
@@ -350,7 +350,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       },
     }));
     if (confirmBefore.authorized || confirmBefore.redundantSubmit || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
-        confirmBefore.proof !== 'Cada ticket es una chance más de ganar.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('2 mantas, 4 almohadones, 1 alfombra y 1 pie de cama') ||
+        confirmBefore.proof !== 'Cada ticket es una chance más de ganar.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 premios de mantas y almohadones') ||
         confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.headerBackground !== 'rgba(0, 0, 0, 0)' || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {

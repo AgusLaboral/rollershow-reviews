@@ -525,3 +525,15 @@ Agus consiguió los premios reales (productos Planeta Eco) y mandó fotos. Se re
 **Bug de test corregido**: `verify-reviews.mjs` armaba el texto de premios con su propia regla (`join(' y ')`) en vez de leer el que arma la app (`listaNatural`). Con dos premios coincidía por casualidad; con cuatro se rompió. Ahora lee `premiosTexto` de la app.
 
 **Pendiente de decisión de Agus**: pasar el copy de premios de lista de objetos sueltos a los tres sets por ganador ("1er premio: manta + 2 almohadones..."), que además destraba las Bases (exigen saber qué recibe cada ganador).
+
+## 58. Premios por sets, uno por ganador — 2026-07-22
+
+Agus aprobó pasar de lista de objetos sueltos a tres sets. Además de leerse mejor, es lo que exige el Decreto 961/2017: informar qué recibe cada ganador.
+
+- [x] `SORTEO.premios` pasa de `{cantidad, nombre}` a `{puesto, contenido}`: 1er premio manta crudo y beige y dos almohadones con relieve; 2do premio manta beige y dos almohadones crudos; 3er premio alfombra de algodón rústico y pie de cama.
+- [x] Tres derivados según el lugar: `premiosResumen` (corto, para confirmación donde manda el número de tickets), `premiosDetalle` (por ganador, para Bases y el alt de la imagen) y la lista de la portada.
+- [x] Portada: lista editorial de tres líneas, el puesto en Rojo Teja por peso y color. No es tabla ni chips con fondo — eso sería un tell. Coincide visualmente con los tres sets de la imagen de premios.
+- [x] Se eliminó `premiosTexto`: unía los tres contenidos con "y" y quedaba ilegible.
+- [x] Fold verificado con la línea extra: CTA a 573 px de 700 en 320×700, cero scroll.
+
+**Destraba las Bases**: el texto legal ahora dice "3 premios entre 3 personas, uno por persona" con el detalle de cada uno, que era uno de los faltantes que impedían publicarlas.
