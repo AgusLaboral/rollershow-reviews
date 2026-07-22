@@ -537,3 +537,12 @@ Agus aprobó pasar de lista de objetos sueltos a tres sets. Además de leerse me
 - [x] Fold verificado con la línea extra: CTA a 573 px de 700 en 320×700, cero scroll.
 
 **Destraba las Bases**: el texto legal ahora dice "3 premios entre 3 personas, uno por persona" con el detalle de cada uno, que era uno de los faltantes que impedían publicarlas.
+
+## 59. Placeholders animados por ambiente + regla de contenido al CDN — 2026-07-22
+
+- [x] **Cada placeholder es ahora un video del propio ambiente**, no una foto quieta: se animó con Kling 2.5 Turbo la **misma foto de referencia** que ya usaba cada ítem, así se conserva la regla dura de correspondencia ambiente–imagen (Living con living, Dormitorio con camas, etc.). Reusar videos genéricos de cortinas la habría roto.
+- [x] Siguen **desenfocados**, igual que las fotos que reemplazan: el ejemplo no puede confundirse con la foto del cliente. El desenfoque además los comprime a 60–80 KB cada uno.
+- [x] Carga diferida: usan `data-scene-video`, así el mecanismo existente los activa **sólo al entrar al paso**. El shell no crece (sigue en 300 KB) y se retiran solos al subir contenido, igual que la referencia.
+- [x] **Los binarios de contenido dejan de ir a git**: los 8 archivos viven en `cdn.rollershow.com.ar/web/resenas/` y el código los referencia por URL absoluta, en los dos repos. Pedido explícito de Agus, ya escrito en el `CLAUDE.md` de Nicolás ("cero binarios en git") y ahora también en los configs globales y en memoria.
+
+**Se descartaron los videos de cortinas existentes** (`black-out-pesada-negro`, `sun-screen-5-lino`, las tres de `cortina-motorizada`): son buenos, pero sólo cubren dos ambientes y romperían la correspondencia. Quedan disponibles para otros usos.

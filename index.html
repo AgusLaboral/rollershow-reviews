@@ -592,6 +592,12 @@ body{min-height:100vh;min-height:100dvh}
 .curtain-photo>.reference-media{transform:scale(1.08);opacity:.88;transition:transform .9s cubic-bezier(.22,1,.36,1)}
 .flow-step.active .curtain-photo>.reference-media{transform:scale(1.055)}
 .item-step.has-media .reference-media{opacity:0}
+/* El ejemplo del ambiente, vivo. Entra por encima de la foto sólo cuando puede
+   reproducir, así nunca se ve un hueco mientras carga. */
+.reference-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transform:scale(1.055);transition:opacity .5s ease-out}
+.reference-video.is-ready{opacity:.88}
+.item-step.has-media .reference-video{opacity:0}
 .stage-user-media{position:absolute;inset:0;z-index:0;transform:scale(1.025);opacity:0;animation:userMediaReveal .72s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes userMediaReveal{to{transform:scale(1);opacity:1}}
 .curtain-photo::before{content:"";position:absolute;z-index:1;inset:0;background:
@@ -1334,6 +1340,17 @@ const PRESUPUESTO = {
   ]
 };
 
+
+/* Placeholder animado por ambiente: el mismo ambiente de la foto de referencia,
+   pero vivo. Sigue desenfocado para que se lea como ejemplo y no como la foto
+   del cliente. Se carga sólo al entrar al paso (data-scene-video). */
+const PLACEHOLDER_VIDEO = {
+  1: { video:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-living-6a60e98349216.mp4", poster:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-living-poster-6a60e983b63a2.webp" },
+  2: { video:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-dormitorio-6a60e9842e5ec.mp4", poster:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-dormitorio-poster-6a60e984be957.webp" },
+  3: { video:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-escritorio-6a60e98532666.mp4", poster:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-escritorio-poster-6a60e98589fe9.webp" },
+  4: { video:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-homeoffice-6a60e985f05eb.mp4", poster:"https://cdn.rollershow.com.ar/web/resenas/rs-ph-homeoffice-poster-6a60e98654895.webp" },
+};
+
 /* Tickets. OJO(Nico): en producción los tickets se recalculan SIEMPRE server-side
    al recibir el POST; lo del cliente es solo feedback visual. */
 const TICKETS = { foto: 1, video: 1, audio: 3, estrellas: 1, texto: 1 };
@@ -1588,7 +1605,7 @@ PRESUPUESTO.items.forEach((item, index) => {
     <div class="item-stage">
       <div class="item-visual">
         <article class="curtain-card">
-          <div class="curtain-photo"><img class="reference-media" src="${blurredReference}" width="1024" height="1024" alt="Ejemplo de ${ambiente}" /></div>
+          <div class="curtain-photo"><img class="reference-media" src="${blurredReference}" width="1024" height="1024" alt="Ejemplo de ${ambiente}" />${PLACEHOLDER_VIDEO[item.id] ? `<video class="reference-video" data-scene-video data-soft-loop muted playsinline preload="none" aria-hidden="true" poster="${PLACEHOLDER_VIDEO[item.id].poster}" data-src-desktop="${PLACEHOLDER_VIDEO[item.id].video}" data-src-mobile="${PLACEHOLDER_VIDEO[item.id].video}"></video>` : ""}</div>
         </article>
       </div>
       <div class="item-task">
