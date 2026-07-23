@@ -117,7 +117,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.includes('participación') ||
-      !initial.copy.consent?.includes('audio') || !initial.copy.consent?.includes('Autorizar y confirmar') ||
+      !initial.copy.consent?.includes('audio') || !initial.copy.consent?.includes('Autorizar y participar') ||
       !initial.copy.consent?.includes('anónima') || !initial.copy.consent?.includes('no publicamos tu nombre') ||
       !initial.copy.google?.includes('Duplicá tus tickets')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);

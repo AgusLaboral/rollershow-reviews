@@ -561,7 +561,7 @@ Feedback de Nicolás, más pedidos de Agus en la misma pasada.
 
 **Premio genérico.** Los productos cambian mes a mes, así que la comunicación dice `3 sets de textiles premium` (`SORTEO.premioGenerico`). El detalle por ganador sigue en `SORTEO.premios` pero se publica sólo en las Bases, que es donde el Decreto 961/2017 lo exige.
 
-**Cierre.** El CTA pasó de `Autorizar el uso y confirmar mi participación` (barra de 452 px, dos líneas en mobile) a `Autorizar y confirmar`, compacto en desktop. La desalineación que marcó Nicolás era real y medible: el bloque de acciones usaba `align-self:center` y arrancaba 33 px más abajo que el de tickets. Ahora ambos arrancan en 228,9 px y la letra chica comparte el eje izquierdo del botón. También se corrigió el tracking negativo que hacía que la etiqueta se montara sobre el número de tickets.
+**Cierre.** El CTA pasó de `Autorizar el uso y confirmar mi participación` (barra de 452 px, dos líneas en mobile) a `Autorizar y participar`, compacto en desktop. La desalineación que marcó Nicolás era real y medible: el bloque de acciones usaba `align-self:center` y arrancaba 33 px más abajo que el de tickets. Ahora ambos arrancan en 228,9 px y la letra chica comparte el eje izquierdo del botón. También se corrigió el tracking negativo que hacía que la etiqueta se montara sobre el número de tickets.
 
 **Letra chica.** Explicita que el material se usa sólo para mostrarle a otros clientes cómo quedan las cortinas y que la publicación es **anónima**, sin nombre ni datos. Las Bases se reescribieron en la misma línea, con un apartado de datos personales y la aclaración de que los premios varían mes a mes. Sigue pendiente, sin inventar: la vía de participación sin compra y quién paga el envío del premio.
 
