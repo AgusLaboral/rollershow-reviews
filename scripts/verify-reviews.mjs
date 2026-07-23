@@ -102,8 +102,12 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.active !== 'intro') fails.push(`${vp.w}px: la portada no es el primer paso`);
   if (initial.primaries !== 1) fails.push(`${vp.w}px: la portada tiene ${initial.primaries} CTAs primarios`);
   if (!initial.prizes) fails.push(`${vp.w}px: faltan los premios concretos`);
+  // La portada nombra el premio en genérico (los productos cambian mes a mes) y
+  // el detalle por ganador queda sólo en las Bases.
   if (!initial.prizeConfig?.includes('1er premio:') || !initial.prizeConfig?.includes('3er premio:') || !initial.prizeVisual || !initial.introTitle?.toLowerCase().includes('compartí tu cortina') ||
-      !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') || !initial.introPrize?.includes('1er premio') || !initial.introPrize?.includes('3er premio') ||
+      !initial.introTitle?.toLowerCase().includes('sorteo') || !initial.introHook?.includes('Mostranos cómo quedó') ||
+      !initial.introPrize?.includes('textiles premium') || !initial.introPrize?.includes('uno para cada ganador') ||
+      /1er premio|2do premio|3er premio/.test(initial.introPrize || '') ||
       !initial.introSaved?.includes('avance queda guardado')) fails.push(`${vp.w}px: la portada no explica propósito, participación, premio y continuidad ${JSON.stringify(initial)}`);
   if (initial.introType.families > 2 || !initial.introType.bodySame || initial.introType.prizeColor === initial.introType.ctaColor) {
     fails.push(`${vp.w}px: la portada vuelve a mezclar demasiadas voces tipográficas ${JSON.stringify(initial.introType)}`);
@@ -113,7 +117,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
   if (initial.bannedCopy) fails.push(`${vp.w}px: el flujo conserva separadores de copy vetados`);
   if (initial.copy.rating !== '¿Cómo fue tu experiencia?' || !initial.copy.audio?.includes('contarlo con tu voz') ||
       !initial.copy.text?.includes('agregar una frase') || !initial.copy.confirm?.includes('participación') ||
-      !initial.copy.consent?.includes('audios') || !initial.copy.consent?.includes('confirmar mi participación') || !initial.copy.google?.includes('Duplicá tus tickets')) {
+      !initial.copy.consent?.includes('audio') || !initial.copy.consent?.includes('Autorizar y confirmar') ||
+      !initial.copy.consent?.includes('anónima') || !initial.copy.consent?.includes('no publicamos tu nombre') ||
+      !initial.copy.google?.includes('Duplicá tus tickets')) {
     fails.push(`${vp.w}px: el recorrido conserva copy genérico o incompleto ${JSON.stringify(initial.copy)}`);
   }
   if (!initial.copy.ratingAction?.includes('+1 ticket') || !initial.copy.textAction?.includes('+1 ticket') ||
@@ -350,7 +356,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
       },
     }));
     if (confirmBefore.authorized || confirmBefore.redundantSubmit || confirmBefore.rollers !== 3 || confirmBefore.prizes !== 1 || confirmBefore.videos !== 1 ||
-        confirmBefore.proof !== 'Cada ticket es una chance más de ganar.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 premios de mantas y almohadones') ||
+        confirmBefore.proof !== 'Cada ticket es una chance más de ganar.' || confirmBefore.fabricatedAverage || !confirmBefore.concretePrizes?.includes('3 sets de textiles premium') ||
         confirmBefore.scoreBackground !== 'rgba(0, 0, 0, 0)' || !confirmBefore.compactHeader || confirmBefore.headerBackground !== 'rgba(0, 0, 0, 0)' || confirmBefore.persistentRollers !== 0 || !confirmBefore.hero.src?.includes('scene-02-textile-editorial-desktop') ||
         !confirmBefore.hero.current?.includes('scene-02-textile-editorial-mobile') || !confirmBefore.hero.video?.includes('scene-02-mobile') || confirmBefore.hero.video?.includes('desktop') ||
         !['rgb(198, 58, 33)','rgb(151, 41, 15)'].includes(confirmBefore.consentBg)) {
@@ -468,10 +474,9 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
         googleHandoff.dateTop - googleHandoff.buttonRect.bottom < googleHandoff.outlineWidth + googleHandoff.outlineOffset) {
       fails.push(`Google no recibe foco sin cortar el logro ${JSON.stringify(googleHandoff)}`);
     }
-    if (googleHandoff.host !== 'www.google.com'
-      || !googleHandoff.path.startsWith('/maps/place/Cortinas+RollerShow/')
-      || !googleHandoff.href.includes('0x95bcb6719099596b:0x4354517b56352268')
-      || !googleHandoff.href.includes('!9m1!1b1')) {
+    // Link corto oficial de Google: abre el panel de calificar, no la lista de
+    // opiniones. CWgiNVZ7UVRD codifica el CID de la ficha de CABA.
+    if (googleHandoff.host !== 'g.page' || googleHandoff.path !== '/r/CWgiNVZ7UVRD/review') {
       fails.push(`enlace directo al compositor de reseñas incorrecto ${JSON.stringify(googleHandoff)}`);
     }
     await page.evaluate(() => scrollTo(0, 0));
@@ -481,7 +486,7 @@ for (const vp of [{ w: 320, h: 700 }, { w: 360, h: 780 }, { w: 390, h: 700 }]) {
 
     const [popup] = await Promise.all([ctx.waitForEvent('page'), page.locator('#gReviewBtn').click({ force:true, noWaitAfter:true })]);
     await popup.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
-    if (!popup.url().includes('google.com/')) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
+    if (!/(google\.com|g\.page)\//.test(popup.url())) fails.push(`el CTA de reseña no abrió Google ${popup.url()}`);
     await popup.close().catch(() => {});
     if ((await page.textContent('#gConfirmBtn'))?.trim() !== 'Listo, ya la publiqué') fails.push('la vuelta de Google no pide confirmación clara');
     if (!((await page.textContent('#gValidating')) || '').includes('Actualizando tus tickets')) fails.push('Google no comunica con claridad qué está haciendo');

@@ -546,3 +546,27 @@ Agus aprobó pasar de lista de objetos sueltos a tres sets. Además de leerse me
 - [x] **Los binarios de contenido dejan de ir a git**: los 8 archivos viven en `cdn.rollershow.com.ar/web/resenas/` y el código los referencia por URL absoluta, en los dos repos. Pedido explícito de Agus, ya escrito en el `CLAUDE.md` de Nicolás ("cero binarios en git") y ahora también en los configs globales y en memoria.
 
 **Se descartaron los videos de cortinas existentes** (`black-out-pesada-negro`, `sun-screen-5-lino`, las tres de `cortina-motorizada`): son buenos, pero sólo cubren dos ambientes y romperían la correspondencia. Quedan disponibles para otros usos.
+
+## 60. Ronda de Nicolás: ritmo del video, cierre y Google directo — 2026-07-23
+
+Feedback de Nicolás, más pedidos de Agus en la misma pasada.
+
+**Frames lentos con el fondo en video (portada).** No se reprodujo en headless (16,7 ms de mediana con CPU a 6×), así que se atacaron las causas plausibles en vez de una sola hipótesis:
+- Reencode de los dos clips para decodificación barata: `main@3.1`, `-tune fastdecode`, sin CABAC ni B-frames, `ref=2`, GOP corto, `faststart`. Mobile pasó a 30 fps constantes (897 KB), desktop bajó de 1,82 MB a 1,70 MB. Los pósters se extraen del cuadro cero del propio encode, así el empalme sigue siendo inmóvil (diferencia medida: 0,55% mobile / 0,68% desktop).
+- La capa se promueve un cuadro **antes** de reproducir. Componer y decodificar en el mismo cuadro descartaba frames en la entrada; reproducir con la capa invisible los descarta igual, porque el navegador no pinta lo que no se ve (medido: 23/100 descartados por intentarlo).
+- Arranque por `canplaythrough` con fallback por `canplay` a 1,2 s, en vez de entrar con el buffer justo.
+- El reinicio del loop ocurre durante el fundido y no en `ended` con el video ya visible: ese rebobinado era el tirón cada 10 s.
+- Corte por dispositivo: con `saveData`, 2g/3g, o ≤4 GB de memoria y ≤4 núcleos, no se reproduce nada y queda el póster. Lo decide un script inline pegado al `<video>` para poder abortar la descarga apenas se parsea; los `<source>` siguen declarados en el HTML, así que en un equipo capaz el arranque sigue siendo sin cambio de plano.
+- Nuevo `scripts/verify-video-pacing.mjs`: mide el ritmo con la CPU frenada (p95 ≤ 32 ms) y verifica el corte por dispositivo.
+
+**Premio genérico.** Los productos cambian mes a mes, así que la comunicación dice `3 sets de textiles premium` (`SORTEO.premioGenerico`). El detalle por ganador sigue en `SORTEO.premios` pero se publica sólo en las Bases, que es donde el Decreto 961/2017 lo exige.
+
+**Cierre.** El CTA pasó de `Autorizar el uso y confirmar mi participación` (barra de 452 px, dos líneas en mobile) a `Autorizar y confirmar`, compacto en desktop. La desalineación que marcó Nicolás era real y medible: el bloque de acciones usaba `align-self:center` y arrancaba 33 px más abajo que el de tickets. Ahora ambos arrancan en 228,9 px y la letra chica comparte el eje izquierdo del botón. También se corrigió el tracking negativo que hacía que la etiqueta se montara sobre el número de tickets.
+
+**Letra chica.** Explicita que el material se usa sólo para mostrarle a otros clientes cómo quedan las cortinas y que la publicación es **anónima**, sin nombre ni datos. Las Bases se reescribieron en la misma línea, con un apartado de datos personales y la aclaración de que los premios varían mes a mes. Sigue pendiente, sin inventar: la vía de participación sin compra y quién paga el envío del premio.
+
+**Google.** El CTA abría la ficha con las opiniones. Ahora usa `https://g.page/r/CWgiNVZ7UVRD/review`, el link corto oficial (mismo formato que los QR de locales), derivado del CID `0x4354517b56352268` de la ficha de CABA. Equivalente para web: `search.google.com/local/writereview?placeid=ChIJa1mZkHG2vJURaCI1VntRVEM`. Sigue pendiente el local de Villa Carlos Paz.
+
+**Footer.** Sólo `Rollershow` y `Bases y condiciones`.
+
+**Material para Cami.** Se armó `Desktop\Premios-sorteo-para-Cami\` con las fotos reales con fondo, las composiciones y los videos en alta, para que arme la plantilla del sorteo.

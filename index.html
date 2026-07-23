@@ -777,7 +777,9 @@ body{min-height:100vh;min-height:100dvh}
 .confirm-summary{display:flex;flex-direction:column;min-width:0}
 .confirm-score{margin-top:16px;padding-block:14px;border-block:1px solid rgba(142,77,31,.28);color:var(--fg-soft)}
 .confirm-chances{display:flex;align-items:flex-end;gap:12px}
-.confirm-chances strong{font-family:var(--font-display);font-size:clamp(4.8rem,18vw,8.2rem);font-weight:800;line-height:.72;letter-spacing:-.075em;color:var(--cta-deep);font-variant-numeric:tabular-nums}
+/* El tracking negativo se aplica también después del último dígito: sin este
+   padding la etiqueta se monta encima del número (visible con 1 dígito). */
+.confirm-chances strong{font-family:var(--font-display);font-size:clamp(4.8rem,18vw,8.2rem);font-weight:800;line-height:.72;letter-spacing:-.075em;padding-right:.075em;color:var(--cta-deep);font-variant-numeric:tabular-nums}
 .confirm-chances span{font-family:var(--font-display);font-size:1.05rem;font-weight:800;line-height:1.05;max-width:11ch;padding-bottom:4px}
 .confirm-ticket-icon{display:block;width:30px;height:30px;margin-bottom:6px;color:var(--cta-deep)}
 .confirm-proof{margin-top:12px;max-width:36ch;font-weight:700;font-size:.9rem;color:var(--fg-soft)}
@@ -789,13 +791,16 @@ body{min-height:100vh;min-height:100dvh}
 @keyframes finalProof{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .confirm-actions{margin-top:18px;align-self:stretch}
 .confirm-step .consent{display:block;position:relative;margin:0;padding:0;background:none;color:inherit}
+/* CTA compacto y corto: en desktop no es una barra a sangre, se mide por su
+   propio texto y comparte el eje izquierdo con la letra chica (Nico, 2026-07-23). */
 .confirm-step .consent-action{display:flex;width:100%;min-height:64px;padding:15px 18px;align-items:center;justify-content:center;gap:10px;border:1px solid transparent;border-radius:14px;
   background:var(--cta);color:#fff;font-family:var(--font-display);font-size:1rem;font-weight:800;line-height:1.2;text-align:center;box-shadow:0 16px 34px -17px rgba(151,41,15,.9);transition:background .34s,box-shadow .34s,transform .2s,border-color .34s}
 .confirm-step .consent-action:hover{background:var(--cta-deep)}
 .confirm-step .consent-action:active{transform:scale(.985)}
 .confirm-step .consent-action:focus-visible{outline:3px solid rgba(198,58,33,.3);outline-offset:3px}
 .confirm-step .consent-action svg{width:18px;height:18px;flex:none}
-.confirm-step .consent-note{margin:10px auto 0;max-width:46ch;color:var(--fg-mute);font-size:.76rem;line-height:1.4;text-align:center}
+.confirm-step .consent-note{margin:12px 0 0;max-width:46ch;color:var(--fg-mute);font-size:.76rem;line-height:1.45;text-align:left}
+.confirm-step .consent-note strong{color:var(--fg-soft);font-weight:700}
 .confirm-step .consent-note a{position:relative;display:inline-block;min-height:32px;padding:6px 4px;color:var(--accent-deep);font-weight:700;text-underline-offset:3px}
 /* El área táctil llega a 44 px sin estirar la línea: si el link creciera de verdad,
    abriría un hueco en medio del párrafo de consentimiento. */
@@ -892,7 +897,11 @@ body.done #flowApp{display:none}
   .confirm-step .confirm-summary>.step-title{grid-column:2 / span 7;grid-row:1;margin:0}
   .confirm-step .confirm-summary>.step-copy{grid-column:2 / span 6;grid-row:2;margin:0}
   .confirm-step .confirm-score{grid-column:2 / span 5;grid-row:3;margin-top:16px}
-  .confirm-step .confirm-actions{grid-column:7 / span 5;grid-row:3;margin-top:16px;align-self:center}
+  /* align-self:start, no center: el borde superior del CTA tiene que arrancar en
+     la misma línea que el bloque de tickets. Con center quedaba 33 px más abajo
+     y se leía como desalineado. */
+  .confirm-step .confirm-actions{grid-column:7 / span 5;grid-row:3;margin-top:16px;align-self:start}
+  .confirm-step .consent-action{display:inline-flex;width:auto;max-width:100%;min-height:56px;padding:16px 28px;font-size:.98rem}
   .item-step .step-inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:12px;align-items:start;align-content:start}
   .item-step.has-media .step-inner{row-gap:0}
   .item-step.has-media .item-heading{margin-bottom:12px}
@@ -955,12 +964,37 @@ body.done #flowApp{display:none}
       <div class="intro-scene">
         <picture aria-hidden="true">
           <source media="(max-width:799px)" srcset="img/video/rs-premio-celebracion-mobile-poster.webp" />
-          <img class="intro-base" src="img/video/rs-premio-celebracion-desktop-poster.webp" width="1440" height="810" alt="" fetchpriority="high" />
+          <img class="intro-base" src="img/video/rs-premio-celebracion-desktop-poster.webp" width="1280" height="720" alt="" fetchpriority="high" />
         </picture>
         <video class="scene-video" data-scene-video data-seamless-start data-soft-loop data-src-desktop="img/video/rs-premio-celebracion-desktop.mp4" data-src-mobile="img/video/rs-premio-celebracion-mobile.mp4" muted playsinline preload="auto" aria-hidden="true">
           <source media="(max-width:799px)" src="img/video/rs-premio-celebracion-mobile.mp4" type="video/mp4" />
           <source src="img/video/rs-premio-celebracion-desktop.mp4" type="video/mp4" />
         </video>
+        <!-- El video se declara con sus <source> y preload="auto" para que arranque
+             sin cambio de plano. Este script corre apenas se parsea el elemento y
+             aborta la descarga sólo en equipos que no la bancan: ahí queda el
+             póster quieto, que es mejor que un fondo a los tirones. -->
+        <script>
+        window.sceneVideoAllowed = function () {
+          if (window.sceneVideoAllowed.cache !== undefined) return window.sceneVideoAllowed.cache;
+          var c = navigator.connection || {};
+          var lenta = c.saveData === true || /^(slow-)?2g$/.test(c.effectiveType || "") || c.effectiveType === "3g";
+          var pocaMemoria = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4;
+          var pocosNucleos = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4;
+          window.sceneVideoAllowed.cache = !(lenta || (pocaMemoria && pocosNucleos));
+          return window.sceneVideoAllowed.cache;
+        };
+        if (!window.sceneVideoAllowed()) {
+          (function () {
+            var v = document.currentScript.parentNode.querySelector(".scene-video");
+            if (!v) return;
+            v.preload = "none";
+            while (v.firstElementChild) v.removeChild(v.firstElementChild);
+            v.removeAttribute("src");
+            v.load();
+          })();
+        }
+        </script>
       </div>
       <div class="step-inner">
         <img class="intro-logo" src="img/logo.svg" alt="Rollershow" />
@@ -1161,10 +1195,10 @@ body.done #flowApp{display:none}
     <div class="wrap">
       <div class="consent" id="consentBox">
         <input type="checkbox" id="consent" hidden />
-        <button class="consent-action" id="confirmParticipation" type="button">Autorizar el uso y confirmar mi participación
+        <button class="consent-action" id="confirmParticipation" type="button">Autorizar y confirmar
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
-        <p class="consent-note">Autorizás a Rollershow a publicar las fotos, videos, audios y opinión que compartiste en sus redes y web. Este único toque autoriza y confirma. <a href="#" id="openBases">Ver bases del sorteo</a></p>
+        <p class="consent-note">Con este toque autorizás y confirmás tu participación. Usamos tus fotos, video, audio y opinión sólo para mostrarle a otros clientes cómo quedan nuestras cortinas, <strong>de forma anónima: no publicamos tu nombre, tu teléfono ni tus datos</strong>. Podés pedirnos que lo bajemos cuando quieras. <a href="#" id="openBases">Ver bases y condiciones</a></p>
       </div>
       <p class="cta-sub" id="ctaSub">Con lo que cargaste hasta ahora entrás al sorteo de julio.</p>
     </div>
@@ -1205,9 +1239,16 @@ body.done #flowApp{display:none}
          de Google Business Profile para esto), así que la confirmación es
          auto-reportada por el cliente. Rollershow asume ese margen de
          confianza, igual que ya confía en que las fotos subidas son reales.
-         Link directo al compositor de reseñas del local de CABA, confirmado
-         por Agus. El segmento !9m1!1b1 abre la acción de escribir la opinión;
-         Google puede pedir login primero si no hay una sesión iniciada.
+         Link corto oficial de Google al compositor de reseñas del local de CABA
+         (Roseti 1674). Es el mismo formato que Google Business Profile entrega
+         en "Pedir reseñas" y el que usan los QR de locales: en un celular con
+         la app de Maps abre directo el panel de estrellas, no la lista de
+         opiniones. Se derivó del CID de la ficha (0x4354517b56352268).
+         El link anterior (maps/place/...!9m1!1b1) abría la ficha con las
+         opiniones y obligaba a buscar el botón de escribir.
+         Alternativa equivalente para web, si alguna vez hiciera falta:
+         https://search.google.com/local/writereview?placeid=ChIJa1mZkHG2vJURaCI1VntRVEM
+         Google pide login primero si no hay sesión iniciada.
          TODO(Nico): Rollershow tiene 2 locales (CABA y Villa Carlos Paz) —
          este mockup usa siempre el de CABA. Si el presupuesto trae el local
          de origen, elegir el link según corresponda; si no, confirmar con
@@ -1216,7 +1257,7 @@ body.done #flowApp{display:none}
       <div class="g-block" id="gBlock">
         <h3 id="gTitle">Duplicá tus tickets en Google</h3>
         <p id="gIntro">Publicá tu reseña y, cuando vuelvas, confirmá que ya está.</p>
-        <a class="g-cta" id="gReviewBtn" href="https://www.google.com/maps/place/Cortinas+RollerShow/@-34.5819602,-58.4652317,20z/data=!4m8!3m7!1s0x95bcb6719099596b:0x4354517b56352268!8m2!3d-34.5817708!4d-58.4657373!9m1!1b1!16s%2Fg%2F11ddzr18df?entry=ttu&amp;g_ep=EgoyMDI2MDcxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">
+        <a class="g-cta" id="gReviewBtn" href="https://g.page/r/CWgiNVZ7UVRD/review" target="_blank" rel="noopener">
           Ir a Google y duplicar mis tickets
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
@@ -1251,8 +1292,8 @@ body.done #flowApp{display:none}
 
 <footer>
   <div class="wrap">
-    <span>Rollershow. Cortinas a medida en Villa Carlos Paz y Capital Federal.</span>
-    <span><a href="#" id="openBases2">Bases y condiciones del sorteo</a></span>
+    <span>Rollershow</span>
+    <span><a href="#" id="openBases2">Bases y condiciones</a></span>
   </div>
 </footer>
 
@@ -1265,10 +1306,15 @@ body.done #flowApp{display:none}
     <div class="bases-txt">
       <p>Participan clientes de Rollershow mayores de 18 años, residentes en Argentina, que hayan comprado cortinas y completen este formulario durante el mes en curso.</p>
       <p>Toda participación confirmada tiene al menos un ticket, y cada ticket es una chance en el sorteo. Los tickets se otorgan por: foto de cortina instalada (1 por foto), video (1 por video), mensaje de voz (3), calificación con estrellas (1) y opinión escrita de al menos 20 caracteres (1). El total final lo valida Rollershow al revisar el material.</p>
-      <p id="basesPrizeText">Este mes se sortean 3 almohadones y 2 alfombras premium entre 3 ganadores. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Los ganadores serán contactados por WhatsApp.</p>
+      <p id="basesPrizeText">Este mes se sortean 3 premios entre 3 personas, uno por persona. El sorteo se realiza en vivo en la fecha publicada en esta página, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Las personas ganadoras serán contactadas por WhatsApp.</p>
       <p>Para que la participación sea válida al momento del sorteo, la persona debe seguir a <strong>@cortinas.rollershow</strong> en Instagram. Rollershow verificará este requisito antes de entregar el premio. Instagram no patrocina, avala ni administra esta promoción, ni está asociado a ella.</p>
-      <p>Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos enviados en sus redes sociales, web y material comercial, sin datos personales más allá de tu nombre de pila. Podés pedir la baja del material escribiéndonos cuando quieras.</p>
+      <p><strong>Uso del material, en forma anónima.</strong> Al participar autorizás a Rollershow a publicar las fotos, videos, audios y textos que enviaste en sus redes sociales, su web y su material comercial, con un solo fin: mostrarle a otros clientes cómo quedan las cortinas instaladas. La publicación es anónima: no difundimos tu nombre, tu teléfono, tu dirección ni ningún otro dato personal junto al material. Podés pedirnos que lo demos de baja cuando quieras, escribiéndonos por WhatsApp o por Instagram.</p>
+      <p><strong>Tus datos.</strong> El material y los datos de contacto se usan sólo para administrar este sorteo, avisarte si ganás y publicar el material como se explica arriba. No se venden ni se ceden a terceros.</p>
+      <!-- TODO(legal): definir quién paga el envío o retiro del premio y la vía
+           de participación sin compra que exige el Decreto 961/2017. No inventar
+           ninguna de las dos acá. -->
       <p>Sin obligación de compra adicional. Premios no canjeables por dinero.</p>
+      <p>Los premios pueden variar de un mes a otro. El detalle vigente es el publicado en estas bases al momento del sorteo.</p>
     </div>
     <button class="modal-close" data-close>Entendido</button>
   </div>
@@ -1298,6 +1344,12 @@ const SORTEO = {
   mes: "julio",
   fecha: "31 de julio",
   ganadores: 3,
+  /* Cómo se nombra el premio en la comunicación (portada, confirmación,
+     Gracias, salida). Es deliberadamente genérico porque los productos cambian
+     mes a mes y el copy no puede quedar viejo: pedido de Agus 2026-07-23.
+     El detalle exacto vive abajo y sólo se publica en las Bases. */
+  premioGenerico: "sets de textiles premium",
+  premioGenericoDetalle: "mantas, almohadones y alfombras para acompañar tus cortinas",
   /* Un set por ganador. El Decreto 961/2017 exige informar qué recibe cada
      ganador, así que esta es la forma que además destraba las Bases. */
   premios: [
@@ -1312,9 +1364,9 @@ function listaNatural(partes) {
   if (partes.length < 2) return partes[0] || "premios de decoración";
   return `${partes.slice(0,-1).join(", ")} y ${partes.at(-1)}`;
 }
-/* Resumen corto para los lugares donde no entra el detalle, y el detalle por
-   ganador para portada y Bases. */
-const premiosResumen = `${SORTEO.premios.length} ${SORTEO.premios.length === 1 ? "premio" : "premios"} de mantas y almohadones`;
+/* Resumen genérico para toda la comunicación, y el detalle por ganador que sólo
+   aparece en las Bases. */
+const premiosResumen = `${SORTEO.premios.length} ${SORTEO.premioGenerico}`;
 const premiosDetalle = SORTEO.premios.map(premio => `${premio.puesto}: ${premio.contenido}`).join(". ") + ".";
 const ganadoresTexto = `${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "persona" : "personas"}`;
 
@@ -1369,15 +1421,20 @@ document.body.classList.add(`variant-${FLOW_VARIANT}`);
 $("#heroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, mostrá cómo quedó tu casa.`;
 $("#flowHeroTitle").textContent = `${PRESUPUESTO.cliente.nombre}, compartí tu cortina y participá del sorteo.`;
 $("#introPrizeHook").textContent = "Mostranos cómo quedó tu casa con fotos, videos o tu experiencia.";
-$("#introPrizeCopy").replaceChildren(...SORTEO.premios.map(premio => {
+/* La portada nombra el premio de forma genérica: los productos cambian todos los
+   meses y el detalle por ganador queda en las Bases. */
+$("#introPrizeCopy").replaceChildren(...[
+  `<b>${premiosResumen}</b> para tu casa, uno para cada ganador.`,
+  SORTEO.premioGenericoDetalle.charAt(0).toUpperCase() + SORTEO.premioGenericoDetalle.slice(1) + "."
+].map(texto => {
   const fila = document.createElement("li");
-  fila.innerHTML = `<b>${premio.puesto}</b> ${premio.contenido}`;
+  fila.innerHTML = texto;
   return fila;
 }));
 $("#introDateCopy").innerHTML = `<strong>${SORTEO.ganadores} ${SORTEO.ganadores === 1 ? "ganador" : "ganadores"}.</strong> En vivo por Instagram el ${SORTEO.fecha}.`;
 $("#introPrizeImage").src = SORTEO.imagenPremios;
-$("#introPrizeImage").alt = `Premios del sorteo. ${premiosDetalle}`;
-$("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosResumen}.`;
+$("#introPrizeImage").alt = `Premios del sorteo: ${premiosResumen}.`;
+$("#confirmPrizeReminder").textContent = `En ${SORTEO.mes} sorteamos ${premiosResumen} para tu casa.`;
 $("#instagramRequirement").innerHTML = `Es un requisito del sorteo. Lo hacemos <strong>en vivo el ${SORTEO.fecha}</strong> y anunciamos a ${ganadoresTexto} en <strong>@cortinas.rollershow</strong>.`;
 $("#thanksDrawDate").innerHTML = `Sorteo <b>en vivo el ${SORTEO.fecha}</b> por Instagram. Ahí anunciamos a ${ganadoresTexto}.`;
 $("#basesPrizeText").textContent = `Este mes se sortean ${SORTEO.premios.length} premios entre ${ganadoresTexto}, uno por persona. ${premiosDetalle} El sorteo se realiza en vivo el ${SORTEO.fecha}, desde el Instagram de Rollershow, y el resultado se publica en esa cuenta. Las personas ganadoras serán contactadas por WhatsApp.`;
@@ -2140,34 +2197,43 @@ function syncExperienceProgress({ revealAudio = false, revealText = false } = {}
     cta?.focus({ preventScroll:true });
   }, 220);
 }
+/* Definido junto al video de portada para poder abortar la descarga apenas se
+   parsea el elemento. Acá sólo se reusa. */
+const sceneVideoAllowed = window.sceneVideoAllowed || (() => true);
 function prepareSceneVideo(video) {
-  if (!video) return;
+  if (!video || !sceneVideoAllowed()) return;
   const embeddedSource = video.querySelector("source[src]");
   if (!video.src && !embeddedSource) video.src = matchMedia("(max-width:799px)").matches ? video.dataset.srcMobile : video.dataset.srcDesktop;
   video.preload = "auto";
   video.load();
 }
+/* El reinicio del loop se adelanta al final del clip: rebobinar recién en `ended`
+   obligaba a decodificar de cero con el video ya visible y eso era el tirón que
+   se veía cada 10 s en celulares lentos (Nico, 2026-07-23). Ahora el salto ocurre
+   durante el fundido, cuando la capa ya está en opacidad 0. */
 function setupSoftVideoLoop(video) {
   if (!video?.hasAttribute("data-soft-loop") || video.dataset.softLoopReady) return;
   video.dataset.softLoopReady = "true";
-  video.addEventListener("timeupdate", () => {
-    if (video.duration && video.currentTime >= video.duration - .48 && !video.classList.contains("soft-loop-fade")) {
-      video.classList.add("soft-looping", "soft-loop-fade");
-    }
-  });
-  video.addEventListener("ended", () => {
-    video.currentTime = 0;
-    const resume = () => {
+  const reiniciar = () => {
+    if (video.dataset.softLoopBusy) return;
+    video.dataset.softLoopBusy = "1";
+    video.classList.add("soft-looping", "soft-loop-fade");
+    setTimeout(() => {
+      try { video.currentTime = 0; } catch (_) {}
       video.play().catch(() => {});
-      requestAnimationFrame(() => requestAnimationFrame(() => video.classList.remove("soft-loop-fade")));
-      setTimeout(() => video.classList.remove("soft-looping"), 460);
-    };
-    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) resume();
-    else video.addEventListener("canplay", resume, { once:true });
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        video.classList.remove("soft-loop-fade");
+        setTimeout(() => { video.classList.remove("soft-looping"); delete video.dataset.softLoopBusy; }, 460);
+      }));
+    }, 180);
+  };
+  video.addEventListener("timeupdate", () => {
+    if (video.duration && video.currentTime >= video.duration - .42) reiniciar();
   });
+  video.addEventListener("ended", reiniciar);
 }
 function activateSceneVideo(video, restart = false) {
-  if (!video) return;
+  if (!video || !sceneVideoAllowed()) return;
   setupSoftVideoLoop(video);
   const embeddedSource = video.querySelector("source[src]");
   if (!video.src && !embeddedSource) {
@@ -2178,14 +2244,31 @@ function activateSceneVideo(video, restart = false) {
     if (restart || video.hasAttribute("data-seamless-start")) {
       try { video.currentTime = 0; } catch (_) {}
     }
-    requestAnimationFrame(() => {
+    /* Primero se reproduce y recién se muestra cuando hay un cuadro pintado de
+       verdad. Promover la capa y decodificar en el mismo cuadro descartaba los
+       primeros frames justo cuando la escena entra, que es donde se nota. */
+    /* La capa se promueve un cuadro antes de reproducir: componer y decodificar
+       en el mismo cuadro descartaba los primeros frames justo en la entrada de
+       la escena. Reproducir con la capa todavía invisible tampoco sirve, porque
+       el navegador descarta lo que no se pinta. */
+    const reproducir = () => {
       video.classList.add("is-ready");
-      video.play().catch(() => {});
-    });
+      requestAnimationFrame(() => video.play().catch(() => {}));
+    };
+    /* Reproducir con un seek a medio resolver hace que el decodificador arranque
+       atrasado y descarte cuadros durante todo el clip. */
+    if (video.seeking) video.addEventListener("seeked", () => requestAnimationFrame(reproducir), { once:true });
+    else requestAnimationFrame(reproducir);
   };
-  if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) start();
+  /* Se espera a HAVE_ENOUGH_DATA, no a HAVE_FUTURE_DATA: con el buffer justo el
+     video entraba y se trababa en los primeros cuadros. El fallback por `canplay`
+     evita quedarse con el póster para siempre si el buffer nunca se llena. */
+  if (video.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) start();
   else {
-    video.addEventListener("canplay", start, { once:true });
+    let arrancado = false;
+    const arrancar = () => { if (!arrancado) { arrancado = true; start(); } };
+    video.addEventListener("canplaythrough", arrancar, { once:true });
+    video.addEventListener("canplay", () => setTimeout(arrancar, 1200), { once:true });
     video.load();
   }
 }

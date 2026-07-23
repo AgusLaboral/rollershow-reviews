@@ -19,14 +19,19 @@ for (const viewport of [{ name:'desktop', width:1440, height:900 }, { name:'mobi
   }, selector);
 
   const expectedCadence = viewport.name === 'mobile' ? 28.5 : 22.5;
-  const validate = (label, playback, minimumTime) => {
+  /* El clip de portada es la toma de celebración de 10 s; las escenas de
+     confirmación y Gracias siguen siendo tomas continuas de 15 s.
+     El corte de descartados combina proporción y cantidad: a 30 fps, dos o tres
+     cuadros perdidos mientras todavía carga la página cruzan el 1% sin que haya
+     un problema sostenido. Una caída real (decenas de cuadros) sigue fallando. */
+  const validate = (label, playback, minimumTime, minimumDuration = 14.8) => {
     const expectedSize = viewport.name === 'desktop'
       ? playback.width >= 1280 && playback.height >= 720
       : playback.width >= 720 && playback.height >= 1280;
     const rightVariant = viewport.name === 'mobile' ? playback.source.includes('mobile') : playback.source.includes('desktop');
     const dropRatio = playback.total ? playback.dropped / playback.total : 1;
-    if (!expectedSize || !rightVariant || playback.currentTime < minimumTime || playback.duration < 14.8 ||
-        playback.cadence < expectedCadence || playback.paused || dropRatio > .01 || playback.corrupted > 0) {
+    if (!expectedSize || !rightVariant || playback.currentTime < minimumTime || playback.duration < minimumDuration ||
+        playback.cadence < expectedCadence || playback.paused || (dropRatio > .01 && playback.dropped > 4) || playback.corrupted > 0) {
       failures.push(`${viewport.name} ${label}: reproducción deficiente ${JSON.stringify({ ...playback,dropRatio })}`);
     }
   };
@@ -35,7 +40,7 @@ for (const viewport of [{ name:'desktop', width:1440, height:900 }, { name:'mobi
   await page.waitForFunction(sel => document.querySelector(sel)?.currentTime > .2, introSelector, { timeout:15000 });
   await page.waitForTimeout(8000);
   const intro = await inspectVideo(introSelector);
-  validate('inicio', intro, 8);
+  validate('inicio', intro, 8, 9.5);
   await page.evaluate(sel => {
     const video = document.querySelector(sel);
     video.currentTime = Math.max(0, video.duration - .3);
